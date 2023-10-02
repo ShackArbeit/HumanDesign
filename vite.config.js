@@ -5,4 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base:"/HumanDesign/",
   plugins: [react()],
+  css:{
+    modules: {
+      localsConvention: 'camelCase',
+      scopeBehaviour: 'local',
+      generateScopedName: '[name]_[local]_[hash:5]',
+      globalModulePaths: ["./componentB.module.css"], 
+    }
+  }
 })

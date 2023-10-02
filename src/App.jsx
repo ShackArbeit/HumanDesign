@@ -1,7 +1,7 @@
 import { useEffect,useState} from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from './Layout/Layout'
+
 
 function App() {
   const[data,setData]=useState([])
@@ -24,24 +24,19 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <div>
+     <BrowserRouter>
+      <Routes>
+        <Route path="/HumanDesign" element={<Layout />}>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    <h1>React Project for HumanDesign</h1>
         {data.map((item) => (
             <div key={item.id}>
              <p>Job: {item.job}</p>
              <p>Salary: {item.salary}</p>
               </div>
           ))}
-        </div>
-      </div>
-      <h1>React Project for HumanDesign</h1>
-    
     </>
   )
 }
