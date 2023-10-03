@@ -3,35 +3,98 @@
       position: relative;
 }
 .navbar{
-      width:100vw;
-      height:64px;
       position:fixed;
+      width:100%;
+      max-width: 1140px;
+      height:64px;
       z-index:500;
       background-color: rgba(0,0,0,0.8);
-      border:2px solid blue;
       left:0;
       top:0;
       display:flex;
       flex-direction: row;
-      justify-content: space-evenly;
+      justify-content: space-around;
 }
+
 .navbar .brand{
-      display:inline-block;
-	height: 64px;
-      width: 160px;
+      display:block;
+	height: 50px;
+      width: 125px;
 }
-.navbar .nav{
+.navbar .Nav{
       display:flex;
       flex-direction: row;
       align-items: center;
 }
-.navbar .nav .link{
+.navbar .Nav .Navlink{
       display:block;
       color:#fff;
       line-height: 24px;
       padding:20px 16px;
       transition: color 0.3s;
 }
-.navbar .nav .link:hover{
+.navbar .Nav .Navlink:hover{
 	color: #d5a26f;
+}
+/* 設定當小於768px時，用useState選取NavMenu，並以NavMenu為點擊後的項目列表 */
+@media screen and (max-width: 768px){
+/*設定當小於768px時原Nav消失，NavMenu出現  */
+      .navbar .Nav{
+            display:none; 
+      }  
+      .navbar .NavMenu{
+            position:fixed;
+            left:0;
+            top:46px;  
+            width:100%;
+            height:100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index:500;
+            display:flex;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+            opacity: 1;
+		visibility: visible;
+            transition: all 0.3s;
+      }
+      .navbar .NavMenu .Navitem{
+            text-align: center;
+		padding: 20px;
+            
+      }
+      .navbar .NavMenu .Navlink{
+            color:#fff;
+      }
+}
+/* 當小於768px時，漢堡列出現 */
+.navbar .menuToggle{
+      width:48px;
+      height:48px;
+      margin-top:8px;
+      display:none;
+}
+@media screen and (max-width: 768px){
+      .navbar .menuToggle{
+            display: block;
+      }
+}
+/* 漢堡列細部設定 */
+.navbar .menuToggle span{
+      display:block;
+      width:32px;
+      height:2px;
+      position: absolute;
+      background-color: #d5a26f;
+      left:50%;
+      transform: translate(-50%,0);
+}
+.navbar .menuToggle span:nth-child(1){
+      top:12px;
+}
+.navbar .menuToggle span:nth-child(2){
+      top:22px;
+}
+.navbar .menuToggle span:nth-child(3){
+      top:32px;
 }
