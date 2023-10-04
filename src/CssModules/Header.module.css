@@ -25,6 +25,9 @@
       flex-direction: row;
       align-items: center;
 }
+.navbar .Nav li{
+      list-style: none;
+}
 .navbar .Nav .Navlink{
       display:block;
       color:#fff;
@@ -60,7 +63,6 @@
       .navbar .NavMenu .Navitem{
             text-align: center;
 		padding: 20px;
-            
       }
       .navbar .NavMenu .Navlink{
             color:#fff;
