@@ -49,6 +49,11 @@ body{
 .footerBooking p{
       padding:0.5rem;
 }
+.CopyRight{
+      width:100%;
+      text-align: center;
+      background-color:black;
+}
 @media screen and (max-width: 768px){
       .footer{
             display:flex;

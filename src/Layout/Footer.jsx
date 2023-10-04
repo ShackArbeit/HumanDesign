@@ -3,6 +3,7 @@ import style from '../CssModules/Footer.module.css'
 
 const Footer = () => {
       return(
+        <>
         <footer className={style.footer}>
           <Container className={style.footerBrand} fluid>
           <img src='https://sorehunter.com/wp-content/uploads/2020/07/home_logo.png' />
@@ -43,6 +44,10 @@ const Footer = () => {
             </div>
           </Container>
         </footer>
+        <Container className={style.CopyRight} fluid>
+        <span>Copyright © 2023 當八字遇見人類圖 Jerome HumanDesign 保留所有權利</span>
+        </Container>
+        </>
       )
     };
     
