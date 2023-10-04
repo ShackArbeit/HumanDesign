@@ -1,0 +1,75 @@
+*{
+      position: relative;
+      margin:0;
+      box-sizing: border-box;
+      padding:0
+}
+body{
+      color:white;
+      font-size: 10px;
+}
+.footer{
+      width:100%;
+      background-color: rgba(0,0,0,0.8);
+      display:flex;
+      padding-left:2rem;
+      padding-right:2rem; 
+}
+/* 有關介紹圖片的部分 */
+.footerBrand{
+    width:50%;
+    display:flex;
+    align-items: center;
+}
+
+/* 有關Icons + 注意文字部分 */
+.footerIntroducer{
+      width:50%;
+      display:flex;
+      flex-direction: row;
+}
+/* 有關Icons部分 */
+.footerIcons{
+      padding-top:10px;
+      width:50%;
+}
+.footerIcon{
+      padding:16px;
+}
+.footerIcon span{
+      margin-left:10px;
+} 
+/* 有關介紹文字的部分 */
+.footerBooking{
+      padding-top:10px;
+      width:50%;
+      display:flex;
+      flex-direction: column;
+}
+.footerBooking p{
+      padding:0.5rem;
+}
+@media screen and (max-width: 768px){
+      .footer{
+            display:flex;
+            flex-direction: column;
+      }
+      .footerBrand{
+            width:100%;
+      }
+      .footerIntroducer{
+            width:100%;
+            display:flex;
+            flex-direction:column;
+      }
+      .footerIcons{
+            width:100%;
+      }
+      .footerIcon{
+            margin:0 auto;
+            text-align: center;
+      }
+      .footerBooking{
+            width:100%;
+      }
+}
