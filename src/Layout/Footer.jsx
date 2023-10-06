@@ -4,7 +4,7 @@ import style from '../CssModules/Footer.module.css'
 const Footer = () => {
       return(
         <>
-        <footer className={style.footer}>
+        <footer className={style.footer} >
           <Container className={style.footerBrand} fluid>
           <img src='https://sorehunter.com/wp-content/uploads/2020/07/home_logo.png' />
           </Container>

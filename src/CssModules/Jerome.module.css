@@ -1,0 +1,22 @@
+*{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.JeromeContainer{
+    width:100%;
+    color:black;
+    margin:0 auto;
+    align-items: center;
+    text-align: center;
+    padding-top: 200px;
+}
+.JeromeTimeItem{
+    padding:1rem;
+    display:flex;
+}
+
+.JeromeContent{
+    border:1px solid green;
+}

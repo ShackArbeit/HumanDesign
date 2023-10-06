@@ -1,6 +1,8 @@
 import { useEffect,useState} from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout/Layout'
+import AboutJerome from './PageComponents/AboutJerome';
+
 
 
 function App() {
@@ -23,21 +25,20 @@ function App() {
    },[])
 
   return (
-    <>
      <BrowserRouter>
       <Routes>
         <Route path="/HumanDesign" element={<Layout />}>
+        <Route path="Jerome" element={<AboutJerome/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
-    <h1>React Project for HumanDesign</h1>
-        {data.map((item) => (
-            <div key={item.id}>
-             <p>Job: {item.job}</p>
-             <p>Salary: {item.salary}</p>
-              </div>
-          ))}
-    </>
+    // <h1>React Project for HumanDesign</h1>
+    //     {data.map((item) => (
+    //         <div key={item.id}>
+    //          <p>Job: {item.job}</p>
+    //          <p>Salary: {item.salary}</p>
+    //           </div>
+    //       ))}
   )
 }
 
