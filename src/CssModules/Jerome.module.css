@@ -4,19 +4,35 @@
     padding: 0;
     box-sizing: border-box;
 }
+body{
+    width:100%;
+}
 .JeromeContainer{
     width:100%;
     color:black;
     margin:0 auto;
     align-items: center;
     text-align: center;
-    padding-top: 200px;
+    padding-top: 75px;
 }
 .JeromeTimeItem{
-    padding:1rem;
-    display:flex;
+    width:100%;
 }
 
-.JeromeContent{
+/* .JeromeContent{
     border:1px solid green;
+} */
+.JeromeYear{
+    font-weight: 900;
+    font-size: 25px;
+    
+}
+.JeromeTitle{
+    font-size: 20px;
+}
+.JeromeDec{
+    color: #6c757d;
+    font-size: 15px;
+    display:inline-block;
+    text-align:left;
 }

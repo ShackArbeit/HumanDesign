@@ -5,15 +5,17 @@
       padding:0
 }
 body{
-      color:white;
-      font-size: 10px;
-}
+      width:100%;
+  }
+
 .footer{
       width:100%;
       background-color: rgba(0,0,0,0.8);
       display:flex;
       padding-left:2rem;
       padding-right:2rem; 
+      color:white;
+      font-size: 10px;
 }
 /* 有關介紹圖片的部分 */
 .footerBrand{
@@ -53,6 +55,8 @@ body{
       width:100%;
       text-align: center;
       background-color:black;
+      color:white;
+      font-size: 10px;
 }
 @media screen and (max-width: 768px){
       .footer{

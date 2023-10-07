@@ -1,21 +1,22 @@
-import express from 'express'
-import cors from 'cors'
+const express=require('express')
+const cors=require('cors')
+const JeromeProfile=require('./AboutJerome');
 
 const app = express();
 app.use(cors())
 
-const userLevel1=[
-      {id:4,job:'police',salary:1000},
-      {id:5,job:'doctor',salary:2000},
-      {id:6,job:'lawer',salary:3000},
-]
-
 app.get("/", (req , res) => {
     res.send( "Hello world!" );
 });
-app.get('/user',(req,res)=>{
-      res.send(userLevel1)
-})
+app.get('/aboutJerome/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const profile=JeromeProfile.find(item=>item.id===id)
+  if (!profile) {
+    return res.status(404).json({ error: 'Profile not found' });
+  }else{
+  res.json({id:profile.id,title:profile.title,content:profile.content});
+  }
+});
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')
