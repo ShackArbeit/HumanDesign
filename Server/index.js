@@ -3,6 +3,12 @@ const cors=require('cors')
 const JeromeProfile=require('./AboutJerome');
 
 const app = express();
+const corsOptions = {
+  origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
+};
+
+app.use(cors(corsOptions));
+
 app.use(cors())
 
 app.get("/", (req , res) => {

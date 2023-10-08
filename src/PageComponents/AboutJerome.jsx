@@ -13,34 +13,31 @@ import Container from 'react-bootstrap/Container';
 const AboutJerome = () => {
   const[datas,setDatas]=useState([])
   useEffect(() => {
-    const fetchData = async (id) => {
+    const fetchData = async () => {
       try {
-        // const response = await fetch(`http://localhost:8000/aboutJerome/${id}`);
-        // if (!response.ok) {
-        //   throw new Error('Can not get data from port 8000 !');
-        //  }
-        //  const userData = await response.json();
-        //  console.log(userData);
-        //  setDatas((prevData) => [...prevData, userData]);
-         const response2013 = await fetch("http://localhost:8000/aboutJerome/2013");
-         const response2016 = await fetch("http://localhost:8000/aboutJerome/2016");
-        const response2019 = await fetch("http://localhost:8000/aboutJerome/2019");
-        const response2021 = await fetch("http://localhost:8000/aboutJerome/2021");
-        const response2022 = await fetch("http://localhost:8000/aboutJerome/2022");
+        const years = [2013, 2016, 2019, 2021, 2022];
+        const fetchedData = [];
   
-        const data2013 = await response2013.json();
-        const data2016 = await response2016.json();
-        const data2019 = await response2019.json();
-        const data2021 = await response2021.json();
-        const data2022 = await response2022.json();
+        for (const year of years) {
+          const response = await fetch(`http://localhost:8000/aboutJerome/${year}`);
   
-        setDatas([data2013, data2016, data2019, data2021, data2022]);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch data for ${year}`);
+          }
+  
+          const data = await response.json();
+          fetchedData.push(data);
+        }
+  
+        setDatas(fetchedData);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
-    fetchData()
+  
+    fetchData();
   }, []);
+  
   return (
     <>
      <Container className={style.JeromeContainer} fluid>
