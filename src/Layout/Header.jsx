@@ -1,11 +1,22 @@
 import MediaQuery from 'react-responsive';
 import { Link } from 'react-router-dom';
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import style from '../CssModules/Header.module.css'
 
 
 const Header = () => {
   const[isOpen,setIsOpen]=useState(false)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsOpen(false); 
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
    <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>

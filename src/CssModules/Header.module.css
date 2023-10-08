@@ -77,6 +77,7 @@ body{
             color:#fff;
       }
 }
+
 /* 當小於768px時，漢堡列出現 */
 .navbar .menuToggle{
       width:48px;
