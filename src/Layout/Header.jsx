@@ -8,6 +8,7 @@ const Header = () => {
   const[isOpen,setIsOpen]=useState(false)
   useEffect(() => {
     const handleResize = () => {
+      // 這裡是設定不管漢堡列是否被開啟或是關閉，當螢幕寬度大於768px時，漢堡列裡面的項目都會不顯示
       if (window.innerWidth > 768) {
         setIsOpen(false); 
       }

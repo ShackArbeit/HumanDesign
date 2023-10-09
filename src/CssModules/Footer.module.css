@@ -23,6 +23,9 @@ body{
     display:flex;
     align-items: center;
 }
+.footerBrand img{
+      width:100%;
+}
 
 /* 有關Icons + 注意文字部分 */
 .footerIntroducer{
