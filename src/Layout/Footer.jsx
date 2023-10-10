@@ -1,12 +1,13 @@
 import Container from 'react-bootstrap/Container';
 import style from '../CssModules/Footer.module.css'
+import Image from 'react-bootstrap/Image';
 
 const Footer = () => {
       return(
         <>
         <footer className={style.footer} >
           <Container className={style.footerBrand} fluid>
-          <img src='https://sorehunter.com/wp-content/uploads/2020/07/home_logo.png' />
+          <Image src='https://sorehunter.com/wp-content/uploads/2020/07/home_logo.png' fluid />
           </Container>
           <Container className={style.footerIntroducer} fluid>
             <div className={style.footerIcons}>

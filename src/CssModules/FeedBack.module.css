@@ -1,0 +1,71 @@
+*{
+      position: relative;
+      margin:0;
+      padding:0;
+      box-sizing: border-box;
+}
+body{
+      width:100%;
+}
+.userContainer{
+      width:100%;
+      padding-top:64px;
+      background-color: #fffae4;
+}
+
+.jdContainer{
+      width:100%;
+      padding-top:1rem;
+	padding-bottom:1rem;
+      text-align: center;
+}
+.jdTitle{
+      color:black;
+}
+/* 以下為卡片部分 */
+.jsCardContainer{
+	max-width: 300px;
+	margin:0 auto;
+	margin-top: 5vh;
+}
+.jdCard{
+	background-color: white;
+      border: 1px solid #bacdd8;
+      padding: 8px;
+      border-radius: 12px;
+}    
+.jdCard img{
+	width:100%;
+	border-radius: 12px;
+      height: 200px;
+	object-fit: cover;
+}
+.jdCardDetail{
+	padding: 16px 8px 8px 8px;
+}
+.jdCardDetail p{
+   font-size: 14px;
+   color: #7f8c9b;
+   line-height: 150%;
+}
+.jdCardDetail a{
+	border: none;
+	padding: 12px 24px;
+	border-radius: 50px; 
+	font-weight: 600;
+	color: #0077ff;
+	background-color: #e0efff;
+	margin: 0 auto;
+	display: block;
+	cursor: pointer;
+	text-decoration: none;
+}
+.jdCardDetail a:hover{
+	background-color: #d5a26f;
+	color:black;
+}
+.jdCardTitle{
+   font-size: 24px;
+   font-weight: 600;
+   margin-top: 16px;
+}
