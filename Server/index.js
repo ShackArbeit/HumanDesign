@@ -2,6 +2,7 @@ const express=require('express')
 const cors=require('cors')
 const JeromeProfile=require('./AboutJerome');
 const jdContent=require('./Feedback')
+const serviceContent=require('./HomePage')
 
 const app = express();
 const corsOptions = {
@@ -26,6 +27,9 @@ app.get('/aboutJerome/:id', (req, res) => {
 });
 app.get('/feedback/jdShare',(req,res)=>{
   res.send(jdContent)
+})
+app.get('/home/service',(req,res)=>{
+  res.send(serviceContent)
 })
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

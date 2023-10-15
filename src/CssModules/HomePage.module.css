@@ -10,7 +10,8 @@ body{
 /* 以下是有關一開始圖文滿版介紹的部分 */
 .homeBannder{
     width: 100%;
-	height: 80vh;
+	height: 100vh;
+    padding-top: 2rem;
 	background-color: #ccc;
 	background:
 	linear-gradient(115deg, #7bf 50%, transparent 50%) center center / 100% 100%,
@@ -64,8 +65,16 @@ body{
     .bannerText p{
         font-size: 10px;
     }
+    .homeBannder{
+        padding:0;
+        height: 50vh;
+    }
 }
 @media screen and (max-width: 500px){
+    .homeBannder{
+        padding:0;
+        height: 50vh;
+    }
     .bannerText h1{
         font-size:35px ;
         padding:0;
@@ -80,7 +89,7 @@ body{
         font-size: 10px;
     }
 }
-/* 以下是有關簡介人類圖示什麼的部分設定 */
+/* 以下是有關簡介人類是什麼的部分設定 */
 .briefWrap{
     padding: 50px 0;
 	background: linear-gradient(20deg,#3d5493,#1aa2a0) fixed center center / 100% 100%;
@@ -157,4 +166,84 @@ body{
     .briefItems .briefImage{
         width:80%;
     }
+}
+/* 以下是有關介紹服務項目的部分設定 */
+.serviceWrap{
+    width:100%;
+    background-color: #003;
+    text-align: center;
+    padding-top: 1rem;
+
+}
+.serviceTitle{
+    color:white
+}
+.serviceContainer{
+    width: 100%;
+	display: flex;
+	margin: auto;
+    align-items: center;
+}
+.serviceItem{
+    width: 100%; 
+    max-width: 250px; 
+    margin: 15px;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    transform: translateY(0px);
+    transition: .5s;
+  
+}
+.serviceItem img{
+    width: 100%;
+    vertical-align: middle;
+    max-height: 250px; 
+}
+.serviceItem h2{
+    font-family: 'Noto Sans TC', sans-serif;
+	border-bottom: 1px solid #888;
+	padding-bottom: .3em;
+	margin-bottom: .4em;
+	font-weight: 900;
+	transition: .25s;
+}
+.serviceItem p{
+    font-family: 'Noto Sans TC', sans-serif;
+	line-height: 1.6;
+	font-weight: 300;
+	transition: .25s;
+}
+.serviceItem .serviceText{
+    padding: 20px;
+	position: relative;
+}
+.serviceItem .serviceText:before{
+    content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 0;
+	top: 0;
+    border-top: 40px solid transparent;
+	border-left: 125px solid #fff;
+	border-right: 125px solid #fff;
+	transform: translateY(-100%);
+}
+.serviceItem:hover{
+    transform: translateY(-50px);
+}
+.serviceItem:hover .serviceText{
+    background-image: linear-gradient(0deg,#FB8076, #FEB85D);
+}
+.serviceItem:hover .serviceText:before{
+    border-left: 125px solid #FEB85D;
+	border-right: 125px solid #FEB85D;
+}
+.serviceItem:hover h2{
+    color: #fff;
+	border-bottom-color: #fff;
+}
+.serviceItem:hover p{
+    color: #fff;
 }

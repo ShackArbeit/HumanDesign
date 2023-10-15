@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import  { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { setFeedbackData } from '../ToolkitComponents/FeedBack/FeedbackSlice';
 import style from '../CssModules/FeedBack.module.css';
