@@ -6,6 +6,11 @@ import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { purple } from '@mui/material/colors';
+import { Link } from 'react-router-dom';
 
 const theme = createTheme({
       breakpoints: {
@@ -18,7 +23,13 @@ const theme = createTheme({
         },
       },
     })
-
+    const ColorButton = styled(Button)(({ theme }) => ({
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: purple[500],
+      '&:hover': {
+        backgroundColor: purple[700],
+      },
+    }));
 
 const ServiceProcess = () => {
       const datas=useSelector((state)=>state.Service)
@@ -50,6 +61,13 @@ const ServiceProcess = () => {
                <div className={style.serviceText}>
                <h2>{data.title}</h2>
                <p>{data.content}</p>
+               <Stack spacing={2} direction="row" margin="0 atuo">
+            <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+        <ColorButton variant="contained">
+        <Link to='booking' style={{textDecoration:"none",color:"white"}}>立即預約 ! </Link>
+        </ColorButton>
+      </div>
+    </Stack>
                </div>
                </div>
             </div>

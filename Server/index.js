@@ -2,8 +2,8 @@ const express=require('express')
 const cors=require('cors')
 const JeromeProfile=require('./AboutJerome');
 const jdContent=require('./Feedback')
-const serviceContent=require('./HomePage')
-
+const {serviceContent}=require('./HomePage')
+const {bookingProcess}=require('./HomePage')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -30,6 +30,9 @@ app.get('/feedback/jdShare',(req,res)=>{
 })
 app.get('/home/service',(req,res)=>{
   res.send(serviceContent)
+})
+app.get('/home/bookingProcess',(req,res)=>{
+  res.send(bookingProcess)
 })
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

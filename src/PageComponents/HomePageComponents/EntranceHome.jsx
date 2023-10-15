@@ -1,7 +1,7 @@
-import React from 'react'
 import FullBadge from './FullBadge'
 import BriefIntroduce from './BriefIntroduce'
 import ServiceProcess from './ServiceProcess'
+import BookingProcess from './BookingProcess'
 
 const EntranceHome = () => {
   return (
@@ -9,6 +9,7 @@ const EntranceHome = () => {
     <FullBadge/>
     <BriefIntroduce/>
     <ServiceProcess/>
+    <BookingProcess/>
     </>
   )
 }
