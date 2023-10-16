@@ -1,7 +1,8 @@
 const express=require('express')
 const cors=require('cors')
 const JeromeProfile=require('./AboutJerome');
-const jdContent=require('./Feedback')
+const jdContent=require('./Feedback');
+const hoverHumanDesign=require('./WhatIsHumanDesign')
 const {serviceContent}=require('./HomePage')
 const {bookingProcess}=require('./HomePage')
 const app = express();
@@ -33,6 +34,9 @@ app.get('/home/service',(req,res)=>{
 })
 app.get('/home/bookingProcess',(req,res)=>{
   res.send(bookingProcess)
+})
+app.get('/human/hoverIntroducer',(req,res)=>{
+  res.send(hoverHumanDesign)
 })
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

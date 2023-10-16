@@ -52,7 +52,7 @@ const ServiceProcess = () => {
    <Container className={style.serviceWrap} fluid>
    <h2 className={style.serviceTitle} >解析項目</h2>
    <Box sx={{ flexGrow: 1 }}>
-   <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 2, sm: 6, md: 12 }}>
+   <Grid container spacing={{ xs: 1, md: 2}} columns={{ xs: 2, sm: 6, md: 12 }}>
    {datas.map((data)=>(
             <Grid item xs={12} sm={3} md={3} key={data.id}>
             <div className={style.serviceContainer}>

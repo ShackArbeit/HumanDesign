@@ -173,10 +173,11 @@ body{
     background-color: #003;
     text-align: center;
     padding-top: 1rem;
-
+    padding-bottom: 1.5rem;
 }
 .serviceTitle{
-    color:white
+    color:white;
+    margin-bottom: 15px;
 }
 .serviceContainer{
     width: 100%;
@@ -187,7 +188,7 @@ body{
 .serviceItem{
     width: 100%; 
     max-width: 250px; 
-    margin: 15px;
+    margin: 0 auto;
     text-align: center;
     background-color: #fff;
     border: 1px solid #ccc;

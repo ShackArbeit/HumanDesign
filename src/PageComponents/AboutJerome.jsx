@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { setData } from '../ToolkitComponents/AboutJerome/AboutJeromeSlice';
