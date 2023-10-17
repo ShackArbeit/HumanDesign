@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import { useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {setHoverHumanData} from '../../ToolkitComponents/WhatIsHumanDesign/HoverHumanSlice'
+import {Link} from 'react-router-dom'
 
 const HoverHumanDesign = () => {
     const datas=useSelector((state)=>state.HoverHuman)
@@ -23,13 +24,15 @@ const HoverHumanDesign = () => {
   return (
     <Container fluid className={style.HoverHumanDesignWarap}>
     {datas.map((data)=>(
+      <Link to={data.url} style={{cursor:'pointer'}}>
         <div className={style.HoverHumanDesignItem} key={data.id}>
-        <img src={`https://picsum.photos/400/400?random=${data.id}`}/>
+        <img src={`https://picsum.photos/400/400?random=${data.id}`} />
         <div className={style.HoverHumanDesignText}>
             <h3>{data.title}</h3>
             <p>{data.content}</p>
+        </div> 
         </div>
-        </div>
+        </Link>
     ))}
     </Container>
   )

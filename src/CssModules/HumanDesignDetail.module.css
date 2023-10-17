@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&display=swap");
+*{
+    position: relative;
+    margin:0;
+    box-sizing: border-box;
+    padding:0
+}
+body{
+    width:100%;
+}
+/* 以下為人類圖是什麼入口頁頁面的樣式設定 */
+.HumanDesignWrap{
+    width:100%;
+    padding-top: 84px;
+    color:white;
+    background: linear-gradient(to right, 
+    #000 0%,
+    #333 20%,
+    transparent 50%,
+    #333 80%,
+    #000 100%
+  );
+  text-align: center;
+  margin:auto;
+  padding: 64px ;
+}
+.HumanDesignMainTitle{
+    font-weight: 800;
+    margin-bottom: 20px;
+}

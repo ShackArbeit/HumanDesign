@@ -5,6 +5,7 @@ import UserFeedBack from "./PageComponents/UserFeedBack";
 import EntranceHome from "./PageComponents/HomePageComponents/EntranceHome";
 import EntraceBooking from "./PageComponents/BookPageComponents/EntraceBooking";
 import EntranceHumanDesign from "./PageComponents/WhatIsHumanComponents/EntranceHumanDesign";
+import ExplainHumanDesign from  './PageComponents/WhatIsHumanComponents/ExplainHumanDesign'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="Feedback" element={<UserFeedBack/>}/>
         <Route path="booking" element={<EntraceBooking/>}/>
         <Route path="human" element={<EntranceHumanDesign/>}/>
+        <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
