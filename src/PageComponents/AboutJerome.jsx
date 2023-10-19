@@ -1,6 +1,6 @@
 import { useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../ToolkitComponents/AboutJerome/AboutJeromeSlice';
+import { setData } from '../ToolkitComponents/AboutFetchApi/AboutJeromeSlice';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';

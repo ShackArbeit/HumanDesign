@@ -1,7 +1,5 @@
 import style from '../../CssModules/HomePage.module.css'
-import { useSelector, useDispatch } from 'react-redux'
-import {setServiceData} from '../../ToolkitComponents/HomePage/ServiceSlice'
-import  { useEffect } from 'react';
+import  { useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -11,6 +9,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 const theme = createTheme({
       breakpoints: {
@@ -32,14 +32,14 @@ const theme = createTheme({
     }));
 
 const ServiceProcess = () => {
-      const datas=useSelector((state)=>state.Service)
-      const dispatch=useDispatch()
+  const datas=useSelector((state)=>state.aboutJerome)
+  const dispatch=useDispatch()
       useEffect(() => {
             const fetchData = async () => {
               try {
                 const response = await fetch('http://localhost:8000/home/service');
                 const Data = await response.json();
-                dispatch(setServiceData(Data))
+                dispatch(setData(Data));
               } 
               catch (error) {
                 console.log(error);

@@ -98,7 +98,7 @@ body{
     text-align: center;
 }
 .briefItems{
-    display: flex;
+    display:flex;
 	align-items: center;
 	margin-bottom: 70px;
 	font-family: 'Noto Sans TC', sans-serif;

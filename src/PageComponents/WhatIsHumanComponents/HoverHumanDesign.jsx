@@ -2,18 +2,18 @@ import style from '../../CssModules/HumanDesignIntroduce.module.css'
 import Container from 'react-bootstrap/Container';
 import { useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {setHoverHumanData} from '../../ToolkitComponents/WhatIsHumanDesign/HoverHumanSlice'
+import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 import {Link} from 'react-router-dom'
 
 const HoverHumanDesign = () => {
-    const datas=useSelector((state)=>state.HoverHuman)
-    const dispatch=useDispatch()
+  const datas=useSelector((state)=>state.aboutJerome)
+  const dispatch=useDispatch()
     useEffect(() => {
         const fetchData = async () => {
           try {
             const response = await fetch('http://localhost:8000/human/hoverIntroducer');
             const Data = await response.json();
-            dispatch(setHoverHumanData(Data))
+            dispatch(setData(Data));
           } 
           catch (error) {
             console.log(error);

@@ -1,11 +1,11 @@
-import  { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { setFeedbackData } from '../ToolkitComponents/FeedBack/FeedbackSlice';
+import  { useEffect,useState} from 'react';
 import style from '../CssModules/FeedBack.module.css';
 import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
+import { useSelector, useDispatch } from 'react-redux'
+import { setData } from '../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 const theme = createTheme({
   breakpoints: {
@@ -20,15 +20,14 @@ const theme = createTheme({
 });
 
 const UserFeedBack = () => {
-  const datas=useSelector((state)=>state.FeedBack)
+  const datas=useSelector((state)=>state.aboutJerome)
   const dispatch=useDispatch()
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8000/feedback/jdShare');
         const Data = await response.json();
-        dispatch(setFeedbackData(Data))
+        dispatch(setData(Data));
       } 
       catch (error) {
         console.log(error);
