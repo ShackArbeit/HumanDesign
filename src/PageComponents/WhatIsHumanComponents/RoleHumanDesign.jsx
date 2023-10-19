@@ -8,13 +8,13 @@ import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 
 
-export default function ExplainHumanDesign() {
+export default function RoleHumanDesign() {
   const datas=useSelector((state)=>state.aboutJerome)
   const dispatch=useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/human/explainHuman');
+        const response = await fetch('http://localhost:8000/human/roleHuman');
         const Data = await response.json();
         console.log(Data)
         dispatch(setData(Data));

@@ -8,13 +8,13 @@ import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 
 
-export default function ExplainHumanDesign() {
+export default function TalentHumanDesign() {
   const datas=useSelector((state)=>state.aboutJerome)
   const dispatch=useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/human/explainHuman');
+        const response = await fetch('http://localhost:8000/human/talentHuman');
         const Data = await response.json();
         console.log(Data)
         dispatch(setData(Data));
@@ -28,7 +28,7 @@ export default function ExplainHumanDesign() {
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
-    <h1 className={style.HumanDesignMainTitle}>  You Are Waht You Be !  </h1>
+    <h1 className={style.HumanDesignMainTitle}>  知悉天賦比努力更重要 !  </h1>
     <div className={style.GelleryContainer}>
     {datas.map((data, index) => (
       <Container fluid key={data.id}>
@@ -70,5 +70,7 @@ export default function ExplainHumanDesign() {
    
   );
 }
+
+
 
 
