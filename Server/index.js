@@ -11,6 +11,7 @@ const { roleHumanDesign}=require('./WhatIsHumanDesign')
 const {authorHumanDesign}=require('./WhatIsHumanDesign')
 const {energyHumanDesign}=require('./WhatIsHumanDesign')
 const {roadHumanDesign}=require('./WhatIsHumanDesign')
+const { writerHumanDesign} =require('./WhatIsHumanDesign')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -68,6 +69,11 @@ app.get('/human/authorHuman',(req,res)=>{
 app.get('/human/energyHuman',(req,res)=>{
   res.send(energyHumanDesign)
 })
+// 作者部分
+app.get('/human/writerHuman',(req,res)=>{
+  res.send( writerHumanDesign)
+})
+// 通道部分
 app.get('/human/roadHuman',(req,res)=>{
   res.send(roadHumanDesign)
 })

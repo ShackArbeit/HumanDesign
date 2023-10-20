@@ -60,6 +60,11 @@ const roadHumanDesign=[
     {id:5,title:'7-31領導力的通道',content:'31#跟聲音相關，有影嚮力的聲音，把所有人的意圖綜合起來，借助一個有權威的聲音表達出來。7#在1和4爻所呈現出來的影嚮力是不同的，現行的國家和領導力跟這條通道相關，共同去到一個目標。但是生活往往不一定邏輯理性，但是系統是邏輯的系統，如果有一個很好的領導，會去到一個很好的方向。要相信類型和決定，在這份領導下我是否適用，領導也需要去創造規則、確定目標和願景，領導眾人去向同一個目標。',url:'https://picsum.photos/600/400?random=31'},
     {id:6,title:'10-34探索的通道',content:'純粹的生命能量，任何從34#出來的能量都是中正的，與性無關，不是去傳播花粉，就是力量相關。個體回路群，跟自己相關，你絕對不要去跟隨別人。你不要指望別人認同你和肯定你，你要非常的堅強和理解：我就是要用自己的方式來理解，我只有真正的關註和跟隨薦骨的回應，才知道我自己要做的事情是甚麼，你跟隨自己的信念的時候才發現跟別人不一樣，如果你讓別人說服了你，你就會失去自己的獨特性。',url:'https://picsum.photos/600/400?random=32'}
 ]
+// 人類圖作者
+const writerHumanDesign=[
+    {id:1,title:'人類圖的起源與歷史',content:'人類圖起源於西班牙Ibiza，由加拿大籍的拉‧烏盧‧胡於1987年創立，至今已推廣到全球40餘國。由於人類圖體系博大精深，具備扎實的科學及邏輯基礎，可以應用的範疇非常廣泛，除了自我認識，還可運用在愛情、職場、教養、健康等，是近年來最受矚目的一門學問。',url:'https://picsum.photos/600/400?random=33'},
+    {id:2,title:'豐富的知識綜合',content:'人類圖結合西方占星、猶太教生命之樹，和印度脈輪、中國易經等古老知識，並加入當代基因遺傳及量子物理學等現代科學。這張圖揭露你的基因密碼，造就你獨特的人格特質、天賦才華，是你的人生使用說明書，指引你回到內在權威，在人生道路中大大小小的旅途，做出正確的決定，活出自己，毫不費力。',url:'https://picsum.photos/600/400?random=34'}
+]
 
 module.exports= {hoverHumanDesign,
                  explainHumanDesign,
@@ -67,5 +72,6 @@ module.exports= {hoverHumanDesign,
                  roleHumanDesign,
                  authorHumanDesign,
                  energyHumanDesign,
-                 roadHumanDesign
+                 roadHumanDesign,
+                 writerHumanDesign
                 }
