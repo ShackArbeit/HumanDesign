@@ -1,11 +1,11 @@
 import style from '../../CssModules/HomePage.module.css'
 import Container from 'react-bootstrap/Container';
-import  { useEffect} from 'react';
+import  { useEffect,useState} from 'react';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
+// import { useSelector, useDispatch } from 'react-redux'
+// import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 
 const theme = createTheme({
@@ -20,14 +20,16 @@ const theme = createTheme({
       },
     })
 const BookingProcess = () => {
-      const datas=useSelector((state)=>state.aboutJerome)
-      const dispatch=useDispatch()
+      const[datas,setDatas]=useState([])
+      // const datas=useSelector((state)=>state.aboutJerome)
+      // const dispatch=useDispatch()
       useEffect(() => {
             const fetchData = async () => {
               try {
                 const response = await fetch('http://localhost:8000/home/bookingProcess');
                 const Data = await response.json();
-                dispatch(setData(Data));
+                console.log(Data)
+                setDatas(Data)
               } 
               catch (error) {
                 console.log(error);

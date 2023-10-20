@@ -2,9 +2,9 @@ const express=require('express')
 const cors=require('cors')
 const JeromeProfile=require('./AboutJerome');
 const jdContent=require('./Feedback');
-const {hoverHumanDesign}=require('./WhatIsHumanDesign')
-const {serviceContent}=require('./HomePage')
+const { serviceContent}=require('./HomePage');
 const {bookingProcess}=require('./HomePage')
+const {hoverHumanDesign}=require('./WhatIsHumanDesign')
 const {explainHumanDesign}=require('./WhatIsHumanDesign')
 const {TalentHumanDesign}=require('./WhatIsHumanDesign')
 const { roleHumanDesign}=require('./WhatIsHumanDesign')
@@ -16,6 +16,9 @@ const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
 };
+
+
+
 
 app.use(cors(corsOptions));
 
@@ -38,7 +41,7 @@ app.get('/feedback/jdShare',(req,res)=>{
   res.send(jdContent)
 })
 //首頁解析項目區塊
-app.get('/home/service',(req,res)=>{
+app.get('/home/serviceProcess',(req,res)=>{
   res.send(serviceContent)
 })
 // 首頁預約流程區塊

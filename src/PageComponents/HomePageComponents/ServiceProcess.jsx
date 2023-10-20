@@ -37,8 +37,9 @@ const ServiceProcess = () => {
       useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await fetch('http://localhost:8000/home/service');
+                const response = await fetch('http://localhost:8000/home/serviceProcess');
                 const Data = await response.json();
+                console.log(Data)
                 dispatch(setData(Data));
               } 
               catch (error) {
@@ -49,6 +50,7 @@ const ServiceProcess = () => {
           }, []);
   return (
    <ThemeProvider theme={theme}>
+   
    <Container className={style.serviceWrap} fluid>
    <h2 className={style.serviceTitle} >解析項目</h2>
    <Box sx={{ flexGrow: 1 }}>
@@ -72,10 +74,11 @@ const ServiceProcess = () => {
                </div>
             </div>
             </Grid>
-   ))}
+        ))}
    </Grid>
    </Box>
    </Container>
+  
    </ThemeProvider>
   )
 }
