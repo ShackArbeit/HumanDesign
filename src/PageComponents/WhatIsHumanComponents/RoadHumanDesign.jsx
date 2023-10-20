@@ -14,7 +14,7 @@ export default function RoadHumanDesign() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/human/energyHuman');
+        const response = await fetch('http://localhost:8000/human/roadHuman');
         const Data = await response.json();
         console.log(Data)
         dispatch(setData(Data));
@@ -28,7 +28,7 @@ export default function RoadHumanDesign() {
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
-    <h1 className={style.HumanDesignMainTitle}>  有無能量都很好的 !  </h1>
+    <h1 className={style.HumanDesignMainTitle}>  看看幾種常見的通道吧 !  </h1>
     <div className={style.GelleryContainer}>
     {datas.map((data, index) => (
       <Container fluid key={data.id}>

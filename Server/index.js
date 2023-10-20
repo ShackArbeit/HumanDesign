@@ -10,6 +10,7 @@ const {TalentHumanDesign}=require('./WhatIsHumanDesign')
 const { roleHumanDesign}=require('./WhatIsHumanDesign')
 const {authorHumanDesign}=require('./WhatIsHumanDesign')
 const {energyHumanDesign}=require('./WhatIsHumanDesign')
+const {roadHumanDesign}=require('./WhatIsHumanDesign')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -66,6 +67,9 @@ app.get('/human/authorHuman',(req,res)=>{
 // 九大中心
 app.get('/human/energyHuman',(req,res)=>{
   res.send(energyHumanDesign)
+})
+app.get('/human/roadHuman',(req,res)=>{
+  res.send(roadHumanDesign)
 })
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

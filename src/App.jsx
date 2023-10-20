@@ -10,6 +10,7 @@ import TalentHumanDesign from "./PageComponents/WhatIsHumanComponents/TalentHuma
 import RoleHumanDesign from "./PageComponents/WhatIsHumanComponents/RoleHumanDesign";
 import AuthorHumanDesign from "./PageComponents/WhatIsHumanComponents/AuthorHumanDesign";
 import EnergyHumanDesign from "./PageComponents/WhatIsHumanComponents/EnergyHumanDesign";
+import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDesign";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='human/人生角色' element={<RoleHumanDesign/>}/>
         <Route path='human/內在權威' element={<AuthorHumanDesign/>}/>
         <Route path='human/能量中心' element={<EnergyHumanDesign/>}/>
+        <Route path='human/通道' element={<RoadHumanDesign />}/>
         </Route>
       </Routes>
     </BrowserRouter>
