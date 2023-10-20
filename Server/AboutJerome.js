@@ -6,6 +6,4 @@ const JeromeProfile=[
       {id:2022,title:'遇見八字',content:'生命機緣將Jerome帶入新領域 =>八字，開始學習八字。'},
 ]
 
-
-
 module.exports=JeromeProfile
