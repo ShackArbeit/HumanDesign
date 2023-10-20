@@ -28,7 +28,7 @@ export default function RoleHumanDesign() {
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
-    <h1 className={style.HumanDesignMainTitle}>  You Are Waht You Be !  </h1>
+    <h1 className={style.HumanDesignMainTitle}>  意識到你是什麼 !  </h1>
     <div className={style.GelleryContainer}>
     {datas.map((data, index) => (
       <Container fluid key={data.id}>

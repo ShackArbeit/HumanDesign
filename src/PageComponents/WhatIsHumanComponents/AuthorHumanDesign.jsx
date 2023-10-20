@@ -8,13 +8,13 @@ import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 
 
-export default function TalentHumanDesign() {
+export default function AuthorHumanDesign() {
   const datas=useSelector((state)=>state.aboutJerome)
   const dispatch=useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/human/talentHuman');
+        const response = await fetch('http://localhost:8000/human/authorHuman');
         const Data = await response.json();
         console.log(Data)
         dispatch(setData(Data));
@@ -41,7 +41,7 @@ export default function TalentHumanDesign() {
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
-    <h1 className={style.HumanDesignMainTitle}>  知悉天賦比努力更重要 !  </h1>
+    <h1 className={style.HumanDesignMainTitle}>  傾聽後再作決定吧 !  </h1>
     <div className={style.GelleryContainer}>
     {datas.map((data, index) => (
       <Container fluid key={data.id}>

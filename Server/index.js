@@ -8,6 +8,8 @@ const {bookingProcess}=require('./HomePage')
 const {explainHumanDesign}=require('./WhatIsHumanDesign')
 const {TalentHumanDesign}=require('./WhatIsHumanDesign')
 const { roleHumanDesign}=require('./WhatIsHumanDesign')
+const {authorHumanDesign}=require('./WhatIsHumanDesign')
+const {energyHumanDesign}=require('./WhatIsHumanDesign')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -56,6 +58,14 @@ app.get('/human/talentHuman',(req,res)=>{
 // 人類圖較紹子分頁 3 (角色部分)
 app.get('/human/roleHuman',(req,res)=>{
   res.send(roleHumanDesign)
+})
+// 人類圖介紹分頁 4 (內在權威部分)
+app.get('/human/authorHuman',(req,res)=>{
+  res.send(authorHumanDesign)
+})
+// 九大中心
+app.get('/human/energyHuman',(req,res)=>{
+  res.send(energyHumanDesign)
 })
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

@@ -2,19 +2,19 @@ import style from '../../CssModules/HumanDesignDetail.module.css'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { useEffect,useState} from 'react';
+import { useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 
 
-export default function TalentHumanDesign() {
+export default function RoadHumanDesign() {
   const datas=useSelector((state)=>state.aboutJerome)
   const dispatch=useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/human/talentHuman');
+        const response = await fetch('http://localhost:8000/human/energyHuman');
         const Data = await response.json();
         console.log(Data)
         dispatch(setData(Data));
@@ -25,23 +25,10 @@ export default function TalentHumanDesign() {
     };
     fetchData();
   }, []);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
-    <h1 className={style.HumanDesignMainTitle}>  知悉天賦比努力更重要 !  </h1>
+    <h1 className={style.HumanDesignMainTitle}>  有無能量都很好的 !  </h1>
     <div className={style.GelleryContainer}>
     {datas.map((data, index) => (
       <Container fluid key={data.id}>
@@ -49,16 +36,12 @@ export default function TalentHumanDesign() {
           {index % 2 === 0 ? ( 
             <>
               <Col md={6} xs={12} className={style.GelleryColLeft}>
-                <div className={style.GelleryImageContainer}
-                style={{ backgroundAttachment: 'fixed', transform: `translateY(${scrollY * 0.095}px)` }}
-                >
+                <div className={style.GelleryImageContainer}>
                   <img src={data.url} className={style.GelleryImage} alt={data.title} />
                 </div>
               </Col>
               <Col md={6} xs={12} className={style.GelleryColRight}>
-                <div className={style.textContainer}
-                style={{ transform: `translateY(-${scrollY * 0.095}px)` }}
-                >
+                <div className={style.textContainer}>
                   <h2>{data.title}</h2>
                   <p>{data.content}</p>
                 </div>
@@ -67,17 +50,13 @@ export default function TalentHumanDesign() {
           ) : (
             <>
               <Col md={6} xs={12} className={style.GelleryColLeft}>
-                <div className={style.textContainer}
-                style={{ transform: `translateY(-${scrollY * 0.095}px)` }}
-                >
+                <div className={style.textContainer}>
                   <h2>{data.title}</h2>
                   <p>{data.content}</p>
                 </div>
               </Col>
               <Col md={6} xs={12} className={style.GelleryColRight}>
-                <div className={style.GelleryImageContainer}
-                style={{ backgroundAttachment: 'fixed', transform: `translateY(${scrollY * 0.095}px)` }}
-                >
+                <div className={style.GelleryImageContainer}>
                   <img src={data.url} className={style.GelleryImage} alt={data.title} />
                 </div>
               </Col>
@@ -91,7 +70,5 @@ export default function TalentHumanDesign() {
    
   );
 }
-
-
 
 

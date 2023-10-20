@@ -67,11 +67,12 @@ body{
 .textContainer{
     color: #fff;
 	background-color: rgba(0,0,0,.6);
+    font-size: 20px;
+    line-height: 40px;
+    transition: transform 0.3s ease; 
     position: absolute; 
     top: 50%; 
     transform: translateY(-50%); 
-    font-size: 20px;
-    line-height: 40px;
 }
   @media screen and (max-width: 1280px){
     .textContainer{

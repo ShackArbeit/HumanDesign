@@ -8,6 +8,8 @@ import EntranceHumanDesign from "./PageComponents/WhatIsHumanComponents/Entrance
 import ExplainHumanDesign from  './PageComponents/WhatIsHumanComponents/ExplainHumanDesign'
 import TalentHumanDesign from "./PageComponents/WhatIsHumanComponents/TalentHumanDesign";
 import RoleHumanDesign from "./PageComponents/WhatIsHumanComponents/RoleHumanDesign";
+import AuthorHumanDesign from "./PageComponents/WhatIsHumanComponents/AuthorHumanDesign";
+import EnergyHumanDesign from "./PageComponents/WhatIsHumanComponents/EnergyHumanDesign";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>
         <Route path='human/天賦類型' element={<TalentHumanDesign/>}/>
         <Route path='human/人生角色' element={<RoleHumanDesign/>}/>
+        <Route path='human/內在權威' element={<AuthorHumanDesign/>}/>
+        <Route path='human/能量中心' element={<EnergyHumanDesign/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
