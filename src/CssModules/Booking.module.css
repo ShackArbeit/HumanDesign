@@ -1,0 +1,59 @@
+*{
+    position: relative;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    text-decoration: none;
+}
+ul,li{
+    list-style: none;
+}
+body,html{
+    width:100%;
+    height:100%;
+}
+.bookingEntranceWrapper{
+    background-color: blanchedalmond;
+    width:100%;
+}
+.bookingEntranceContainer{
+    border:2px solid blue;
+    padding-top: 64px;
+    max-width: 1200px;
+    margin:0 auto;
+    height:900px;
+}
+.bookingEntranceListsContainer{
+    width:100%;
+    border:1px solid green;
+    margin: 0 auto;
+}
+.bookingListImageContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width:20%;
+}
+.bookingListImageContainer img{
+    margin: 0 auto;
+}
+.bookingItems{
+    text-align: left;
+}
+.bookingItems svg{
+    margin: 0.8rem;
+}
+.bookingItemsButtonContainer{
+    width:20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bookingItemsButton{
+    background-color: #5eba00;
+    width:120px;
+    height:90px;
+    border-radius: 5px;
+}
