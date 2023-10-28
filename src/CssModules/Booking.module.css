@@ -15,21 +15,22 @@ body,html{
     height:100%;
 }
 .bookingEntranceWrapper{
-    background-color: blanchedalmond;
     width:100%;
 }
 .bookingEntranceContainer{
     border:2px solid blue;
     padding-top: 64px;
-    max-width: 1200px;
-    margin:0 auto;
-    height:900px;
+    height:400px;
 }
 .bookingEntranceListsContainer{
-    width:100%;
-    border:1px solid green;
+    max-width: 600px;
+    border:3px solid green;
     margin: 0 auto;
 }
+.bookingEntranceListsContainer span{
+    font-size: 10px;
+}
+
 .bookingListImageContainer{
     display: flex;
     flex-direction: column;
@@ -53,7 +54,11 @@ body,html{
 }
 .bookingItemsButton{
     background-color: #5eba00;
-    width:120px;
-    height:90px;
+    align-items: center;
+    width:95px;
+    height:65px;
     border-radius: 5px;
+}
+.bookingItems p{
+    margin-top: 20px;
 }

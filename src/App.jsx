@@ -12,6 +12,7 @@ import AuthorHumanDesign from "./PageComponents/WhatIsHumanComponents/AuthorHuma
 import EnergyHumanDesign from "./PageComponents/WhatIsHumanComponents/EnergyHumanDesign";
 import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDesign";
 import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanDesign";
+import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="Jerome" element={<AboutJerome/>}/>
         <Route path="Feedback" element={<UserFeedBack/>}/>
         <Route path="booking" element={<EntraceBooking/>}/>
+        <Route path="calendar" element={<BasicCalendar />}/>
         // 以下是人類的分頁的子項目Router
         <Route path="human" element={<EntranceHumanDesign/>}/>
         <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>
