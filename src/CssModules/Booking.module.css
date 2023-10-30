@@ -17,16 +17,20 @@ body,html{
 .bookingEntranceContainer{
     border:2px solid blue;
     padding-top: 64px;
-    height:400px;
+    height:100%;
     width:100%;
 }
 .bookingEntranceListsContainer{
-    max-width: 600px;
-    border:3px solid green;
+    max-width: 800px;
+    border-top:1px solid rgba(0,0,0,0.8);
+    border-bottom:1px solid rgba(0,0,0,0.8);
     margin: 0 auto;
 }
+.bookingEntranceListsContainer:hover{
+    background-color: #eeecec;
+}
 .bookingEntranceListsContainer span{
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .bookingListImageContainer{
@@ -42,12 +46,16 @@ body,html{
 .bookingItems{
     width:80%;
 }
+
+.CardContent:hover{
+    background-color: #eeecec;
+}
 .bookingItemsIcons span{
     text-align: left;
     margin: 0.3rem;
 }
 .bookingItemsIcons svg{
-    margin: 0.3rem;
+    margin:0.3rem;
 }
 .bookingItemsButtonContainer{
     width:20%;
@@ -82,7 +90,7 @@ body,html{
     height:50px;
 }
 .isMobileHeader p{
-    font-size: 10px;
+    font-size: 20px;
     margin: 0;
 }
 .isMobileButton{
@@ -93,26 +101,34 @@ body,html{
 .isMobileButton span{
     margin-left: 5px;
 }
- @media screen and (max-width:350px) {
-    .isMobileImage img{
-        width:35px;
-        height:35px;
+ @media screen and (max-width:450px) {
+    .isMobileHeader{
+        width:50%;
     }
-} 
-@media screen and (max-width:350px) {
-    .isMobileImage img{
-        width:35px;
-        height:35px;
+    .isMobileHeader p:first-child{
+        margin-top: 20px;
+        margin-bottom: 10px;
     }
-} 
-@media screen and (max-width:300px) {
+    .isMobileHeader p{
+        font-size: 15px;
+    }
+    .isMobileImage{
+        width: 50%;
+    } 
+    .isMobileImage img{
+        width:100%;
+        height:100%;
+    }
     .bookingItemsIcons span{
         margin: 0.1rem;
     }
     .bookingItemsIcons svg{
-        margin: 0.1rem;
+        margin: 0.5rem;
     }
 } 
+/* @media screen and (max-width:300px) {
+    
+}  */
 
 
 

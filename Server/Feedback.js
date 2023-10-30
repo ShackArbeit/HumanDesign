@@ -1,3 +1,4 @@
+
 const jdContent=[
       {id:1,title:'Jerome的人類圖分析師之路',content:'聽聽Jerome開始接觸到人類圖的契機，自己生命轉化的心路歷程以及成為人類圖分析師的初衷',url:'https://youtu.be/rkgEqVzYbzY?si=hjlNYqFwerjcsOu9'},
       {id:2,title:'職場引導師Kevin的人類圖實驗室',content:'聽聽一個平凡上班族的內心困頓掙扎，從香港離職移居台灣的心路歷程以及迎接人生有無限可能。',url:'https://youtu.be/oA3wmT2sP-s?si=wST31wFSlRDpp_Gh'},
@@ -6,3 +7,4 @@ const jdContent=[
 ]
 
 module.exports=jdContent
+// module.exports=router

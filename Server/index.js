@@ -12,9 +12,7 @@ const {authorHumanDesign}=require('./WhatIsHumanDesign')
 const {energyHumanDesign}=require('./WhatIsHumanDesign')
 const {roadHumanDesign}=require('./WhatIsHumanDesign')
 const { writerHumanDesign} =require('./WhatIsHumanDesign')
-const dayjs = require('dayjs');
-const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
+const {isDesktopContent}=require('./BookingIntroduction')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -83,22 +81,10 @@ app.get('/human/writerHuman',(req,res)=>{
 app.get('/human/roadHuman',(req,res)=>{
   res.send(roadHumanDesign)
 })
-
-app.get('/dayWeek', (req, res) => {
-  const currentDate = dayjs();
-  const currentDayOfWeek = currentDate.day();
-  const monday = currentDate.subtract(currentDayOfWeek, 'day');
-
-  const daysOfWeek = [];
-
-  for (let i = 0; i < 7; i++) {
-    daysOfWeek.push(
-      monday.add(i, 'day').format('MMMM D, ddd')
-    );
-  }
-  
-  res.json(daysOfWeek);
-});
+// 以下為預約系統的部分
+app.get('/bookingIntroduction/isDesktop',(req,res)=>{
+  res.send(isDesktopContent)
+})
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

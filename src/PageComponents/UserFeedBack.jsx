@@ -4,8 +4,6 @@ import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
 
 const theme = createTheme({
   breakpoints: {
@@ -20,14 +18,14 @@ const theme = createTheme({
 });
 
 const UserFeedBack = () => {
-  const datas=useSelector((state)=>state.aboutJerome)
-  const dispatch=useDispatch()
+  const[datas,setDatas]=useState([])
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8000/feedback/jdShare');
         const Data = await response.json();
-        dispatch(setData(Data));
+        console.log(Data)
+        setDatas(Data)
       } 
       catch (error) {
         console.log(error);

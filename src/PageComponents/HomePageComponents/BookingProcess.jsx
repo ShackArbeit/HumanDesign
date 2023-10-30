@@ -4,10 +4,6 @@ import  { useEffect,useState} from 'react';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-// import { useSelector, useDispatch } from 'react-redux'
-// import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
-
-
 const theme = createTheme({
       breakpoints: {
         values: {
@@ -21,8 +17,6 @@ const theme = createTheme({
     })
 const BookingProcess = () => {
       const[datas,setDatas]=useState([])
-      // const datas=useSelector((state)=>state.aboutJerome)
-      // const dispatch=useDispatch()
       useEffect(() => {
             const fetchData = async () => {
               try {

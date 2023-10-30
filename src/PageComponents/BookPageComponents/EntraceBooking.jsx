@@ -2,7 +2,6 @@ import style from '../../CssModules/Booking.module.css'
 import { useMediaQuery } from '@mui/material';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,34 +9,51 @@ import Typography from '@mui/material/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
+import  { useEffect,useState} from 'react';
 
 
 const EntraceBooking = () => {
     const isDesktop = useMediaQuery('(min-width:576px)');
     const isMobile=useMediaQuery('(max-width:576px');
+    const[dataOne,setDataOne]=useState([])
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/bookingIntroduction/isDesktop');
+          const Data = await response.json();
+          console.log(Data)
+          setDataOne(Data)
+        } 
+        catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }, []);
   return (
      <div className={style.bookingEntranceContainer}>
-      {isDesktop && <div className={style.bookingEntranceListsContainer}>
+     {dataOne.map((data1,index)=>(
+      isDesktop && <div className={style.bookingEntranceListsContainer}>
       <Stack
         direction={{  sm: 'row',xs:'row' }}
       >
         <div className={style.bookingListImageContainer}>
-        <img src="https://sb-drops.s3.amazonaws.com/drop/rmopt-5c383beaab657-970205300-1547189226.png" 
+        <img src={data1.urlOne}
         style={{width:"40px",height:"40px"}}/>
-        <img src="https://sb-cafetalk.s3.amazonaws.com/user-uploaded-files/cafetalk-optimized-559ce8bca9427-969330700-1436346556.jpg"
+        <img src={data1.urlTwo}
         style={{width:"90px",height:"90px"}}
         />
         </div>
         <div className={style.bookingItems}>
         <Card>
-        <CardContent>
+        <CardContent className={style.CardContent}>
           <Typography 
           sx={{ fontSize: 20,textAlign:"left" }} 
           color="text.secondary"  >
-            個人解析
+            {data1.title}
           </Typography>
           <Typography  component="div" style={{textAlign:"left",fontSize:10}}>
-          個人解析是讓你知道自己是屬於何種類型，以了解並應用自己的人生策略，讓人活活得更自在。
+           {data1.content}
           </Typography>
           <Typography sx={{ textAlign:"left"}} className={style.bookingItemsIcons}>
           <svg viewBox="0 0 800 800" xmlnsXlink="http://www.w3.org/2000/svg" style={{width:"15px",height:"15px"}}>
@@ -67,7 +83,7 @@ const EntraceBooking = () => {
 						<path d="M150,0C67.29,0,0,67.29,0,150s67.29,150,150,150s150-67.29,150-150S232.71,0,150,0z M150,270c-66.168,0-120-53.832-120-120 S83.832,30,150,30s120,53.832,120,120S216.168,270,150,270z"></path>
 						<path d="M195.031,75.387C183.477,66.802,169.331,65,159.5,65h-38.846c-5.522,0-10,4.478-10,10v150c0,5.523,4.478,10,10,10h7.691 c5.522,0,10-4.477,10-10v-53.46H159.5c9.831,0,23.977-1.802,35.531-10.388c8.355-6.207,18.314-18.352,18.314-40.961v-3.843 C213.346,93.739,203.387,81.594,195.031,75.387z M185.27,119.809c0,10.484-2.671,24.424-25.77,24.424h-21.154V92.308H159.5 c23.099,0,25.77,13.939,25.77,24.424V119.809z"></path>
 					</svg>
-          <span>5000元</span>
+          <span>{data1.price60}元</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <polyline points="12 6 12 12 16 14"></polyline>
@@ -77,7 +93,7 @@ const EntraceBooking = () => {
 						<path d="M150,0C67.29,0,0,67.29,0,150s67.29,150,150,150s150-67.29,150-150S232.71,0,150,0z M150,270c-66.168,0-120-53.832-120-120 S83.832,30,150,30s120,53.832,120,120S216.168,270,150,270z"></path>
 						<path d="M195.031,75.387C183.477,66.802,169.331,65,159.5,65h-38.846c-5.522,0-10,4.478-10,10v150c0,5.523,4.478,10,10,10h7.691 c5.522,0,10-4.477,10-10v-53.46H159.5c9.831,0,23.977-1.802,35.531-10.388c8.355-6.207,18.314-18.352,18.314-40.961v-3.843 C213.346,93.739,203.387,81.594,195.031,75.387z M185.27,119.809c0,10.484-2.671,24.424-25.77,24.424h-21.154V92.308H159.5 c23.099,0,25.77,13.939,25.77,24.424V119.809z"></path>
 					</svg>
-          <span>9000元</span>
+          <span>{data1.price90}元</span>
           </Typography>
         </CardContent>
       </Card>
@@ -89,7 +105,7 @@ const EntraceBooking = () => {
         </button>
         </div>
       </Stack>
-      </div> }
+      </div> ))}
       {isMobile&&
       <div className={style.bookingEntranceListsContainer}>
         <Container fluid>
