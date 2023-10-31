@@ -23,9 +23,9 @@ const HoverHumanDesign = () => {
       }, [])
   return (
     <Container fluid className={style.HoverHumanDesignWarap}>
-    {datas.map((data)=>(
-      <Link to={data.url} style={{cursor:'pointer'}}>
-        <div className={style.HoverHumanDesignItem} key={data.id}>
+    {datas.map((data,index)=>(
+      <Link to={data.url} style={{cursor:'pointer'}}  key={index}>
+        <div className={style.HoverHumanDesignItem}>
         <img src={`https://picsum.photos/400/400?random=${data.id}`} />
         <div className={style.HoverHumanDesignText}>
             <h3>{data.title}</h3>

@@ -12,6 +12,7 @@ body{
 .HumanDesignWrap{
     width:100%;
     padding-top: 84px;
+    padding-bottom: 84px;
     color:white;
     background: linear-gradient(to right, 
     #000 0%,
@@ -20,8 +21,7 @@ body{
     #333 80%,
     #000 100%
   );
-    text-align: center;
-    
+  text-align: center; 
 }
 .HumanDesignMainTitle{
     font-weight: 800;
@@ -30,16 +30,14 @@ body{
 /* 以下為滑動介紹人類圖是什麼的設定 */
 .HoverHumanDesignWarap{
     width: 100%;
-	margin: auto;
+	margin: 0 auto;
 	overflow: hidden;
     list-style: none;
-    font-family: 'Noto Sans TC', sans-serif;
-    padding-right: 15%;
     padding-left: 25%;
+    font-family: 'Noto Sans TC', sans-serif;
 }
 .HoverHumanDesignItem{
     float: left;
-	position: relative;
 }
 .HoverHumanDesignItem img{
     width: 100%;
@@ -86,6 +84,10 @@ body{
 }
 
 @media screen and (max-width: 576px){
+    .HoverHumanDesignWarap{
+        padding-left:30px;
+        padding-right: 30px;
+    }
     .HoverHumanDesignItem .HoverHumanDesignText{
         display: block;
     }
@@ -104,6 +106,5 @@ body{
     }
     .HoverHumanDesignItem:last-child{
         width:100%;
-    }
-   
+    }   
 }

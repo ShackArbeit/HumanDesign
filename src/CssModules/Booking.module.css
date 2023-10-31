@@ -15,16 +15,17 @@ body,html{
     height:100%;
 }
 .bookingEntranceContainer{
-    border:2px solid blue;
-    padding-top: 64px;
+    text-align: center;
+    padding-top: 80px;
+    padding-bottom:80px;
     height:100%;
     width:100%;
+    background-color: #fffae4;
 }
 .bookingEntranceListsContainer{
     max-width: 800px;
-    border-top:1px solid rgba(0,0,0,0.8);
-    border-bottom:1px solid rgba(0,0,0,0.8);
-    margin: 0 auto;
+    border:1px solid rgba(0,0,0,0.8);
+    margin:0 auto;
 }
 .bookingEntranceListsContainer:hover{
     background-color: #eeecec;
@@ -50,12 +51,14 @@ body,html{
 .CardContent:hover{
     background-color: #eeecec;
 }
-.bookingItemsIcons span{
+.bookingItemsIcons{
     text-align: left;
+}
+.bookingItemsIcons span{
     margin: 0.3rem;
 }
 .bookingItemsIcons svg{
-    margin:0.3rem;
+    margin:.5rem;
 }
 .bookingItemsButtonContainer{
     width:20%;
@@ -83,7 +86,9 @@ body,html{
 }
 .isMobileImage{
     width:15%; 
-    text-align: left;
+    display:flex;
+    justify-content: center;
+    align-items:center
 }
 .isMobileImage img{
     width:50px;

@@ -13,6 +13,7 @@ const {energyHumanDesign}=require('./WhatIsHumanDesign')
 const {roadHumanDesign}=require('./WhatIsHumanDesign')
 const { writerHumanDesign} =require('./WhatIsHumanDesign')
 const {isDesktopContent}=require('./BookingIntroduction')
+const {isMobile}=require('./BookingIntroduction')
 const app = express();
 const corsOptions = {
   origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
@@ -84,6 +85,9 @@ app.get('/human/roadHuman',(req,res)=>{
 // 以下為預約系統的部分
 app.get('/bookingIntroduction/isDesktop',(req,res)=>{
   res.send(isDesktopContent)
+})
+app.get('/bookingIntroduction/isMobile',(req,res)=>{
+  res.send(isMobile)
 })
 
 app.listen(8000,()=>{
