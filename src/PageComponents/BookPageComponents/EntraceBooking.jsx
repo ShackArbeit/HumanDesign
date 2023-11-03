@@ -182,11 +182,11 @@ const EntraceBooking = () => {
               </Typography>
               </Row>
               <Row>
-              <Button variant="success" >
-              <div className={style.isMobileButton}>
+              <Button variant="success"  className={style.isMobileButton}>
+              <div >
               <FontAwesomeIcon icon={faCalendar}  style={{width:"15px",height:"15px"}}/>
-            <span >預約</span>  
-            </div>
+              <span >預約</span>  
+               </div>
               </Button>
               </Row>
             </Container>

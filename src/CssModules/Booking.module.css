@@ -99,6 +99,8 @@ body,html{
     margin: 0;
 }
 .isMobileButton{
+    margin-top:0.5rem;
+    margin-bottom:0.5rem;
     display: flex;
     justify-content: center;
     color:white;
