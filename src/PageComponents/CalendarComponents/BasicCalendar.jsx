@@ -1,31 +1,47 @@
-import Calendar from "./Calendar";
 import style from '../../CssModules/Calendar.module.css'
-import moment from "moment";
+import { useMediaQuery } from '@mui/material';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn'; 
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+dayjs.locale('zh-cn');
 
-const events = [
-   { start: moment("2023-11-06T19:00:00").toDate(),
-     end: moment("2023-11-06T23:00:00").toDate(),    
-     title: "可預約時段",
-    },
-]
-const minTime = new Date().setHours(16, 0, 0, 0); 
-const maxTime = new Date().setHours(23, 0, 0, 0); 
 
-const BasicCalendar = () => {
+export default function ResponsiveDateTimePickers() {
+  const isDesktop = useMediaQuery('(min-width:576px)');
+  const isMobile=useMediaQuery('(max-width:576px');
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
-      <Calendar 
-                 events={events}
-                 step={60}
-                 min={minTime}
-                 max={maxTime}
-                 defaultView={"week"}
-                 views={["month","week"]}
-                 />
+    <h3 style={{marginBottom:"3rem"}}>請點選日期及時間</h3>
+      {isDesktop?(
+        <DemoItem  >
+        <DesktopDateTimePicker 
+        defaultValue={dayjs('2023-11-06T18:30')}
+        sx={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)"}} 
+          format="YYYY年MM月DD日 hh:mm A "
+          locale='zh-cn'
+          />
+      </DemoItem>):null}
+      {isMobile?( <DemoItem >
+        <MobileDateTimePicker 
+        defaultValue={dayjs('2023-11-06T18:30')}
+        sx={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)"}}
+          format="YYYY年MM月DD日 hh:mm A "
+          locale='zh-cn' />
+      </DemoItem>):null}
     </div>
+  </LocalizationProvider>
   );
-};
-
-export default BasicCalendar;
-
-
+}
