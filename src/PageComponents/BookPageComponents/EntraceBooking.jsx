@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
 import  { useEffect,useState} from 'react';
+import {Link} from 'react-router-dom'
 
 
 const EntraceBooking = () => {
@@ -116,10 +117,12 @@ const EntraceBooking = () => {
       </Card>
         </div>
         <div className={style.bookingItemsButtonContainer}>
-        <button className={style.bookingItemsButton}>   
-        <FontAwesomeIcon icon={faCalendar} className={style.bookingButtonIcon}/>
-        <p>預約</p>  
-        </button>
+        <Link to="calendar" >
+          <button className={style.bookingItemsButton}>   
+          <FontAwesomeIcon icon={faCalendar} className={style.bookingButtonIcon}/>
+          <p>預約</p>  
+          </button>
+        </Link>
         </div>
       </Stack>
       </div>
@@ -182,12 +185,14 @@ const EntraceBooking = () => {
               </Typography>
               </Row>
               <Row>
-              <Button variant="success"  className={style.isMobileButton}>
-              <div >
-              <FontAwesomeIcon icon={faCalendar}  style={{width:"15px",height:"15px"}}/>
-              <span >預約</span>  
-               </div>
-              </Button>
+                <Button variant="success"  className={style.isMobileButton}>
+                <Link to="calendar" style={{color:"white"}}>
+                    <div>
+                    <FontAwesomeIcon icon={faCalendar}  style={{width:"15px",height:"15px"}}/>
+                        <span >預約</span>  
+                    </div>
+                </Link>
+                 </Button>
               </Row>
             </Container>
             </div>

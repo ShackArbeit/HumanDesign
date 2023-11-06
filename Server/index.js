@@ -14,17 +14,20 @@ const {roadHumanDesign}=require('./WhatIsHumanDesign')
 const { writerHumanDesign} =require('./WhatIsHumanDesign')
 const {isDesktopContent}=require('./BookingIntroduction')
 const {isMobile}=require('./BookingIntroduction')
+const {connect,insertData}=require('./MongoDb')
 const app = express();
-const corsOptions = {
-  origin: 'https://shackarbeit.github.io/HumanDesign/Jerome',
-};
+;
+app.use(express.json())
 
-
-
-
-app.use(cors(corsOptions));
-
-app.use(cors())
+app.post('/insertData', async (req, res) => {
+  try {
+    const { name, age } = req.body; 
+    const result = await insertData({ name, age });
+    res.json({ success: true, message: 'Data inserted successfully', result });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error inserting data', error: err.message });
+  }
+});
 
 app.get("/", (req , res) => {
     res.send( "Hello world!" );

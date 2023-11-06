@@ -25,7 +25,13 @@ export default function ResponsiveDateTimePickers() {
           position: "absolute",
           left: "50%",
           top: "50%",
-          transform: "translate(-50%, -50%)"}} 
+          width:"350px",
+          border:'1px solid rgba(0,0,0,0.8)',
+          transform: "translate(-50%, -50%)",
+          '&:hover': {
+            border:'1px solid #2fffe1;'
+          }
+        }} 
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn'
           />
@@ -37,7 +43,13 @@ export default function ResponsiveDateTimePickers() {
           position: "absolute",
           left: "50%",
           top: "50%",
-          transform: "translate(-50%, -50%)"}}
+          width:"350px",
+          border:'1px solid rgba(0,0,0,0.8)',
+          transform: "translate(-50%, -50%)",
+          '&:hover': {
+              border:'1px solid #2fffe1;'
+            },
+        }}
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn' />
       </DemoItem>):null}
