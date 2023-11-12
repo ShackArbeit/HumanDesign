@@ -62,7 +62,6 @@ app.post('/saveDateTime', async (req, res) => {
       Month:month,
       Day:day,
       Hour:hour,
-      Minute:{$gt: 8.5}}
      });
     if (Booking) {
       res.json({ success: false, message: 'DateTime already exists!' });

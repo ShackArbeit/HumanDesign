@@ -1,5 +1,5 @@
 import style from '../../CssModules/Calendar.module.css'
-import { useMediaQuery } from '@mui/material';
+import { Experimental_CssVarsProvider, useMediaQuery } from '@mui/material';
 import {useState} from 'react'
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
@@ -17,32 +17,47 @@ export default function ResponsiveDateTimePickers() {
   const[selectDateTime,setSelectDateTime]=useState(null)
   const handleSelectDateTime = (newDateTime) => {
     setSelectDateTime(newDateTime);
-    console.log(selectDateTime)
   };
-  const handleSendDateTime=async ()=>{
-      try{
-        const response=await fetch('http://localhost:8000/saveDateTime',{
-          method:'POST',
-          headers:{
+  const handleSendDateTime = async () => {
+    try {
+      const currentDate = dayjs();
+      dayjs.locale('zh-cn');
+      const selectedDate = dayjs(selectDateTime);
+      const formattedDate = selectedDate.format('YYYY/MM/DD A hh:mm');
+      if (selectedDate.isBefore(currentDate, 'day')) {
+        alert('你所選取的日期已經過去，請重新選擇');
+        return;
+      }
+      const minimumReservationDate = currentDate.add(3, 'day');
+     
+      if (selectedDate.isBefore(minimumReservationDate, 'day')) {
+        alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
+        return;
+      }
+      else if (selectedDate.diff(currentDate, 'hour') < 2) {
+        alert('抱歉，您必須至少提前兩個小時預約。');
+        return;
+      }else{
+        const response = await fetch('http://localhost:8000/saveDateTime', {
+          method: 'POST',
+          headers: {
             'Content-Type': 'application/json',
           },
-          body:JSON.stringify({selectDateTime})
-        })
-        if(response.ok){
-          console.log('DateTime sent to MongoDB successfully');
-        }else{
-          console.log('Error sending DateTime to MongoDB. Status:', response.status);
-          const errorResponse = await response.json();
-          console.log('Error message:', errorResponse.message);
+          body: JSON.stringify({ selectDateTime }),
+        });
+        if (response.ok) {
+          alert(`我們已成功接受您於  ${formattedDate }  的預約了 !`)
+          console.log(`我們已成功接受您於 ${formattedDate } 的預約了!`)
         }
-        if (response.status === 400 && errorResponse.message === 'DateTime already exists within the next 150 minutes!') {
-          alert('預約時間需要至少相隔 150 分鐘。請選擇其他時間。');
-          return ;
-        }
-      }catch(error){
-         console.log('Error send to MongoDB',error)
-      }
-  }
+      }   
+    } catch (error) {
+      console.log('Error send to MongoDB', error);
+    }
+  };
+  
+  
+  
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
