@@ -39,7 +39,12 @@ initDB()
 const app = express();
 app.use(cors());
 app.use(express.json())
+const corsOptions = {
+  origin: 'http://localhost:5173', // Adjust the origin to your frontend's URL
+  optionsSuccessStatus: 200,
+};
 
+app.use(cors(corsOptions));
 
 
 app.get("/", (req , res) => {
@@ -47,38 +52,79 @@ app.get("/", (req , res) => {
 });
 
 // 關於連接到 MongoDB 的路由設定 
+const dayjs = require('dayjs');
+
 app.post('/saveDateTime', async (req, res) => {
   try {
     const collection = db.collection('ForBooking');
     const { selectDateTime } = req.body;
-    const newBooking=new Date(selectDateTime)
-    const year=newBooking.getFullYear();
-    const month=newBooking.getMonth();
-    const day=newBooking.getDate();
-    const hour=newBooking.getHours();
-    const minute=newBooking.getMinutes();
-    let Booking = await collection.findOne({ 
-      Year:year,
-      Month:month,
-      Day:day,
-      Hour:hour,
-     });
-    if (Booking) {
-      res.json({ success: false, message: 'DateTime already exists!' });
-    } else {
-        Booking = await collection.insertOne({ 
-        Year:year,
-        Month:month,
-        Day:day,
-        Hour:hour,
-        Minute:minute });
-      res.json({ success: true, message: 'DateTime inserted successfully!' });
+    const newBooking = new Date(selectDateTime);
+
+    const startTime = dayjs(newBooking).subtract(30, 'minutes');
+    const endTime = dayjs(newBooking).add(30, 'minutes');
+
+    const existingReservations = await collection.find({
+      $or: [
+        {
+          $and: [
+            { Year: { $eq: newBooking.getFullYear() } },
+            { Month: { $eq: newBooking.getMonth() } },
+            { Day: { $eq: newBooking.getDate() } },
+            { Hour: { $gte: startTime.hour() } },
+            { Hour: { $lte: endTime.hour() } },
+          ],
+        },
+      ],
+    }).toArray();
+
+    if (existingReservations.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Reservation time is already booked. Please choose another time.',
+      });
     }
+    const year = newBooking.getFullYear();
+    const month = newBooking.getMonth();
+    const day = newBooking.getDate();
+    const hour = newBooking.getHours();
+    const minute = newBooking.getMinutes();
+
+    await collection.insertOne({
+      Year: year,
+      Month: month,
+      Day: day,
+      Hour: hour,
+      Minute: minute,
+    });
+    res.json({ success: true, message: 'DateTime inserted successfully!' });
   } catch (error) {
     console.error('Error inserting DateTime into MongoDB:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
-})
+});
+
+// app.post('/saveDateTime', async (req, res) => {
+//   try {
+//     const collection = db.collection('ForBooking');
+//     const { selectDateTime } = req.body;
+//     const newBooking=new Date(selectDateTime)
+//     const year=newBooking.getFullYear();
+//     const month=newBooking.getMonth();
+//     const day=newBooking.getDate();
+//     const hour=newBooking.getHours();
+//     const minute=newBooking.getMinutes();
+//     Booking = await collection.insertOne({ 
+//       Year:year,
+//       Month:month,
+//       Day:day,
+//       Hour:hour,
+//       Minute:minute });
+//     res.json({ success: true, message: 'DateTime inserted successfully!' }); 
+//   } catch (error) {
+//     console.error('Error inserting DateTime into MongoDB:', error);
+//     res.status(500).json({ success: false, message: 'Internal server error' });
+//   }
+// })
 
 
 

@@ -29,15 +29,15 @@ export default function ResponsiveDateTimePickers() {
         return;
       }
       const minimumReservationDate = currentDate.add(3, 'day');
+      const eralyReservationsTime=selectedDate.add(120,'minute').format('YYYY/MM/DD A hh:mm');
+      const latestReservationsTime=selectedDate.subtract(140,'minute').format('YYYY/MM/DD A hh:mm');
+      console.log(selectedDate)
      
       if (selectedDate.isBefore(minimumReservationDate, 'day')) {
         alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
         return;
       }
-      else if (selectedDate.diff(currentDate, 'hour') < 2) {
-        alert('抱歉，您必須至少提前兩個小時預約。');
-        return;
-      }else{
+      else{
         const response = await fetch('http://localhost:8000/saveDateTime', {
           method: 'POST',
           headers: {
@@ -48,6 +48,9 @@ export default function ResponsiveDateTimePickers() {
         if (response.ok) {
           alert(`我們已成功接受您於  ${formattedDate }  的預約了 !`)
           console.log(`我們已成功接受您於 ${formattedDate } 的預約了!`)
+        }else{
+          alert(`該區間已經有人先預約了，您可以於${latestReservationsTime}之前或${eralyReservationsTime}之後預約`)
+          return;
         }
       }   
     } catch (error) {
