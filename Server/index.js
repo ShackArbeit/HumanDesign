@@ -60,8 +60,8 @@ app.post('/saveDateTime', async (req, res) => {
     const { selectDateTime } = req.body;
     const newBooking = new Date(selectDateTime);
 
-    const startTime = dayjs(newBooking).subtract(30, 'minutes');
-    const endTime = dayjs(newBooking).add(30, 'minutes');
+    const startTime = dayjs(newBooking).subtract(90, 'minutes');
+    const endTime = dayjs(newBooking).add(90,'minutes');
 
     const existingReservations = await collection.find({
       $or: [
@@ -70,65 +70,65 @@ app.post('/saveDateTime', async (req, res) => {
             { Year: { $eq: newBooking.getFullYear() } },
             { Month: { $eq: newBooking.getMonth() } },
             { Day: { $eq: newBooking.getDate() } },
-            { Hour: { $gte: startTime.hour() } },
-            { Hour: { $lte: endTime.hour() } },
+            { $or: [
+                { $and: [
+                    { Hour: { $eq: startTime.hour() } },
+                    { Minute: { $gte: startTime.minute() } },
+                ] },
+                { $and: [
+                    { Hour: { $eq: endTime.hour() } },
+                    { Minute: { $lte: endTime.minute() } },
+                ] },
+                { $and: [
+                    { Hour: { $gt: startTime.hour() } },
+                    { Hour: { $lt: endTime.hour() } },
+                ] },
+            ] },
           ],
         },
       ],
     }).toArray();
 
     if (existingReservations.length > 0) {
+      const { Year, Month, Day, Hour, Minute } = existingReservations[0];
       return res.status(400).json({
         success: false,
         message: 'Reservation time is already booked. Please choose another time.',
+        Year,
+        Month,
+        Day,
+        Hour,
+        Minute
       });
-    }
-    const year = newBooking.getFullYear();
-    const month = newBooking.getMonth();
-    const day = newBooking.getDate();
-    const hour = newBooking.getHours();
-    const minute = newBooking.getMinutes();
-
-    await collection.insertOne({
-      Year: year,
-      Month: month,
-      Day: day,
-      Hour: hour,
-      Minute: minute,
-    });
-    res.json({ success: true, message: 'DateTime inserted successfully!' });
+    }else{
+      const year = newBooking.getFullYear();
+      const month = newBooking.getMonth();
+      const day = newBooking.getDate();
+      const hour = newBooking.getHours();
+      const minute = newBooking.getMinutes();
+  
+      await collection.insertOne({
+        Year: year,
+        Month: month,
+        Day: day,
+        Hour: hour,
+        Minute: minute,
+      });
+      res.json({
+        success: true,
+        message: 'DateTime inserted successfully!',
+        Year: year,
+        Month: month,
+        Day: day,
+        Hour: hour,
+        Minute: minute,
+      });
+    } 
   } catch (error) {
     console.error('Error inserting DateTime into MongoDB:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
-
-// app.post('/saveDateTime', async (req, res) => {
-//   try {
-//     const collection = db.collection('ForBooking');
-//     const { selectDateTime } = req.body;
-//     const newBooking=new Date(selectDateTime)
-//     const year=newBooking.getFullYear();
-//     const month=newBooking.getMonth();
-//     const day=newBooking.getDate();
-//     const hour=newBooking.getHours();
-//     const minute=newBooking.getMinutes();
-//     Booking = await collection.insertOne({ 
-//       Year:year,
-//       Month:month,
-//       Day:day,
-//       Hour:hour,
-//       Minute:minute });
-//     res.json({ success: true, message: 'DateTime inserted successfully!' }); 
-//   } catch (error) {
-//     console.error('Error inserting DateTime into MongoDB:', error);
-//     res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// })
-
-
-
-
 
 // 關於 Jerome 分頁
 app.get('/aboutJerome/:id', (req, res) => {

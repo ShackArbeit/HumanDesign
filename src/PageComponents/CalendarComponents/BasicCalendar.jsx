@@ -24,15 +24,13 @@ export default function ResponsiveDateTimePickers() {
       dayjs.locale('zh-cn');
       const selectedDate = dayjs(selectDateTime);
       const formattedDate = selectedDate.format('YYYY/MM/DD A hh:mm');
+      // 防止選取過去的日期
       if (selectedDate.isBefore(currentDate, 'day')) {
         alert('你所選取的日期已經過去，請重新選擇');
         return;
       }
+      // 只接受三天前的預約
       const minimumReservationDate = currentDate.add(3, 'day');
-      const eralyReservationsTime=selectedDate.add(120,'minute').format('YYYY/MM/DD A hh:mm');
-      const latestReservationsTime=selectedDate.subtract(140,'minute').format('YYYY/MM/DD A hh:mm');
-      console.log(selectedDate)
-     
       if (selectedDate.isBefore(minimumReservationDate, 'day')) {
         alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
         return;
@@ -45,20 +43,25 @@ export default function ResponsiveDateTimePickers() {
           },
           body: JSON.stringify({ selectDateTime }),
         });
-        if (response.ok) {
-          alert(`我們已成功接受您於  ${formattedDate }  的預約了 !`)
-          console.log(`我們已成功接受您於 ${formattedDate } 的預約了!`)
-        }else{
-          alert(`該區間已經有人先預約了，您可以於${latestReservationsTime}之前或${eralyReservationsTime}之後預約`)
-          return;
+        const responseData=await response.json();
+        if(responseData.success){
+          alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
+          console.log(`我們已成功接受您於 ${formattedDate} 的預約了!`);
+        }
+        else{
+          const { Year,Month,Day,Hour,Minute} = responseData;
+          console.log(responseData)
+          const bookingTime = dayjs(`${Year}-${Month + 1}-${Day} ${Hour}:${Minute}`);
+          const latestBookingTime = bookingTime.subtract(90, 'minutes');
+          const  earlyBookingTime  = bookingTime.add(90, 'minutes');
+          alert(`此時間屬在其他預約的時段內，你最早可於 ${Year}/${Month + 1}/${Day}/${latestBookingTime.format('HH:mm')}前或
+          ${Year}/${Month + 1}/${Day}/${earlyBookingTime.format('HH:mm')}後預約`);
         }
       }   
     } catch (error) {
       console.log('Error send to MongoDB', error);
     }
   };
-  
-  
   
   
   return (
