@@ -56,13 +56,14 @@ const dayjs = require('dayjs');
 
 app.post('/saveDateTime', async (req, res) => {
   try {
+
     const collection = db.collection('ForBooking');
     const { selectDateTime } = req.body;
     const newBooking = new Date(selectDateTime);
-
+   // 將存放的時間點做前後 90 分鐘的區間設定
     const startTime = dayjs(newBooking).subtract(90, 'minutes');
     const endTime = dayjs(newBooking).add(90,'minutes');
-
+  // 先向集合內搜尋存在區間內的所有可能
     const existingReservations = await collection.find({
       $or: [
         {
@@ -88,19 +89,23 @@ app.post('/saveDateTime', async (req, res) => {
         },
       ],
     }).toArray();
-
+    // 若有搜尋到，則將所有符合條件且已存放在 MongoDB 的資料透過解構賦值返回給前端
     if (existingReservations.length > 0) {
-      const { Year, Month, Day, Hour, Minute } = existingReservations[0];
-      return res.status(400).json({
-        success: false,
-        message: 'Reservation time is already booked. Please choose another time.',
-        Year,
-        Month,
-        Day,
-        Hour,
-        Minute
-      });
-    }else{
+      for(i=0;i<existingReservations.length;i++){
+        const { Year, Month, Day, Hour, Minute } = existingReservations[i];
+        return res.status(400).json({
+          success: false,
+          message: 'Reservation time is already booked. Please choose another time.',
+          Year,
+          Month,
+          Day,
+          Hour,
+          Minute
+        });
+      }
+    }
+    // 若沒有搜尋到，就額外新增一筆預約資料
+    else{
       const year = newBooking.getFullYear();
       const month = newBooking.getMonth();
       const day = newBooking.getDate();
