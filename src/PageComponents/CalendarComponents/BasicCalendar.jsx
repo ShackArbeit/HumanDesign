@@ -1,5 +1,5 @@
 import style from '../../CssModules/Calendar.module.css'
-import { Experimental_CssVarsProvider, useMediaQuery } from '@mui/material';
+import {  useMediaQuery } from '@mui/material';
 import {useState} from 'react'
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
@@ -8,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import Button from '@mui/material/Button';
 dayjs.locale('zh-cn');
 
 
@@ -98,9 +99,22 @@ export default function ResponsiveDateTimePickers() {
           onChange={handleSelectDateTime}
           />
       </DemoItem>
-      <button style={{widht:'300px',height:'100px',top:'100px'}}
-      onClick={handleSendDateTime}
-      >確定送出</button>
+      <Button 
+      variant="contained" 
+      size='large'
+      onclick={handleSendDateTime}
+      sx={{
+        position:'relative',
+        top:'4rem',
+        fontWeight:900,
+        fontSize:'20px',
+        '&:hover':{
+          border:'2px solid #ffa811',
+          color:'black',
+          backgroundColor:'#fff'
+        }
+      }}
+      >確定送出</Button>
       </>
       ):null}
       {isMobile?( <DemoItem >
