@@ -13,6 +13,7 @@ import EnergyHumanDesign from "./PageComponents/WhatIsHumanComponents/EnergyHuma
 import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDesign";
 import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanDesign";
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
+import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="Feedback" element={<UserFeedBack/>}/>
           <Route path="booking" element={<EntraceBooking/>}/>
           <Route path="booking/calendar" element={<BasicCalendar />}/>
+          <Route path="booking/firstCheck" element={<CheckFirstBooking />}/>
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>

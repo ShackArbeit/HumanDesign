@@ -1,4 +1,5 @@
 import style from '../../CssModules/Calendar.module.css'
+import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
 import {useState} from 'react'
 import dayjs from 'dayjs';
@@ -99,10 +100,10 @@ export default function ResponsiveDateTimePickers() {
           onChange={handleSelectDateTime}
           />
       </DemoItem>
+      <Link to='firstCheck' onClick={handleSendDateTime}>
       <Button 
       variant="contained" 
       size='large'
-      onclick={handleSendDateTime}
       sx={{
         position:'relative',
         top:'4rem',
@@ -113,8 +114,9 @@ export default function ResponsiveDateTimePickers() {
           color:'black',
           backgroundColor:'#fff'
         }
-      }}
-      >確定送出</Button>
+      }}>確定送出
+      </Button>
+      </Link>
       </>
       ):null}
       {isMobile?( <DemoItem >
