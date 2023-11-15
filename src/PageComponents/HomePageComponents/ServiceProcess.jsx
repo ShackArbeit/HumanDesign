@@ -39,7 +39,6 @@ const ServiceProcess = () => {
               try {
                 const response = await fetch('http://localhost:8000/home/serviceProcess');
                 const Data = await response.json();
-                console.log(Data)
                 dispatch(setData(Data));
               } 
               catch (error) {

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import DateTimeProvider from "./ContextComponents/DataTimeContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -15,8 +16,10 @@ import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanD
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 
+
 function App() {
   return (
+    <DateTimeProvider>
      <BrowserRouter>
       <Routes>
         <Route path="/HumanDesign" element={<Layout />}>
@@ -38,6 +41,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </DateTimeProvider>
   )
 }
 

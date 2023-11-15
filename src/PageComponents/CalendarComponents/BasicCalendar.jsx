@@ -1,100 +1,76 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useState} from 'react'
-import dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn'; 
+import {useContext,useEffect} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import Button from '@mui/material/Button';
+import dayjs from 'dayjs';
 dayjs.locale('zh-cn');
+import Button from '@mui/material/Button';
+import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Autocomplete from '@mui/material/Autocomplete';
+
+
+const Items = [
+  { title: '個人解析' },
+  { title: '多人解析'},
+  { title: '親子解析' },
+  { title: '團體解析'},
+];
+console.log(Items)
+const Prices=[
+  {time:'60分鐘 5000元'},
+  {time:'120分鐘 9000元'},
+  {time:'60分鐘 7000元'},
+  {time:'120分鐘 12000元'},
+  {time:'60分鐘 8000元'},
+  {time:'120分鐘 14000元'},
+  {time:'60分鐘 9000元'},
+  {time:'120分鐘 15000元'},
+]
+const filterPrice = Prices.filter((price) => {
+  let isValid = false;
+  for (let i = 0; i < Items.length; i++) {
+    if (Items[i].title === '個人解析' && (price.time === '60分鐘 5000元' || price.time === '120分鐘 9000元')) {
+      isValid = true;
+    } else if (Items[i].title === '多人解析' && (price.time === '60分鐘 7000元' || price.time === '120分鐘 12000元')) {
+      isValid = true;
+    } else if (Items[i].title === '親子解析' && (price.time === '60分鐘 8000元' || price.time === '120分鐘 14000元')) {
+      isValid = true;
+    } else if (Items[i].title === '團體解析' && (price.time === '60分鐘 9000元' || price.time === '120分鐘 15000元')) {
+      isValid = true;
+    }
+  }
+  return isValid;
+});
+   console.log(filterPrice)
+
 
 
 export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
-  const[selectDateTime,setSelectDateTime]=useState(null)
-  const[showGoButton,setShowGoButton]=useState(false)
-  const handleSelectDateTime = (newDateTime) => {
-    setSelectDateTime(newDateTime);
-  };
-  // const Naigation=useNavigate()
-  const handleSendDateTime = async (event) => {
-    try {
-      const currentDate = dayjs();
-      dayjs.locale('zh-cn');
-      const selectedDate = dayjs(selectDateTime);
-      const formattedDate = selectedDate.format(' YYYY   /   MM   /   DD    A hh:mm');
-  
-      // 防止選取過去的日期
-      if (selectedDate.isBefore(currentDate, 'day')) {
-        alert('你所選取的日期已經過去，請重新選擇');
-        return;
-      }
-  
-      // 只接受三天前的預約
-      const minimumReservationDate = currentDate.add(3, 'day');
-      if (selectedDate.isBefore(minimumReservationDate, 'day')) {
-        alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
-        return;
-      // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
-      } else {
-        // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
-        const response = await fetch('http://localhost:8000/saveDateTime', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ selectDateTime }),
-        });
-        // 將資料 JSON 格式化
-        const responseData = await response.json();
-        // 若是成功放入資料庫則返回放入成功的訊息並 Alert 出來
-        if (responseData.success) {
-          alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
-          setShowGoButton(true)
-        // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
-        // 90 分鐘的區間內
-        } else {
-          // responseData 是 status 為 400 時所返回的物件，並透過解構賦值存放在變數 Year,Month,Day,Hour,Minute 中
-            const { Year, Month, Day, Hour, Minute } = responseData;
-          // 設定前端要 Alert 訊息的變數，將前後 90 分鐘的區間透過 day.js 做計算
-            const bookingTime = dayjs(`${Year}-${Month + 1}-${Day} ${Hour}:${Minute}`);
-            const latestBookingTime = bookingTime.subtract(90, 'minutes');
-            const earlyBookingTime = bookingTime.add(90, 'minutes');
-             alert(`此時間屬在其他預約的時段內，你最早可於 ${Year} / ${Month + 1} /  ${Day} / ${latestBookingTime.format('HH:mm')} 前
-            或 ${Year} /${Month + 1} / ${Day} / ${earlyBookingTime.format('HH:mm')}  後預約`);
-            event.preventDefault();
-            return; 
-          }
-      }
-    } catch (error) {
-      console.log('Error send to MongoDB', error);
-    }
-  };
- 
-  
-  
-  
+  const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton}=useContext(DateTimeContext)
+  useEffect(()=>{
+      
+  },[])
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
     <h3 style={{marginBottom:"3rem"}}>請點選日期及時間</h3>
       {isDesktop?(
-        <>
-        <DemoItem  >
+    <div className={style.ItemContainer}>
+        <DemoItem >
         <DesktopDateTimePicker 
         defaultValue={dayjs('2023-11-06T18:30')}
         sx={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
           width:"350px",
           border:'1px solid rgba(0,0,0,0.8)',
-          transform: "translate(-50%, -50%)",
           '&:hover': {
             border:'1px solid #2fffe1;'
           }}} 
@@ -105,6 +81,31 @@ export default function ResponsiveDateTimePickers() {
           onChange={handleSelectDateTime}
           />
       </DemoItem>
+      <Stack spacing={2} sx={{ width: 300,marginTop:"1rem",marginBottom:'1rem'}}>
+      <Autocomplete
+        id="free-solo-demo"
+        freeSolo
+       
+        options={Items.map((option) => option.title)}
+        renderInput={(params) => <TextField {...params} label="解析項目" />}
+      />
+      <Autocomplete
+        freeSolo
+        id="free-solo-2-demo"
+        disableClearable
+        options={filterPrice.map((option) => option.time)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="時間"
+            InputProps={{
+              ...params.InputProps,
+              type: 'search',
+            }}
+          />
+        )}
+      />
+    </Stack>
       {showGoButton ?
       <div className={style.ButtonContainer}>
       <Button 
@@ -122,7 +123,7 @@ export default function ResponsiveDateTimePickers() {
         }
       }}>確定送出
       </Button>
-      <Link to='firstCheck'> <Button 
+      <Link to='/HumanDesign/booking/firstCheck'> <Button 
       variant="contained" 
       size='large'
       sx={{
@@ -152,7 +153,8 @@ export default function ResponsiveDateTimePickers() {
         >確定送出
         </Button>
         </div>
-      }</>
+      }
+    </div>
       ):null }
       {isMobile?( 
       <>
@@ -192,7 +194,7 @@ export default function ResponsiveDateTimePickers() {
           }
         }}>確定送出
         </Button>
-        <Link to='firstCheck'> <Button 
+        <Link to='/HumanDesign/booking/firstCheck'> <Button 
         variant="contained" 
         sx={{
           fontWeight:900,

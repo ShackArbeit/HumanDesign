@@ -21,12 +21,18 @@ body,htmo{
     height:600px;
     text-align: center;
 }
+.ItemContainer{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
 .ButtonContainer{
+    margin-top:1rem;
+} 
+ButtonContainerTwo{
     top:4rem;
-}
-.ButtonContainerTwo{
-    top:4rem;
-}
+} 
 @media(max-width:360px){
     .ButtonContainerTwo{
         display:flex;

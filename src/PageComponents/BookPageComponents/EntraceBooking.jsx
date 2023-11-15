@@ -19,34 +19,33 @@ const EntraceBooking = () => {
     const[dataOne,setDataOne]=useState([])
     const [dataTwo,setDataTwo]=useState([])
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch('http://localhost:8000/bookingIntroduction/isDesktop');
-          const Data = await response.json();
-          console.log(Data)
-          setDataOne(Data)
-        } 
-        catch (error) {
-          console.log(error);
-        }
-      };
-      fetchData();
-    }, []);
-
-    useEffect(() => {
-      const fetchData2 = async () => {
-        try {
-          const response = await fetch('http://localhost:8000/bookingIntroduction/isMobile');
-          const Data = await response.json();
-          console.log(Data)
-          setDataTwo(Data)
-        } 
-        catch (error) {
-          console.log(error);
-        }
-      };
-      fetchData2();
-    }, []);
+        const fetchData = async () => {
+          try {
+            const response = await fetch('http://localhost:8000/bookingIntroduction/isDesktop');
+            const Data = await response.json();
+            setDataOne(Data)
+          } 
+          catch (error) {
+            console.log(error);
+          }
+        };
+        fetchData();
+      }, []);
+  
+      useEffect(() => {
+        const fetchData2 = async () => {
+          try {
+            const response = await fetch('http://localhost:8000/bookingIntroduction/isMobile');
+            const Data = await response.json();
+            setDataTwo(Data)
+          } 
+          catch (error) {
+            console.log(error);
+          }
+        };
+        fetchData2();
+      }, []);
+    
   return (
      <div className={style.bookingEntranceContainer}>
      <h1>分析項目列表</h1>
