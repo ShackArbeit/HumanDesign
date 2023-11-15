@@ -17,15 +17,17 @@ export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const[selectDateTime,setSelectDateTime]=useState(null)
+  const[showGoButton,setShowGoButton]=useState(false)
   const handleSelectDateTime = (newDateTime) => {
     setSelectDateTime(newDateTime);
   };
-  const handleSendDateTime = async () => {
+  // const Naigation=useNavigate()
+  const handleSendDateTime = async (event) => {
     try {
       const currentDate = dayjs();
       dayjs.locale('zh-cn');
       const selectedDate = dayjs(selectDateTime);
-      const formattedDate = selectedDate.format('YYYY/MM/DD A hh:mm');
+      const formattedDate = selectedDate.format(' YYYY   /   MM   /   DD    A hh:mm');
   
       // 防止選取過去的日期
       if (selectedDate.isBefore(currentDate, 'day')) {
@@ -53,24 +55,27 @@ export default function ResponsiveDateTimePickers() {
         // 若是成功放入資料庫則返回放入成功的訊息並 Alert 出來
         if (responseData.success) {
           alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
-          console.log(`我們已成功接受您於 ${formattedDate} 的預約了!`);
+          setShowGoButton(true)
         // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
         // 90 分鐘的區間內
         } else {
-        // responseData 是 status 為 400 時所返回的物件，並透過解構賦值存放在變數 Year,Month,Day,Hour,Minute 中
-          const { Year, Month, Day, Hour, Minute } = responseData;
-        // 設定前端要 Alert 訊息的變數，將前後 90 分鐘的區間透過 day.js 做計算
-          const bookingTime = dayjs(`${Year}-${Month + 1}-${Day} ${Hour}:${Minute}`);
-          const latestBookingTime = bookingTime.subtract(90, 'minutes');
-          const earlyBookingTime = bookingTime.add(90, 'minutes');
-          alert(`此時間屬在其他預約的時段內，你最早可於 ${Year} / ${Month + 1} /  ${Day} / ${latestBookingTime.format('HH:mm')} 前
-          或 ${Year} /${Month + 1} / ${Day} / ${earlyBookingTime.format('HH:mm')}  後預約`);
-        }
+          // responseData 是 status 為 400 時所返回的物件，並透過解構賦值存放在變數 Year,Month,Day,Hour,Minute 中
+            const { Year, Month, Day, Hour, Minute } = responseData;
+          // 設定前端要 Alert 訊息的變數，將前後 90 分鐘的區間透過 day.js 做計算
+            const bookingTime = dayjs(`${Year}-${Month + 1}-${Day} ${Hour}:${Minute}`);
+            const latestBookingTime = bookingTime.subtract(90, 'minutes');
+            const earlyBookingTime = bookingTime.add(90, 'minutes');
+             alert(`此時間屬在其他預約的時段內，你最早可於 ${Year} / ${Month + 1} /  ${Day} / ${latestBookingTime.format('HH:mm')} 前
+            或 ${Year} /${Month + 1} / ${Day} / ${earlyBookingTime.format('HH:mm')}  後預約`);
+            event.preventDefault();
+            return; 
+          }
       }
     } catch (error) {
       console.log('Error send to MongoDB', error);
     }
   };
+ 
   
   
   
@@ -100,15 +105,16 @@ export default function ResponsiveDateTimePickers() {
           onChange={handleSelectDateTime}
           />
       </DemoItem>
-      <Link to='firstCheck' onClick={handleSendDateTime}>
+      {showGoButton ?
+      <div className={style.ButtonContainer}>
       <Button 
+      onClick={handleSendDateTime}
       variant="contained" 
       size='large'
       sx={{
-        position:'relative',
-        top:'4rem',
         fontWeight:900,
         fontSize:'20px',
+        marginRight:'1rem',
         '&:hover':{
           border:'2px solid #ffa811',
           color:'black',
@@ -116,10 +122,41 @@ export default function ResponsiveDateTimePickers() {
         }
       }}>確定送出
       </Button>
-      </Link>
-      </>
-      ):null}
-      {isMobile?( <DemoItem >
+      <Link to='firstCheck'> <Button 
+      variant="contained" 
+      size='large'
+      sx={{
+        fontWeight:900,
+        fontSize:'20px',
+        '&:hover':{
+          border:'2px solid #ffa811',
+          color:'black',
+          backgroundColor:'#fff'
+        }
+      }}>前往確認頁面</Button></Link>
+      </div>:
+       <div className={style.ButtonContainer}>
+        <Button 
+        onClick={handleSendDateTime}
+        variant="contained" 
+        size='large'
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}
+        >確定送出
+        </Button>
+        </div>
+      }</>
+      ):null }
+      {isMobile?( 
+      <>
+      <DemoItem >
         <MobileDateTimePicker 
         defaultValue={dayjs('2023-11-06T18:30')}
         sx={{
@@ -133,9 +170,60 @@ export default function ResponsiveDateTimePickers() {
               border:'1px solid #2fffe1;'
             },
         }}
+          value={selectDateTime}
+          onChange={handleSelectDateTime}
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn' />
-      </DemoItem>):null}
+      </DemoItem>
+      {showGoButton ?
+        <div className={style.ButtonContainerTwo}>
+        <Button 
+        onClick={handleSendDateTime}
+        variant="contained" 
+       
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          marginRight:'1rem',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}>確定送出
+        </Button>
+        <Link to='firstCheck'> <Button 
+        variant="contained" 
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}>前往確認頁面</Button></Link>
+        </div>:
+         <div className={style.ButtonContainer}>
+          <Button 
+          onClick={handleSendDateTime}
+          variant="contained" 
+          size='large'
+          sx={{
+            fontWeight:900,
+            fontSize:'20px',
+            '&:hover':{
+              border:'2px solid #ffa811',
+              color:'black',
+              backgroundColor:'#fff'
+            }
+          }}
+          >確定送出
+          </Button>
+          </div>
+        }
+      </>)
+      :null}
     </div>
   </LocalizationProvider>
   );

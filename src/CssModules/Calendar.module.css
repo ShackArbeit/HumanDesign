@@ -21,3 +21,15 @@ body,htmo{
     height:600px;
     text-align: center;
 }
+.ButtonContainer{
+    top:4rem;
+}
+.ButtonContainerTwo{
+    top:4rem;
+}
+@media(max-width:360px){
+    .ButtonContainerTwo{
+        display:flex;
+        flex-direction:column;
+    }
+}
