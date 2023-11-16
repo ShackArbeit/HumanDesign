@@ -7,10 +7,20 @@ import 'dayjs/locale/zh-cn';
  export default function DateTimeProvider({ children }) {
 
   const [selectDateTime, setSelectDateTime] = useState([]);
+  const[bookingItem,setBookingItem]=useState(null);
   const[showGoButton,setShowGoButton]=useState(false)
+
    const handleSelectDateTime = (newDateTime) => {
      setSelectDateTime(newDateTime);
    };
+  //  const handleSelectBookingItem=(newItem)=>{
+  //    setBookingItem(newItem)
+  //    console.log(newItem)
+  //  }
+  const handleSelectBookingItem = (event, newValue) => {
+    setBookingItem(newValue);
+    console.log(newValue)
+ };
    const handleSendDateTime = async (event) => {
     try {
       const currentDate = dayjs();
@@ -32,12 +42,12 @@ import 'dayjs/locale/zh-cn';
       // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
       } else {
         // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
-        const response = await fetch('http://localhost:8000/saveDateTime', {
+        const response = await fetch('http://localhost:8000/saveDateTimeAndItem', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ selectDateTime }),
+          body: JSON.stringify({ selectDateTime,bookingItem, }),
         });
         // 將資料 JSON 格式化
         const responseData = await response.json();
@@ -58,7 +68,7 @@ import 'dayjs/locale/zh-cn';
             或 ${Year} /${Month + 1} / ${Day} / ${earlyBookingTime.format('HH:mm')}  後預約`);
             event.preventDefault();
             return; 
-          }
+        }
       }
     } catch (error) {
       console.log('Error send to MongoDB', error);
@@ -66,7 +76,9 @@ import 'dayjs/locale/zh-cn';
   };
 
    return (
-     <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton}}>
+     <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton,
+      handleSelectBookingItem,bookingItem
+    }}>
        {children}
      </DateTimeContext.Provider>
      )

@@ -54,11 +54,10 @@ app.get("/", (req , res) => {
 // 關於連接到 MongoDB 的路由設定 
 const dayjs = require('dayjs');
 
-app.post('/saveDateTime', async (req, res) => {
+app.post('/saveDateTimeAndItem', async (req, res) => {
   try {
-
     const collection = db.collection('ForBooking');
-    const { selectDateTime } = req.body;
+    const { selectDateTime,bookingItem, } = req.body;
     const newBooking = new Date(selectDateTime);
    // 將存放的時間點做前後 90 分鐘的區間設定
     const startTime = dayjs(newBooking).subtract(90, 'minutes');
@@ -134,6 +133,7 @@ app.post('/saveDateTime', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+
 
 // 關於 Jerome 分頁
 app.get('/aboutJerome/:id', (req, res) => {

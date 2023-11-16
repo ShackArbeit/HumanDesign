@@ -1,7 +1,7 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useContext,useEffect} from 'react'
+import {useContext} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,63 +16,42 @@ import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 
 
+
+
+
 const Items = [
-  { title: '個人解析' },
-  { title: '多人解析'},
-  { title: '親子解析' },
-  { title: '團體解析'},
-];
-console.log(Items)
-const Prices=[
-  {time:'60分鐘 5000元'},
-  {time:'120分鐘 9000元'},
-  {time:'60分鐘 7000元'},
-  {time:'120分鐘 12000元'},
-  {time:'60分鐘 8000元'},
-  {time:'120分鐘 14000元'},
-  {time:'60分鐘 9000元'},
-  {time:'120分鐘 15000元'},
+  { title: '個人解析', time: '[  60 分鐘  5,000 元 ]' },
+  { title: '個人解析', time: '[ 120 分鐘  9,000 元 ]' },
+  { title: '多人解析', time: '[ 60 分鐘  7,000 元 ]' },
+  { title: '多人解析', time: '[ 120 分鐘  12,000 元 ]' },
+  { title: '親子解析', time: '[ 60 分鐘  8,000 元 ]' },
+  { title: '親子解析', time: '[ 120 分鐘  14,000 元 ]' },
+  { title: '團體解析', time: '[ 120 分鐘  9,000 元 ]' },
+  { title: '團體解析', time: '[ 120 分鐘  15,000 元 ]' },
 ]
-const filterPrice = Prices.filter((price) => {
-  let isValid = false;
-  for (let i = 0; i < Items.length; i++) {
-    if (Items[i].title === '個人解析' && (price.time === '60分鐘 5000元' || price.time === '120分鐘 9000元')) {
-      isValid = true;
-    } else if (Items[i].title === '多人解析' && (price.time === '60分鐘 7000元' || price.time === '120分鐘 12000元')) {
-      isValid = true;
-    } else if (Items[i].title === '親子解析' && (price.time === '60分鐘 8000元' || price.time === '120分鐘 14000元')) {
-      isValid = true;
-    } else if (Items[i].title === '團體解析' && (price.time === '60分鐘 9000元' || price.time === '120分鐘 15000元')) {
-      isValid = true;
-    }
-  }
-  return isValid;
-});
-   console.log(filterPrice)
 
 
 
 export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
-  const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton}=useContext(DateTimeContext)
-  useEffect(()=>{
-      
-  },[])
+  const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
+    bookingItem,handleSelectBookingItem
+  }=useContext(DateTimeContext)
+
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
-    <h3 style={{marginBottom:"3rem"}}>請點選日期及時間</h3>
+    <h3 style={{marginBottom:"3rem"}}>請點選日期及項目</h3>
       {isDesktop?(
     <div className={style.ItemContainer}>
         <DemoItem >
         <DesktopDateTimePicker 
-        defaultValue={dayjs('2023-11-06T18:30')}
         sx={{
           width:"350px",
-          border:'1px solid rgba(0,0,0,0.8)',
           '&:hover': {
-            border:'1px solid #2fffe1;'
+            border:'2px solid #1192ff;'
           }}} 
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn'
@@ -81,30 +60,28 @@ export default function ResponsiveDateTimePickers() {
           onChange={handleSelectDateTime}
           />
       </DemoItem>
-      <Stack spacing={2} sx={{ width: 300,marginTop:"1rem",marginBottom:'1rem'}}>
+      <Stack spacing={2} sx={{ 
+        width: 350,marginTop:"1rem",
+        marginBottom:'1rem',
+        '&:hover': {
+          border:'2px solid #1192ff;'
+        }}}>
       <Autocomplete
-        id="free-solo-demo"
-        freeSolo
-       
-        options={Items.map((option) => option.title)}
-        renderInput={(params) => <TextField {...params} label="解析項目" />}
-      />
-      <Autocomplete
-        freeSolo
-        id="free-solo-2-demo"
-        disableClearable
-        options={filterPrice.map((option) => option.time)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="時間"
-            InputProps={{
-              ...params.InputProps,
-              type: 'search',
-            }}
-          />
-        )}
-      />
+      id="free-solo-demo"
+      freeSolo
+      value={bookingItem}
+      onChange={handleSelectBookingItem}
+      getOptionLabel={(option) => `${option.title} :   ${option.time}`}
+      inputlabelprops={{ shrink: true }}
+      options={Items}
+      // options={Items.map((option) => `${option.title} :   ${option.time}`)}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="項目"
+        />
+      )}
+    />
     </Stack>
       {showGoButton ?
       <div className={style.ButtonContainer}>
@@ -157,19 +134,15 @@ export default function ResponsiveDateTimePickers() {
     </div>
       ):null }
       {isMobile?( 
-      <>
-      <DemoItem >
+      <div className={style.ItemContainer}>
+      <DemoItem  >
         <MobileDateTimePicker 
         defaultValue={dayjs('2023-11-06T18:30')}
         sx={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          width:"350px",
           border:'1px solid rgba(0,0,0,0.8)',
-          transform: "translate(-50%, -50%)",
+          width:280,
           '&:hover': {
-              border:'1px solid #2fffe1;'
+              border:'1px solid #1192ff;'
             },
         }}
           value={selectDateTime}
@@ -177,12 +150,29 @@ export default function ResponsiveDateTimePickers() {
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn' />
       </DemoItem>
+      <Stack spacing={2} sx={{ 
+        width: 280,
+        marginTop:'2rem',
+        '&:hover': {
+          border:'2px solid #1192ff;'
+        }}}>
+      <Autocomplete
+      id="free-solo-demo"
+      freeSolo
+      options={Items.map((option) => `${option.title} : ${option.time}`)}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="項目"
+        />
+      )}
+    />
+    </Stack>
       {showGoButton ?
         <div className={style.ButtonContainerTwo}>
         <Button 
         onClick={handleSendDateTime}
-        variant="contained" 
-       
+        variant="contained"
         sx={{
           fontWeight:900,
           fontSize:'20px',
@@ -224,7 +214,7 @@ export default function ResponsiveDateTimePickers() {
           </Button>
           </div>
         }
-      </>)
+      </div>)
       :null}
     </div>
   </LocalizationProvider>
