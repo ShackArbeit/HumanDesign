@@ -4,23 +4,30 @@ import 'dayjs/locale/zh-cn';
 
  export const DateTimeContext = createContext();
 
+ const options = {
+  個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
+  多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
+  親子解析: ['60分鐘 8,000 元', '120 分鐘 14,000 元'],
+  團體解析: ['60分鐘 9,000 元', '120 分鐘 15,000 元'],
+};
+ 
+
  export default function DateTimeProvider({ children }) {
 
   const [selectDateTime, setSelectDateTime] = useState([]);
-  const[bookingItem,setBookingItem]=useState(null);
   const[showGoButton,setShowGoButton]=useState(false)
+  const [firstValue, setFirstValue] = useState(null);
+  const [secondOptions, setSecondOptions] = useState([]);
+  const handleFirstAutocompleteChange = (event, newValue) => {
+    setFirstValue(newValue);
+    setSecondOptions(options[newValue] || []);
+  };
 
    const handleSelectDateTime = (newDateTime) => {
      setSelectDateTime(newDateTime);
    };
-  //  const handleSelectBookingItem=(newItem)=>{
-  //    setBookingItem(newItem)
-  //    console.log(newItem)
-  //  }
-  const handleSelectBookingItem = (event, newValue) => {
-    setBookingItem(newValue);
-    console.log(newValue)
- };
+
+ 
    const handleSendDateTime = async (event) => {
     try {
       const currentDate = dayjs();
@@ -77,7 +84,7 @@ import 'dayjs/locale/zh-cn';
 
    return (
      <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton,
-      handleSelectBookingItem,bookingItem
+      firstValue,secondOptions,handleFirstAutocompleteChange
     }}>
        {children}
      </DateTimeContext.Provider>

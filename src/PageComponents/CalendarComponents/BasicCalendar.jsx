@@ -1,7 +1,7 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useContext} from 'react'
+import {useContext,useState} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,18 +17,13 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 
-
-
-const Items = [
-  { title: '個人解析', time: '[  60 分鐘  5,000 元 ]' },
-  { title: '個人解析', time: '[ 120 分鐘  9,000 元 ]' },
-  { title: '多人解析', time: '[ 60 分鐘  7,000 元 ]' },
-  { title: '多人解析', time: '[ 120 分鐘  12,000 元 ]' },
-  { title: '親子解析', time: '[ 60 分鐘  8,000 元 ]' },
-  { title: '親子解析', time: '[ 120 分鐘  14,000 元 ]' },
-  { title: '團體解析', time: '[ 120 分鐘  9,000 元 ]' },
-  { title: '團體解析', time: '[ 120 分鐘  15,000 元 ]' },
-]
+const options = {
+  個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
+  多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
+  親子解析: ['60分鐘 8,000 元', '120 分鐘 14,000 元'],
+  團體解析: ['60分鐘 9,000 元', '120 分鐘 15,000 元'],
+};
+ 
 
 
 
@@ -36,10 +31,9 @@ export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
-    bookingItem,handleSelectBookingItem
+    firstValue,secondOptions,handleFirstAutocompleteChange
   }=useContext(DateTimeContext)
-
-
+ 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
@@ -63,18 +57,17 @@ export default function ResponsiveDateTimePickers() {
       <Stack spacing={2} sx={{ 
         width: 350,marginTop:"1rem",
         marginBottom:'1rem',
+      }}>
+      <Autocomplete
+      sx={{
         '&:hover': {
           border:'2px solid #1192ff;'
-        }}}>
-      <Autocomplete
+        }}}
       id="free-solo-demo"
       freeSolo
-      value={bookingItem}
-      onChange={handleSelectBookingItem}
-      getOptionLabel={(option) => `${option.title} :   ${option.time}`}
-      inputlabelprops={{ shrink: true }}
-      options={Items}
-      // options={Items.map((option) => `${option.title} :   ${option.time}`)}
+      options={Object.keys(options)}
+      value={firstValue}
+      onChange={handleFirstAutocompleteChange}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -82,6 +75,26 @@ export default function ResponsiveDateTimePickers() {
         />
       )}
     />
+    <Autocomplete
+        freeSolo
+        sx={{
+          '&:hover': {
+            border:'2px solid #1192ff;'
+          }}}
+        id="free-solo-2-demo"
+        disableClearable
+        options={secondOptions}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="時間"
+            InputProps={{
+              ...params.InputProps,
+              type: 'search',
+            }}
+          />
+        )}
+      />
     </Stack>
       {showGoButton ?
       <div className={style.ButtonContainer}>
@@ -156,17 +169,43 @@ export default function ResponsiveDateTimePickers() {
         '&:hover': {
           border:'2px solid #1192ff;'
         }}}>
+        <Autocomplete
+        sx={{
+          '&:hover': {
+            border:'2px solid #1192ff;'
+          }}}
+        id="free-solo-demo"
+        freeSolo
+        options={Object.keys(options)}
+        value={firstValue}
+        onChange={handleFirstAutocompleteChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="項目"
+          />
+        )}
+      />
       <Autocomplete
-      id="free-solo-demo"
-      freeSolo
-      options={Items.map((option) => `${option.title} : ${option.time}`)}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="項目"
+          freeSolo
+          sx={{
+            '&:hover': {
+              border:'2px solid #1192ff;'
+            }}}
+          id="free-solo-2-demo"
+          disableClearable
+          options={secondOptions}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="時間"
+              InputProps={{
+                ...params.InputProps,
+                type: 'search',
+              }}
+            />
+          )}
         />
-      )}
-    />
     </Stack>
       {showGoButton ?
         <div className={style.ButtonContainerTwo}>
