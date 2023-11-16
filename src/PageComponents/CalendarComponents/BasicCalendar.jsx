@@ -31,7 +31,7 @@ export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
-    firstValue,secondOptions,handleFirstAutocompleteChange
+    firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange
   }=useContext(DateTimeContext)
  
   return (
@@ -84,6 +84,8 @@ export default function ResponsiveDateTimePickers() {
         id="free-solo-2-demo"
         disableClearable
         options={secondOptions}
+        value={secondItem}
+        onChange={handleSecondAutocompleteChange}
         renderInput={(params) => (
           <TextField
             {...params}

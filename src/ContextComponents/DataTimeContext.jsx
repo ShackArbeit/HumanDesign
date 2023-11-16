@@ -18,43 +18,54 @@ import 'dayjs/locale/zh-cn';
   const[showGoButton,setShowGoButton]=useState(false)
   const [firstValue, setFirstValue] = useState(null);
   const [secondOptions, setSecondOptions] = useState([]);
+  const [secondItem,setSecondItem]=useState(null)
   const handleFirstAutocompleteChange = (event, newValue) => {
     setFirstValue(newValue);
     setSecondOptions(options[newValue] || []);
   };
+  const handleSecondAutocompleteChange=(event,newItem)=>{
+      setSecondItem(newItem)
+      setSecondOptions(options[newItem] || []);
+  }
 
    const handleSelectDateTime = (newDateTime) => {
      setSelectDateTime(newDateTime);
    };
 
- 
    const handleSendDateTime = async (event) => {
-    try {
       const currentDate = dayjs();
       dayjs.locale('zh-cn');
       const selectedDate = dayjs(selectDateTime);
       const formattedDate = selectedDate.format(' YYYY   /   MM   /   DD    A hh:mm');
-  
-      // 防止選取過去的日期
-      if (selectedDate.isBefore(currentDate, 'day')) {
-        alert('你所選取的日期已經過去，請重新選擇');
+      const minimumReservationDate = currentDate.add(3, 'day');
+      if(firstValue===null || secondOptions===null){
+        alert('你還沒選取預約的項目');
         return;
       }
-  
-      // 只接受三天前的預約
-      const minimumReservationDate = currentDate.add(3, 'day');
+      // 防止選取過去的日期
+         if (selectedDate.isBefore(currentDate, 'day')) {
+          alert('你所選取的日期已經過去，請重新選擇');
+          return;
+        }
+      // 防止沒有選取日期及時間
+        if (selectDateTime === null || selectDateTime.length === 0) {
+          alert('你沒有選取日期及時間 !');
+          return;
+        }
+          // 只接受三天前的預約
       if (selectedDate.isBefore(minimumReservationDate, 'day')) {
         alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
         return;
+      }
       // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
-      } else {
+    try {
         // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
         const response = await fetch('http://localhost:8000/saveDateTimeAndItem', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ selectDateTime,bookingItem, }),
+          body: JSON.stringify({ selectDateTime,firstValue, secondItem}),
         });
         // 將資料 JSON 格式化
         const responseData = await response.json();
@@ -77,14 +88,14 @@ import 'dayjs/locale/zh-cn';
             return; 
         }
       }
-    } catch (error) {
+    catch (error) {
       console.log('Error send to MongoDB', error);
     }
   };
 
    return (
      <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton,
-      firstValue,secondOptions,handleFirstAutocompleteChange
+      firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange
     }}>
        {children}
      </DateTimeContext.Provider>

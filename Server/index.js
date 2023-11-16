@@ -57,7 +57,7 @@ const dayjs = require('dayjs');
 app.post('/saveDateTimeAndItem', async (req, res) => {
   try {
     const collection = db.collection('ForBooking');
-    const { selectDateTime,bookingItem, } = req.body;
+    const { selectDateTime,firstValue, secondItem } = req.body;
     const newBooking = new Date(selectDateTime);
    // 將存放的時間點做前後 90 分鐘的區間設定
     const startTime = dayjs(newBooking).subtract(90, 'minutes');
@@ -110,14 +110,17 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
       const day = newBooking.getDate();
       const hour = newBooking.getHours();
       const minute = newBooking.getMinutes();
-  
-      await collection.insertOne({
-        Year: year,
-        Month: month,
-        Day: day,
-        Hour: hour,
-        Minute: minute,
-      });
+        await collection.insertOne({
+          Year: year,
+          Month: month,
+          Day: day,
+          Hour: hour,
+          Minute: minute,
+          BookingItem:firstValue,
+          TimeItem:secondItem
+        });
+      
+
       res.json({
         success: true,
         message: 'DateTime inserted successfully!',
@@ -126,6 +129,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
         Day: day,
         Hour: hour,
         Minute: minute,
+        BookingItem:firstValue,
       });
     } 
   } catch (error) {
