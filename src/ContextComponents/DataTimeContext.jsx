@@ -2,6 +2,13 @@
  import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
 
+
+
+
+
+
+
+
  export const DateTimeContext = createContext();
 
  const options = {
@@ -39,8 +46,8 @@ import 'dayjs/locale/zh-cn';
       const formattedDate = selectedDate.format(' YYYY   /   MM   /   DD    A hh:mm');
       const minimumReservationDate = currentDate.add(3, 'day');
       if(firstValue===null || secondOptions===null){
-        alert('你還沒選取預約的項目');
-        return;
+           alert('你還沒有選取任何項目 !')
+           return 
       }
       // 防止選取過去的日期
          if (selectedDate.isBefore(currentDate, 'day')) {
