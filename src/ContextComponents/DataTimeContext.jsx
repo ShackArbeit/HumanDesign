@@ -1,15 +1,7 @@
  import { useState, createContext } from 'react';
  import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
-
-
-
-
-
-
-
-
- export const DateTimeContext = createContext();
+export const DateTimeContext = createContext();
 
  const options = {
   個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
@@ -80,6 +72,8 @@ import 'dayjs/locale/zh-cn';
         if (responseData.success) {
           alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
           setShowGoButton(true)
+          console.log(responseData)
+          setBookingId(responseData._id);
         // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
         // 90 分鐘的區間內
         } else {
@@ -99,6 +93,7 @@ import 'dayjs/locale/zh-cn';
       console.log('Error send to MongoDB', error);
     }
   };
+
 
    return (
      <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton,

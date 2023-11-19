@@ -31,13 +31,16 @@ export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
-    firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange
+    firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange,
+    
   }=useContext(DateTimeContext)
- 
+  const handleDeleteButton=()=>{
+    
+  }
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
-    <h3 style={{marginBottom:"3rem"}}>請點選日期及項目</h3>
+    <h3 style={{marginBottom:"1rem"}}>請點選日期及項目</h3>
       {isDesktop?(
     <div className={style.ItemContainer}>
         <DemoItem >
@@ -101,7 +104,7 @@ export default function ResponsiveDateTimePickers() {
       {showGoButton ?
       <div className={style.ButtonContainer}>
       <Button 
-      onClick={handleSendDateTime}
+      onClick={handleDeleteButton}
       variant="contained" 
       size='large'
       sx={{
@@ -113,7 +116,7 @@ export default function ResponsiveDateTimePickers() {
           color:'black',
           backgroundColor:'#fff'
         }
-      }}>確定送出
+      }}>刪除 & 重新預約
       </Button>
       <Link to='/HumanDesign/booking/firstCheck'> <Button 
       variant="contained" 

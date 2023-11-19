@@ -54,6 +54,7 @@ app.get("/", (req , res) => {
 // 關於連接到 MongoDB 的路由設定 
 const dayjs = require('dayjs');
 
+// 第一次輸入預約時間及項目時的路由設定
 app.post('/saveDateTimeAndItem', async (req, res) => {
   try {
     const collection = db.collection('ForBooking');
@@ -137,6 +138,27 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+
+
+// 第一次輸入後想要刪除 MongoDB 資料的路由設定
+// app.delete('/deleteFirstBooking',async (req,res)=>{
+//     try{
+//       const collection = db.collection('ForBooking');
+//       const objectId=require('mongodb').ObjectId;
+//       // const id=req.params.id
+
+//       const result=await collection.deleteOne({_id:objectId})
+//       if(result.deletedCount===1){
+//         res.json({success:true,message:'已經成功刪除預約資料了'})
+//       }else{
+//         res.json(404).json({success:false,message:'尚未刪除基本資料'})
+//       }
+//     }
+//     catch(error){
+//       console.error('Error deleting DateTime and Item from MongoDB:', error);
+//       res.status(500).json({ success: false, message: 'Internal server error' });
+//     }
+// })
 
 
 // 關於 Jerome 分頁
