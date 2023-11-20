@@ -32,6 +32,7 @@ export default function ResponsiveDateTimePickers() {
   const isMobile=useMediaQuery('(max-width:576px');
   const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
     firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange,
+    handleDeleteFirstBooking
     
   }=useContext(DateTimeContext)
   const handleDeleteButton=()=>{
@@ -104,7 +105,7 @@ export default function ResponsiveDateTimePickers() {
       {showGoButton ?
       <div className={style.ButtonContainer}>
       <Button 
-      onClick={handleDeleteButton}
+      onClick={handleDeleteFirstBooking}
       variant="contained" 
       size='large'
       sx={{

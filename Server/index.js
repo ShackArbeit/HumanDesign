@@ -16,10 +16,15 @@ const cors = require('cors');
 const {isMobile}=require('./BookingIntroduction')
 
 
-const mongo = require('mongodb')
+const mongo  = require('mongodb');
+const {ObjectId}=require('mongodb')
+
 const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
 const client = new mongo.MongoClient(url);
 let db = null
+let result
+let id
+
 async function initDB() {
       try {
             await client.connect()
@@ -111,20 +116,22 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
       const day = newBooking.getDate();
       const hour = newBooking.getHours();
       const minute = newBooking.getMinutes();
-        await collection.insertOne({
+     
+      result=await collection.insertOne({
           Year: year,
           Month: month,
           Day: day,
           Hour: hour,
           Minute: minute,
           BookingItem:firstValue,
-          TimeItem:secondItem
-        });
-      
-
+          TimeItem:secondItem,
+        });   
+      id = result.insertedId;
+      console.log(id)
       res.json({
         success: true,
         message: 'DateTime inserted successfully!',
+        id:id,
         Year: year,
         Month: month,
         Day: day,
@@ -141,24 +148,32 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
 
 
 // 第一次輸入後想要刪除 MongoDB 資料的路由設定
-// app.delete('/deleteFirstBooking',async (req,res)=>{
-//     try{
-//       const collection = db.collection('ForBooking');
-//       const objectId=require('mongodb').ObjectId;
-//       // const id=req.params.id
+ app.delete('/deleteFirstBooking/',async (req,res)=>{
+  try {
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
+    }
 
-//       const result=await collection.deleteOne({_id:objectId})
-//       if(result.deletedCount===1){
-//         res.json({success:true,message:'已經成功刪除預約資料了'})
-//       }else{
-//         res.json(404).json({success:false,message:'尚未刪除基本資料'})
-//       }
-//     }
-//     catch(error){
-//       console.error('Error deleting DateTime and Item from MongoDB:', error);
-//       res.status(500).json({ success: false, message: 'Internal server error' });
-//     }
-// })
+    const collection = db.collection('ForBooking');
+
+    // Use deleteOne to delete the document with the specified _id
+    result = await collection.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 1) {
+      // Successfully deleted the document
+      return res.json({ success: true, message: 'Booking deleted successfully' });
+    } else {
+      // No document was deleted (probably because the ID didn't match any existing document)
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+})
+
+
+
 
 
 // 關於 Jerome 分頁
