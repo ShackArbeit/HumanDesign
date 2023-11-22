@@ -1,4 +1,4 @@
- import { useState, createContext } from 'react';
+ import { useState, createContext,useEffect } from 'react';
  import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
 export const DateTimeContext = createContext();
@@ -13,13 +13,17 @@ export const DateTimeContext = createContext();
  
 
  export default function DateTimeProvider({ children }) {
-
-  const [selectDateTime, setSelectDateTime] = useState([]);
+  // const [selectDateTime, setSelectDateTime] = useState([]);
+  const [selectDateTime, setSelectDateTime] = useState(() => {
+     const storedDateTime = localStorage.getItem('selectDateTime');
+     return storedDateTime ? dayjs(storedDateTime) : null;
+   });
   const[showGoButton,setShowGoButton]=useState(false)
   const [showOriginButton,setShowOriginButton]=useState(false)
   const [firstValue, setFirstValue] = useState([]);
   const [secondOptions, setSecondOptions] = useState([]);
   const [secondItem,setSecondItem]=useState(null)
+ 
 
   // 選取預約項目第一分項的 function 
   const handleFirstAutocompleteChange = (event, newValue) => {

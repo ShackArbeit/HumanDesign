@@ -17,7 +17,7 @@ const StyledPaper = styled(Paper)({
 
 const CheckFirstBooking = () => {
   const { selectDateTime,firstValue,secondItem} = useContext(DateTimeContext);
-  
+  console.log(selectDateTime)
 
   return (
     <Container>

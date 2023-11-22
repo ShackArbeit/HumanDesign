@@ -78,6 +78,7 @@ export default function ResponsiveDateTimePickers() {
       freeSolo
       options={Object.keys(options)}
       value={firstValue}
+      getOptionLabel={(option) => option}
       onChange={handleFirstAutocompleteChange}
       renderInput={(params) => (
         <TextField
@@ -96,6 +97,7 @@ export default function ResponsiveDateTimePickers() {
         disableClearable
         options={secondOptions}
         value={secondItem}
+        getOptionLabel={(option) => option}
         onChange={handleSecondAutocompleteChange}
         renderInput={(params) => (
           <TextField
@@ -258,6 +260,7 @@ export default function ResponsiveDateTimePickers() {
         options={Object.keys(options)}
         value={firstValue}
         onChange={handleFirstAutocompleteChange}
+        getOptionLabel={(option) => option}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -274,6 +277,7 @@ export default function ResponsiveDateTimePickers() {
           id="free-solo-2-demo"
           disableClearable
           options={secondOptions}
+          getOptionLabel={(option) => option}
           renderInput={(params) => (
             <TextField
               {...params}
