@@ -45,12 +45,10 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 const corsOptions = {
-  origin: 'http://localhost:5173', // Adjust the origin to your frontend's URL
+  origin: 'http://localhost:5173', 
   optionsSuccessStatus: 200,
 };
-
 app.use(cors(corsOptions));
-
 
 app.get("/", (req , res) => {
     res.send( "Hello world!" );
@@ -127,7 +125,6 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
           TimeItem:secondItem,
         });   
       id = result.insertedId;
-      console.log(id)
       res.json({
         success: true,
         message: 'DateTime inserted successfully!',
@@ -148,22 +145,17 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
 
 
 // 第一次輸入後想要刪除 MongoDB 資料的路由設定
- app.delete('/deleteFirstBooking/',async (req,res)=>{
+ app.delete('/deleteFirstBooking',async (req,res)=>{
   try {
     if (!id) {
       return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
     }
-
     const collection = db.collection('ForBooking');
-
-    // Use deleteOne to delete the document with the specified _id
     result = await collection.deleteOne({ _id: new ObjectId(id) });
-
     if (result.deletedCount === 1) {
-      // Successfully deleted the document
+  
       return res.json({ success: true, message: 'Booking deleted successfully' });
     } else {
-      // No document was deleted (probably because the ID didn't match any existing document)
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
   } catch (error) {
@@ -171,6 +163,9 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 })
+
+
+
 
 
 

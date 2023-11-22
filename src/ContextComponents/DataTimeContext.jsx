@@ -37,10 +37,8 @@ export const DateTimeContext = createContext();
    };
    // 若選擇不想選的項目、日期時間後想要重新選取的 fucntion 
    const handleResetBooking=()=>{
-       if(selectDateTime){
-        setSelectDateTime([])
-       }
-       if(firstValue || secondItem ){
+       if(selectDateTime||firstValue || secondItem ){
+          setSelectDateTime([])
           setFirstValue([]);
           setSecondItem([]);
        }
@@ -83,11 +81,11 @@ export const DateTimeContext = createContext();
         });
         // 將資料 JSON 格式化
         const responseData = await response.json();
+        console.log(responseData)
         // 若是成功放入資料庫則返回放入成功的訊息並 Alert 出來
         if (responseData.success) {
           alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
           setShowGoButton(true)
-          console.log(responseData)
         // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
         // 90 分鐘的區間內
         } else {
@@ -128,6 +126,10 @@ export const DateTimeContext = createContext();
           setShowOriginButton(true);
         } else {
           alert('刪除失敗或找不到預約');
+          setSelectDateTime([])
+          setFirstValue([]);
+          setSecondItem([]);
+          setShowOriginButton(true);
         }
       } else {
         alert('取消刪除預約');

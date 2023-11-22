@@ -57,7 +57,7 @@ export default function ResponsiveDateTimePickers() {
           width:"350px",
           '&:hover': {
             border:'2px solid #1192ff;'
-          }}} 
+          }}}
           format="YYYY年MM月DD日 hh:mm A "
           locale='zh-cn'
           slotProps={{ textField: { variant: 'outlined' } }}
@@ -286,54 +286,120 @@ export default function ResponsiveDateTimePickers() {
           )}
         />
     </Stack>
-      {showGoButton ?
-        <div className={style.ButtonContainerTwo}>
-        <Button 
-        onClick={handleSendDateTime}
-        variant="contained"
-        sx={{
-          fontWeight:900,
-          fontSize:'20px',
-          marginRight:'1rem',
-          '&:hover':{
-            border:'2px solid #ffa811',
-            color:'black',
-            backgroundColor:'#fff'
-          }
-        }}>確定送出
-        </Button>
-        <Link to='/HumanDesign/booking/firstCheck'> <Button 
-        variant="contained" 
-        sx={{
-          fontWeight:900,
-          fontSize:'20px',
-          '&:hover':{
-            border:'2px solid #ffa811',
-            color:'black',
-            backgroundColor:'#fff'
-          }
-        }}>前往確認頁面</Button></Link>
-        </div>:
-         <div className={style.ButtonContainer}>
-          <Button 
-          onClick={handleSendDateTime}
-          variant="contained" 
-          size='large'
-          sx={{
-            fontWeight:900,
-            fontSize:'20px',
-            '&:hover':{
-              border:'2px solid #ffa811',
-              color:'black',
-              backgroundColor:'#fff'
-            }
-          }}
-          >確定送出
+    {showGoButton ?
+      <div className={style.ButtonContainer}>
+      { showOriginButton ? (
+        <div className={style.ButtonContainer}>
+          <Button
+            onClick={handleResetBooking}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              marginRight: '1.5rem',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            重新選取
           </Button>
-          </div>
-        }
-      </div>)
-      :null}
+          <Button
+            onClick={handleSendDateTime}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            確定送出
+          </Button>
+        </div>
+      ) : (
+        <>
+          <Button
+            onClick={handleDeleteFirstBooking}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              marginRight: '1rem',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            刪除 & 重新預約
+          </Button>
+          <Link to="/HumanDesign/booking/firstCheck">
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                fontWeight: 900,
+                fontSize: '20px',
+                '&:hover': {
+                  border: '2px solid #ffa811',
+                  color: 'black',
+                  backgroundColor: '#fff',
+                },
+              }}
+            >
+              前往確認頁面
+            </Button>
+          </Link>
+        </>
+      )}
+      </div>    
+     :
+       <div className={style.ButtonContainer}>
+       <Button 
+        onClick={handleResetBooking}
+        variant="contained" 
+        size='large'
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          marginRight:'1.5rem',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}
+        >重新選取
+        </Button>
+       <Button 
+        onClick={handleSendDateTime}
+        variant="contained" 
+        size='large'
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}
+        >確定送出
+        </Button>
+        </div>
+    }
+    </div>
+     ) :null}
     </div>
   </LocalizationProvider>
   );

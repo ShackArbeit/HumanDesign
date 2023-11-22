@@ -4,6 +4,7 @@ import style from '../../CssModules/Booking.module.css'
 import { styled } from '@mui/system';
 import { Container, Paper, Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import {Link} from 'react-router-dom'
 import Button from '@mui/material/Button'
 
 const StyledPaper = styled(Paper)({
@@ -33,9 +34,11 @@ const CheckFirstBooking = () => {
         <Typography className={style.checkBookingItem}>你所預約的項目為: {firstValue}</Typography>
         <Typography className={style.checkBookingItem}>你所預約的時長為: {secondItem}</Typography>
         <Stack spacing={2} direction="row" sx={{ justifyContent: 'center', marginTop: '20px' }}>
-          <Button variant="contained" sx={{ padding: '.5rem', fontSize: '15px' }}>
-            刪除 & 重新預約
-          </Button>
+        <Link to='/HumanDesign/booking/calendar'>
+        <Button variant="contained" sx={{ padding: '.5rem', fontSize: '15px' }} color="success">
+                返回預約
+        </Button>
+        </Link>
           <Button variant="contained" sx={{ padding: '.5rem', fontSize: '15px' }} color="success">
             繼續 & 填寫基本資料
           </Button>
