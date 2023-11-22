@@ -110,36 +110,84 @@ export default function ResponsiveDateTimePickers() {
       />
     </Stack>
       {showGoButton ?
+      <div className={style.ButtonContainer}>
+      { showOriginButton ? (
         <div className={style.ButtonContainer}>
-      <Button 
-      onClick={handleDeleteFirstBooking}
-      variant="contained" 
-      size='large'
-      sx={{
-        fontWeight:900,
-        fontSize:'20px',
-        marginRight:'1rem',
-        '&:hover':{
-          border:'2px solid #ffa811',
-          color:'black',
-          backgroundColor:'#fff'
-        }
-      }}>刪除 & 重新預約
-      </Button>
-      <Link to='/HumanDesign/booking/firstCheck'> <Button 
-      variant="contained" 
-      size='large'
-      sx={{
-        fontWeight:900,
-        fontSize:'20px',
-        '&:hover':{
-          border:'2px solid #ffa811',
-          color:'black',
-          backgroundColor:'#fff'
-        }
-      }}>前往確認頁面</Button></Link>
-      </div>  
-      
+          <Button
+            onClick={handleResetBooking}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              marginRight: '1.5rem',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            重新選取
+          </Button>
+          <Button
+            onClick={handleSendDateTime}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            確定送出
+          </Button>
+        </div>
+      ) : (
+        <>
+          <Button
+            onClick={handleDeleteFirstBooking}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              fontSize: '20px',
+              marginRight: '1rem',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            刪除 & 重新預約
+          </Button>
+          <Link to="/HumanDesign/booking/firstCheck">
+            <Button
+              variant="contained"
+              size="large"
+              sx={{
+                fontWeight: 900,
+                fontSize: '20px',
+                '&:hover': {
+                  border: '2px solid #ffa811',
+                  color: 'black',
+                  backgroundColor: '#fff',
+                },
+              }}
+            >
+              前往確認頁面
+            </Button>
+          </Link>
+        </>
+      )}
+
+
+      </div>    
      :
        <div className={style.ButtonContainer}>
        <Button 
