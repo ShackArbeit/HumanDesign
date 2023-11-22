@@ -16,23 +16,36 @@ export const DateTimeContext = createContext();
 
   const [selectDateTime, setSelectDateTime] = useState([]);
   const[showGoButton,setShowGoButton]=useState(false)
-  const [firstValue, setFirstValue] = useState(null);
+  const [showOriginButton,setShowOriginButton]=useState(false)
+  const [firstValue, setFirstValue] = useState([]);
   const [secondOptions, setSecondOptions] = useState([]);
   const [secondItem,setSecondItem]=useState(null)
 
+  // 選取預約項目第一分項的 function 
   const handleFirstAutocompleteChange = (event, newValue) => {
     setFirstValue(newValue);
     setSecondOptions(options[newValue] || []);
   };
+  // 選取預約項目第二分項的 function 
   const handleSecondAutocompleteChange=(event,newItem)=>{
       setSecondItem(newItem)
       setSecondOptions(options[newItem] || []);
   }
-
+  // 選取項目的 function 
    const handleSelectDateTime = (newDateTime) => {
      setSelectDateTime(newDateTime);
    };
-
+   // 若選擇不想選的項目、日期時間後想要重新選取的 fucntion 
+   const handleResetBooking=()=>{
+       if(selectDateTime){
+        setSelectDateTime([])
+       }
+       if(firstValue || secondItem ){
+          setFirstValue([]);
+          setSecondItem([]);
+       }
+   }
+   // 選取完成預約項目後的送出的 function 
    const handleSendDateTime = async (event) => {
       const currentDate = dayjs();
       dayjs.locale('zh-cn');
@@ -94,31 +107,10 @@ export const DateTimeContext = createContext();
       console.log('Error send to MongoDB', error);
     }
   };
- 
-  //   try {
-  //     const response = await fetch(`http://localhost:8000/deleteFirstBooking`, {
-  //       method: 'DELETE',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });  
-  //     const responseData = await response.json();
-  //     console.log(responseData);
-  //     if (responseData.success) {
-  //       alert('Booking deleted successfully')
-  //       console.log('Booking deleted successfully');
-  //     } else {
-  //       console.log('Booking not found or deletion failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting booking:', error);
-  //   }
-  // };
+  // 刪除預約的 function 
   const handleDeleteFirstBooking = async () => {
     try {
-    
       const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
-  
       if (userConfirmed) {
         const response = await fetch(`http://localhost:8000/deleteFirstBooking`, {
           method: 'DELETE',
@@ -126,12 +118,14 @@ export const DateTimeContext = createContext();
             'Content-Type': 'application/json',
           },
         });
-  
         const responseData = await response.json();
         console.log(responseData);
-  
         if (responseData.success) {
           alert('已經成功刪除你的預約了 !');
+          setSelectDateTime([])
+          setFirstValue([]);
+          setSecondItem([]);
+          setShowOriginButton(true);
         } else {
           alert('刪除失敗或找不到預約');
         }
@@ -144,12 +138,20 @@ export const DateTimeContext = createContext();
     }
   };
   
-  
-
-
    return (
-     <DateTimeContext.Provider value={{ selectDateTime, handleSelectDateTime,handleSendDateTime,showGoButton,
-      firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange,handleDeleteFirstBooking
+     <DateTimeContext.Provider value={{ 
+      selectDateTime, 
+      handleSelectDateTime,
+      handleSendDateTime,
+      showGoButton,
+      showOriginButton,
+      firstValue,
+      secondOptions,
+      handleFirstAutocompleteChange,
+      secondItem,
+      handleSecondAutocompleteChange,
+      handleDeleteFirstBooking,
+      handleResetBooking
     }}>
        {children}
      </DateTimeContext.Provider>

@@ -30,14 +30,21 @@ const options = {
 export default function ResponsiveDateTimePickers() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
-  const {selectDateTime,handleSelectDateTime,handleSendDateTime,showGoButton,
-    firstValue,secondOptions,handleFirstAutocompleteChange,secondItem,handleSecondAutocompleteChange,
-    handleDeleteFirstBooking
-    
+  const {
+    selectDateTime,
+    handleSelectDateTime,
+    handleSendDateTime,
+    showGoButton,
+    firstValue,
+    secondOptions,
+    handleFirstAutocompleteChange,
+    secondItem,
+    handleSecondAutocompleteChange,
+    handleDeleteFirstBooking,
+    handleResetBooking,
+    showOriginButton
   }=useContext(DateTimeContext)
-  const handleDeleteButton=()=>{
-    
-  }
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
@@ -103,7 +110,7 @@ export default function ResponsiveDateTimePickers() {
       />
     </Stack>
       {showGoButton ?
-      <div className={style.ButtonContainer}>
+        <div className={style.ButtonContainer}>
       <Button 
       onClick={handleDeleteFirstBooking}
       variant="contained" 
@@ -131,9 +138,27 @@ export default function ResponsiveDateTimePickers() {
           backgroundColor:'#fff'
         }
       }}>前往確認頁面</Button></Link>
-      </div>:
+      </div>  
+      
+     :
        <div className={style.ButtonContainer}>
-        <Button 
+       <Button 
+        onClick={handleResetBooking}
+        variant="contained" 
+        size='large'
+        sx={{
+          fontWeight:900,
+          fontSize:'20px',
+          marginRight:'1.5rem',
+          '&:hover':{
+            border:'2px solid #ffa811',
+            color:'black',
+            backgroundColor:'#fff'
+          }
+        }}
+        >重新選取
+        </Button>
+       <Button 
         onClick={handleSendDateTime}
         variant="contained" 
         size='large'
@@ -149,7 +174,7 @@ export default function ResponsiveDateTimePickers() {
         >確定送出
         </Button>
         </div>
-      }
+    }
     </div>
       ):null }
       {isMobile?( 
