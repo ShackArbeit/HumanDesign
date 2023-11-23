@@ -13,18 +13,20 @@ export const DateTimeContext = createContext();
  
 
  export default function DateTimeProvider({ children }) {
-  // const [selectDateTime, setSelectDateTime] = useState([]);
-  const [selectDateTime, setSelectDateTime] = useState(() => {
-     const storedDateTime = localStorage.getItem('selectDateTime');
-     return storedDateTime ? dayjs(storedDateTime) : null;
-   });
+  const [selectDateTime, setSelectDateTime] = useState([]);
+  // const [selectDateTime, setSelectDateTime] = useState(() => {
+  //    const storedDateTime = localStorage.getItem('selectDateTime');
+  //    return storedDateTime ? dayjs(storedDateTime) : null;
+  //  });
   const[showGoButton,setShowGoButton]=useState(false)
   const [showOriginButton,setShowOriginButton]=useState(false)
-  const [firstValue, setFirstValue] = useState([]);
+  const [firstValue, setFirstValue] = useState('');
   const [secondOptions, setSecondOptions] = useState([]);
-  const [secondItem,setSecondItem]=useState(null)
+  const [secondItem,setSecondItem]=useState('');
  
-
+  console.log(firstValue)
+  console.log(secondItem)
+   
   // 選取預約項目第一分項的 function 
   const handleFirstAutocompleteChange = (event, newValue) => {
     setFirstValue(newValue);
@@ -41,10 +43,10 @@ export const DateTimeContext = createContext();
    };
    // 若選擇不想選的項目、日期時間後想要重新選取的 fucntion 
    const handleResetBooking=()=>{
-       if(selectDateTime||firstValue || secondItem ){
+       if(selectDateTime ||firstValue || secondItem ){
           setSelectDateTime([])
-          setFirstValue([]);
-          setSecondItem([]);
+          setFirstValue(()=>{});
+          setSecondItem(()=>{});
        }
    }
    // 選取完成預約項目後的送出的 function 

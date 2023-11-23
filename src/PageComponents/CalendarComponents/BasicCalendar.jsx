@@ -97,7 +97,6 @@ export default function ResponsiveDateTimePickers() {
         disableClearable
         options={secondOptions}
         value={secondItem}
-        getOptionLabel={(option) => option}
         onChange={handleSecondAutocompleteChange}
         renderInput={(params) => (
           <TextField

@@ -1,10 +1,12 @@
-import MediaQuery from 'react-responsive';
 import { Link } from 'react-router-dom';
 import {useState,useEffect} from 'react'
+
+
 import style from '../CssModules/Header.module.css'
 
 
 const Header = () => {
+  
   const[isOpen,setIsOpen]=useState(false)
   useEffect(() => {
     const handleResize = () => {
