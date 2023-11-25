@@ -1,6 +1,7 @@
 import { useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../ToolkitComponents/AboutFetchApi/AboutJeromeSlice';
+// import { useSelector, useDispatch } from 'react-redux'
+// import { setData } from '../ToolkitComponents/AboutFetchApi/AboutJeromeSlice';
+import { useAboutJerome } from '../ReactQueryCompoents/AboutJeromeQuery';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -12,28 +13,31 @@ import style from '../CssModules/Jerome.module.css'
 import Container from 'react-bootstrap/Container';
 
 const AboutJerome = () => {
-  const datas=useSelector((state)=>state.aboutJerome)
-  const dispatch=useDispatch()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const years = [2013, 2016, 2019, 2021, 2022];
-        const fetchedData = [];
-        for (const year of years) {
-          const response = await fetch(`http://localhost:8000/aboutJerome/${year}`);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch data for ${year}`);
-          }
-          const data = await response.json();
-          fetchedData.push(data);
-        }
-        dispatch(setData(fetchedData));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, [dispatch]);
+  const { data: datas, isLoading, error } = useAboutJerome(); 
+  if(isLoading) return<p>Loading...</p>
+  if(error) return <p>Error:{error.message}</p>
+  // const datas=useSelector((state)=>state.aboutJerome)
+  // const dispatch=useDispatch()
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const years = [2013, 2016, 2019, 2021, 2022];
+  //       const fetchedData = [];
+  //       for (const year of years) {
+  //         const response = await fetch(`http://localhost:8000/aboutJerome/${year}`);
+  //         if (!response.ok) {
+  //           throw new Error(`Failed to fetch data for ${year}`);
+  //         }
+  //         const data = await response.json();
+  //         fetchedData.push(data);
+  //       }
+  //       dispatch(setData(fetchedData));
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [dispatch]);
   
   return (
     <>

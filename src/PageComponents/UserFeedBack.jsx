@@ -1,4 +1,4 @@
-import  { useEffect,useState} from 'react';
+import { useUserFeedBack } from '../ReactQueryCompoents/UserFeedBackQuery';
 import style from '../CssModules/FeedBack.module.css';
 import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
@@ -18,22 +18,9 @@ const theme = createTheme({
 });
 
 const UserFeedBack = () => {
-  const[datas,setDatas]=useState([])
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/feedback/jdShare');
-        const Data = await response.json();
-        console.log(Data)
-        setDatas(Data)
-      } 
-      catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
+  const { data: datas, isLoading, error } = useUserFeedBack();
+  if(isLoading) return <p>Loading...</p>
+  if(error) return <p>Error:{error.message}</p>
   return (
     <ThemeProvider theme={theme}>
       <Container fluid className={style.userContainer}>

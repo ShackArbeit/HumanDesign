@@ -1,26 +1,13 @@
 import style from '../../CssModules/HumanDesignIntroduce.module.css'
 import Container from 'react-bootstrap/Container';
-import { useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
+import { useHoverHumanDesing } from '../../ReactQueryCompoents/WhatisHumanDesign';
 import {Link} from 'react-router-dom'
 
 const HoverHumanDesign = () => {
-  const datas=useSelector((state)=>state.aboutJerome)
-  const dispatch=useDispatch()
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await fetch('http://localhost:8000/human/hoverIntroducer');
-            const Data = await response.json();
-            dispatch(setData(Data));
-          } 
-          catch (error) {
-            console.log(error);
-          }
-        };
-        fetchData();
-      }, [])
+
+const{data:datas,isLoading,error}=useHoverHumanDesing()
+  if(isLoading) return <p>Loading...</p>
+  if(error) return <p>Error :{error.message}</p>
   return (
     <Container fluid className={style.HoverHumanDesignWarap}>
     {datas.map((data,index)=>(

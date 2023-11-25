@@ -2,29 +2,10 @@ import style from '../../CssModules/HumanDesignDetail.module.css'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { useAuthorHumanDesign } from '../../ReactQueryCompoents/WhatisHumanDesign';
 import { useEffect,useState} from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
-
-
 
 export default function AuthorHumanDesign() {
-  const datas=useSelector((state)=>state.aboutJerome)
-  const dispatch=useDispatch()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/human/authorHuman');
-        const Data = await response.json();
-        console.log(Data)
-        dispatch(setData(Data));
-      } 
-      catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -38,6 +19,10 @@ export default function AuthorHumanDesign() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+  const{data:datas,isLoading,error}=useAuthorHumanDesign()
+  if(isLoading) return <p>Loading...</p>
+  if(error) return <p>Error :{error.message}</p>
+  
 
   return (
     <Container className={style.HumanDesignWrap} fluid>
