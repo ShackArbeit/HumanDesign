@@ -1,5 +1,5 @@
 import style from '../../CssModules/HomePage.module.css'
-import  { useEffect} from 'react';
+import { useService } from '../../ReactQueryCompoents/HomePageQuery';
 import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -9,8 +9,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
-import { setData } from '../../ToolkitComponents/AboutFetchApi/AboutJeromeSlice'
+
 
 const theme = createTheme({
       breakpoints: {
@@ -32,21 +31,9 @@ const theme = createTheme({
     }));
 
 const ServiceProcess = () => {
-  const datas=useSelector((state)=>state.aboutJerome)
-  const dispatch=useDispatch()
-      useEffect(() => {
-            const fetchData = async () => {
-              try {
-                const response = await fetch('http://localhost:8000/home/serviceProcess');
-                const Data = await response.json();
-                dispatch(setData(Data));
-              } 
-              catch (error) {
-                console.log(error);
-              }
-            };
-            fetchData();
-          }, []);
+  const { data: datas, isLoading, error } = useService();
+  if(isLoading) return <p>Loading...</p>
+  if(error) return <p>Error:{error.message}</p>
   return (
    <ThemeProvider theme={theme}>
    

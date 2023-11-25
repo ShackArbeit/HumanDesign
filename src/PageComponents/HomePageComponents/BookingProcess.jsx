@@ -1,7 +1,7 @@
 import style from '../../CssModules/HomePage.module.css'
 import Container from 'react-bootstrap/Container';
-import  { useEffect,useState} from 'react';
 import Box from '@mui/material/Box';
+import { useBooking } from '../../ReactQueryCompoents/HomePageQuery';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 const theme = createTheme({
@@ -16,21 +16,9 @@ const theme = createTheme({
       },
     })
 const BookingProcess = () => {
-      const[datas,setDatas]=useState([])
-      useEffect(() => {
-            const fetchData = async () => {
-              try {
-                const response = await fetch('http://localhost:8000/home/bookingProcess');
-                const Data = await response.json();
-                console.log(Data)
-                setDatas(Data)
-              } 
-              catch (error) {
-                console.log(error);
-              }
-            };
-            fetchData();
-          }, []);
+  const { data: datas, isLoading, error } = useBooking();
+  if(isLoading) return <p>Loading...</p>
+  if(error) return <p>Error:{error.message}</p>
   return (
   <ThemeProvider theme={theme}>
     <Container className={style.bookProcessWrap}>
