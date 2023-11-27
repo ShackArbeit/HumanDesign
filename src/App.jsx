@@ -16,6 +16,7 @@ import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanD
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
+import SignInAfterAuth from "./PageComponents/AuthPageComponents/SignInAfterAuth";
 
 
 function App() {
@@ -30,7 +31,10 @@ function App() {
           <Route path="booking" element={<EntraceBooking/>}/>
             <Route path="booking/calendar" element={<BasicCalendar />}/>
             <Route path="booking/firstCheck" element={<CheckFirstBooking />}/>
+         //以下為註冊的路由
           <Route path='signup' element={<SignUp/>}/>
+          <Route path='signinAfterAuth' element={<SignInAfterAuth/>}/>
+         
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>

@@ -114,6 +114,23 @@ export default function ResponsiveDateTimePickers() {
       <div className={style.ButtonContainer}>
       { showOriginButton ? (
         <div className={style.ButtonContainer}>
+        <Button
+            onClick={handleSendDateTime}
+            variant="contained"
+            size="large"
+            sx={{
+              fontWeight: 900,
+              marginRight:'1.5rem',
+              fontSize: '20px',
+              '&:hover': {
+                border: '2px solid #ffa811',
+                color: 'black',
+                backgroundColor: '#fff',
+              },
+            }}
+          >
+            確定送出
+          </Button>
           <Button
             onClick={handleResetBooking}
             variant="contained"
@@ -130,22 +147,6 @@ export default function ResponsiveDateTimePickers() {
             }}
           >
             重新選取
-          </Button>
-          <Button
-            onClick={handleSendDateTime}
-            variant="contained"
-            size="large"
-            sx={{
-              fontWeight: 900,
-              fontSize: '20px',
-              '&:hover': {
-                border: '2px solid #ffa811',
-                color: 'black',
-                backgroundColor: '#fff',
-              },
-            }}
-          >
-            確定送出
           </Button>
         </div>
       ) : (
@@ -192,13 +193,28 @@ export default function ResponsiveDateTimePickers() {
      :
        <div className={style.ButtonContainer}>
        <Button 
+       onClick={handleSendDateTime}
+       variant="contained" 
+       size='large'
+       sx={{
+         fontWeight:900,
+         fontSize:'20px',
+         marginRight:'1.5rem',
+         '&:hover':{
+           border:'2px solid #ffa811',
+           color:'black',
+           backgroundColor:'#fff'
+         }
+       }}
+       >確定送出
+       </Button>
+       <Button 
         onClick={handleResetBooking}
         variant="contained" 
         size='large'
         sx={{
           fontWeight:900,
           fontSize:'20px',
-          marginRight:'1.5rem',
           '&:hover':{
             border:'2px solid #ffa811',
             color:'black',
@@ -206,21 +222,6 @@ export default function ResponsiveDateTimePickers() {
           }
         }}
         >重新選取
-        </Button>
-       <Button 
-        onClick={handleSendDateTime}
-        variant="contained" 
-        size='large'
-        sx={{
-          fontWeight:900,
-          fontSize:'20px',
-          '&:hover':{
-            border:'2px solid #ffa811',
-            color:'black',
-            backgroundColor:'#fff'
-          }
-        }}
-        >確定送出
         </Button>
         </div>
     }

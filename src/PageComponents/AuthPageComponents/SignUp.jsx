@@ -31,12 +31,16 @@ export default function SignUp() {
         const email = data.get('email');
         const password = data.get('password');
         const confirmPassword = data.get('ConfirmPassword');
+        if(email===''||password===''||confirmPassword===''){
+            alert('請輸入信箱或密碼');
+            return ;
+        }
         if (password !== confirmPassword) {
           alert('密碼和確認密碼不相符，請重新輸入。');
           return;
         }
         else{
-            negative('HumanDesign/signinAfterAuth')
+            negative('/HumanDesign/signinAfterAuth')
             console.log({email,password,});
         }
       };
