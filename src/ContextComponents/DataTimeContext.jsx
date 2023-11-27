@@ -61,13 +61,11 @@ export default function DateTimeProvider({ children }) {
        if (selectDateTime === null || selectDateTime.length === 0) {
          alert('你沒有選取日期及時間 !');
          return;
-       } else if((firstValue === null || secondItem === null) && (selectDateTime !== null || selectDateTime.length !== 0)){
-        alert('你還沒有選取任何項目 !')
-        return;
-      }
-
-
-
+       }
+       if (selectDateTime && selectDateTime.length > 0 && (firstValue==='' || secondItem ==='')) {
+        alert('你尚未選取任何項目！');
+         return; 
+       }
          // 只接受三天前的預約
      if (selectedDate.isBefore(minimumReservationDate, 'day')) {
        alert(`抱歉，無法接受當日預約，只接受${minimumReservationDate.format('YYYY年MM月DD日')}起的預約`);
@@ -90,9 +88,11 @@ export default function DateTimeProvider({ children }) {
        if (responseData.success) {
          alert(`我們已成功接受您於 ${formattedDate} 的預約了 !`);
          setShowGoButton(true)
+         setShowOriginButton(false); 
        // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
        // 90 分鐘的區間內
        } else {
+       
          // responseData 是 status 為 400 時所返回的物件，並透過解構賦值存放在變數 Year,Month,Day,Hour,Minute 中
            const { Year, Month, Day, Hour, Minute } = responseData;
          // 設定前端要 Alert 訊息的變數，將前後 90 分鐘的區間透過 day.js 做計算
