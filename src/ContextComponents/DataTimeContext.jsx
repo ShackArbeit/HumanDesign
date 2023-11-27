@@ -16,9 +16,9 @@ export default function DateTimeProvider({ children }) {
  const [selectDateTime, setSelectDateTime] = useState([]);
  const[showGoButton,setShowGoButton]=useState(false)
  const [showOriginButton,setShowOriginButton]=useState(false)
- const [firstValue, setFirstValue] = useState('');
+ const [firstValue, setFirstValue] = useState(null);
  const [secondOptions, setSecondOptions] = useState([]);
- const [secondItem,setSecondItem]=useState('');
+ const [secondItem,setSecondItem]=useState(null);
 
  console.log(firstValue)
  console.log(secondItem)

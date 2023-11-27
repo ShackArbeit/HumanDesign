@@ -17,6 +17,7 @@ import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
 import SignInAfterAuth from "./PageComponents/AuthPageComponents/SignInAfterAuth";
+import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 
 
 function App() {
@@ -34,6 +35,8 @@ function App() {
          //以下為註冊的路由
           <Route path='signup' element={<SignUp/>}/>
           <Route path='signinAfterAuth' element={<SignInAfterAuth/>}/>
+        // 以下為登入的路由
+        <Route path='signin' element={<SignIn/>}/>
          
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>

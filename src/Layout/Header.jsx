@@ -40,7 +40,7 @@ const Header = () => {
       <Link className={style.Navlink} to="Feedback">體驗回饋</Link>
     </li>
     <li className={style.Navitem}>
-      <Link className={style.Navlink} to="booking">立即預約</Link>
+      <Link className={style.Navlink} to="signup">註冊 & 預約</Link>
     </li>
   </ul>
   <a className={style.menuToggle}
