@@ -15,6 +15,7 @@ import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDes
 import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanDesign";
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
+import SignUp from "./PageComponents/AuthPageComponents/SignUp";
 
 
 function App() {
@@ -27,8 +28,9 @@ function App() {
           <Route path="Jerome" element={<AboutJerome/>}/>
           <Route path="Feedback" element={<UserFeedBack/>}/>
           <Route path="booking" element={<EntraceBooking/>}/>
-          <Route path="booking/calendar" element={<BasicCalendar />}/>
-          <Route path="booking/firstCheck" element={<CheckFirstBooking />}/>
+            <Route path="booking/calendar" element={<BasicCalendar />}/>
+            <Route path="booking/firstCheck" element={<CheckFirstBooking />}/>
+          <Route path='signup' element={<SignUp/>}/>
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>
