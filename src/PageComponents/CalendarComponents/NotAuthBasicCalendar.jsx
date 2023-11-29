@@ -27,7 +27,7 @@ const options = {
 
 
 
-export default function BasicCalendar() {
+export default function NotAuthBasiCalendar() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const {

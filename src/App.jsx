@@ -18,6 +18,8 @@ import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBoo
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
 import SignInAfterAuth from "./PageComponents/AuthPageComponents/SignInAfterAuth";
 import SignIn from "./PageComponents/AuthPageComponents/SignIn";
+import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
+import NotAuthBasiCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
 
 
 function App() {
@@ -29,15 +31,19 @@ function App() {
           <Route path="" element={<EntranceHome />}/>
           <Route path="Jerome" element={<AboutJerome/>}/>
           <Route path="Feedback" element={<UserFeedBack/>}/>
-          <Route path="booking" element={<EntraceBooking/>}/>
-            <Route path="booking/calendar" element={<BasicCalendar />}/>
-            <Route path="booking/firstCheck" element={<CheckFirstBooking />}/>
-         //以下為註冊的路由
+          //以下為註冊的路由
           <Route path='signup' element={<SignUp/>}/>
           <Route path='signinAfterAuth' element={<SignInAfterAuth/>}/>
         // 以下為登入的路由
         <Route path='signin' element={<SignIn/>}/>
-         
+        // 這裡是有經過註冊後所到的預約頁面的路由
+          <Route path="bookingAfterSignIn" element={<EntraceBooking/>}/>
+            <Route path="bookingAfterSignIn/calendar" element={<BasicCalendar />}/>
+            <Route path="bookingAfterSignIn/firstCheck" element={<CheckFirstBooking />}/>
+        // 這裡是沒有經過註冊所到的預約頁面的路由
+         <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
+         <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasiCalendar/>}/>
+
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>

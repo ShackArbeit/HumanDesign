@@ -146,7 +146,7 @@ export default function SignUp() {
           </Box>
             <Grid container sx={{display:'flex',flexDirection:"column"}}>
             <Grid item xs sx={{marginRight:'40px'}}>
-                <Link href="#" variant="body2"
+                <Link to='/HumanDesign/notAuthBooking' variant="body2"
                 sx={{textDecoration:'none',color:'red',fontSize:'18px'}}
                 >
                     不加入會員直接預約
