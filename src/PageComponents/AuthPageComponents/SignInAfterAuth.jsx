@@ -23,6 +23,8 @@ import {useNavigate} from  'react-router-dom'
 const defaultTheme = createTheme();
 
 export default function SignInAfterAuth() {
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const [open, setOpen] = React.useState(true);
     const negative=useNavigate()
     const handleSubmit = (event) => {
@@ -30,6 +32,16 @@ export default function SignInAfterAuth() {
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
         const password = data.get('password');
+         // 要求密碼要符合特殊的格式的判斷
+         if (!passwordPattern.test(password &&confirmPassword)) {
+          alert('密碼格式不符合要求，請重新輸入。');
+          return;
+      }
+       // 要求 Email 要符合特殊的格式判斷
+       if(!emailRegex.test(email)){
+        alert('電子信箱格式不符合要求，請重新輸入。')
+        return 
+      }
         if (email==='' || password==='') {
           alert('請輸入信箱或密碼');
           return;
@@ -83,7 +95,7 @@ export default function SignInAfterAuth() {
               required
               fullWidth
               id="email"
-              label="電子信箱"
+              label="請輸入有效的電子信箱"
               name="email"
               autoComplete="email"
               autoFocus
@@ -93,10 +105,15 @@ export default function SignInAfterAuth() {
               required
               fullWidth
               name="password"
-              label="請輸入密碼"
+              label="密碼須包含至少一大寫及特殊符號及八位元"
               type="password"
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                inputProps: {
+                  pattern: passwordPattern,
+                },
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
