@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { Link }from 'react-router-dom'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import {useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -17,6 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from  'react-router-dom'
+import Swal from 'sweetalert2';
 
 
 
@@ -25,7 +27,7 @@ const defaultTheme = createTheme();
 export default function SignUp() {
     const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
     const negative=useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,22 +36,41 @@ export default function SignUp() {
         const password = data.get('password');
         const confirmPassword = data.get('ConfirmPassword');
         if(email===''||password===''||confirmPassword===''){
-            alert('請輸入信箱或密碼');
+          Swal.fire({
+            title: '不得空白',
+            text: '請輸入信箱或密碼 !',
+            icon: 'warning',
+            confirmButtonText: '了解'
+          })
             return ;
         }
       // 要求 Email 要符合特殊的格式判斷
       if(!emailRegex.test(email)){
-        alert('電子信箱格式不符合要求，請重新輸入。')
+        Swal.fire({
+          title: '格式錯誤',
+          text: '電子信箱格式不符合要求，請重新輸入 !',
+          icon: 'error',
+          confirmButtonText: '了解'
+        })
         return 
       }
       // 要求密碼要符合特殊的格式的判斷
         if (!passwordPattern.test(password &&confirmPassword)) {
-          alert('密碼格式不符合要求，請重新輸入。');
+          Swal.fire({
+            title: '格式錯誤',
+            text: '密碼格式不符合要求，請重新輸入 !',
+            icon: 'error',
+            confirmButtonText: '了解'
+          })
           return;
       }
-
         if (password !== confirmPassword) {
-          alert('密碼和確認密碼不相符，請重新輸入。');
+          Swal.fire({
+            title: '格式錯誤',
+            text: '你所輸入的確認密碼有誤，請重新輸入 !',
+            icon: 'error',
+            confirmButtonText: '了解'
+          })
           return;
         }
         else{
