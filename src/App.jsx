@@ -13,6 +13,7 @@ import AuthorHumanDesign from "./PageComponents/WhatIsHumanComponents/AuthorHuma
 import EnergyHumanDesign from "./PageComponents/WhatIsHumanComponents/EnergyHumanDesign";
 import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDesign";
 import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanDesign";
+import CircileHumanDesign from "./PageComponents/WhatIsHumanComponents/CircileHumanDesign";
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
@@ -52,6 +53,7 @@ function App() {
           <Route path='human/內在權威' element={<AuthorHumanDesign/>}/>
           <Route path='human/能量中心' element={<EnergyHumanDesign/>}/>
           <Route path='human/通道' element={<RoadHumanDesign />}/>
+          <Route path='human/輪迴交叉' element={<CircileHumanDesign />}/>
           <Route path='human/起源' element={<RaUraHumanDesign />}/>
         </Route>
       </Routes>

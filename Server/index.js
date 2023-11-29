@@ -11,6 +11,7 @@ const {authorHumanDesign}=require('./WhatIsHumanDesign')
 const {energyHumanDesign}=require('./WhatIsHumanDesign')
 const {roadHumanDesign}=require('./WhatIsHumanDesign')
 const { writerHumanDesign} =require('./WhatIsHumanDesign')
+const {circleHumanDesign}=require('./WhatIsHumanDesign')
 const {isDesktopContent}=require('./BookingIntroduction')
 const cors = require('cors');
 const {isMobile}=require('./BookingIntroduction')
@@ -225,13 +226,17 @@ app.get('/human/writerHuman',(req,res)=>{
 app.get('/human/roadHuman',(req,res)=>{
   res.send(roadHumanDesign)
 })
-// 以下為預約系統的部分
-app.get('/bookingIntroduction/isDesktop',(req,res)=>{
-  res.send(isDesktopContent)
+// 輪迴交叉
+app.get('/human/circleHuman',(req,res)=>{
+  res.send(circleHumanDesign)
 })
-app.get('/bookingIntroduction/isMobile',(req,res)=>{
-  res.send(isMobile)
-})
+// // 以下為預約系統的部分
+// app.get('/bookingIntroduction/isDesktop',(req,res)=>{
+//   res.send(isDesktopContent)
+// })
+// app.get('/bookingIntroduction/isMobile',(req,res)=>{
+//   res.send(isMobile)
+// })
 
 // 以下為將所選取的日期及時間放進資料庫的路由
 app.post('/saveDateTime',async (req,res)=>{

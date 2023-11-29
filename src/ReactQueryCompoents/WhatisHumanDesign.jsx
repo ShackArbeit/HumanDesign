@@ -89,3 +89,14 @@ export const useTypeHumanDesign=()=>{
           }
       })
 }
+// 輪迴交叉 = 你的命運頁面的 Hook 
+export const useCircleHumanDesign=()=>{
+      return useQuery({
+            queryKey:['circleHumanDesign'],
+            queryFn:async()=>{
+                  const response=await fetch('http://localhost:8000/human/circleHuman')
+                  const data=await response.json();
+                  return data;
+            }
+      })
+}

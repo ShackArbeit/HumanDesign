@@ -65,6 +65,11 @@ const writerHumanDesign=[
     {id:1,title:'人類圖的起源與歷史',content:'人類圖起源於西班牙Ibiza，由加拿大籍的拉‧烏盧‧胡於1987年創立，至今已推廣到全球40餘國。由於人類圖體系博大精深，具備扎實的科學及邏輯基礎，可以應用的範疇非常廣泛，除了自我認識，還可運用在愛情、職場、教養、健康等，是近年來最受矚目的一門學問。',url:'https://picsum.photos/600/400?random=33'},
     {id:2,title:'豐富的知識綜合',content:'人類圖結合西方占星、猶太教生命之樹，和印度脈輪、中國易經等古老知識，並加入當代基因遺傳及量子物理學等現代科學。這張圖揭露你的基因密碼，造就你獨特的人格特質、天賦才華，是你的人生使用說明書，指引你回到內在權威，在人生道路中大大小小的旅途，做出正確的決定，活出自己，毫不費力。',url:'https://picsum.photos/600/400?random=34'}
 ]
+const circleHumanDesign=[
+    {id:1,title:'輪迴交叉是你的命運，是你此生來做的事',content:'「如果你容許自己自然地生活，能量會帶你去做的事。而就算你不容許，也十不離八九」。我想這對很多人來說是非常吸引的資訊，因為它是解開人生迷茫感最有用的資訊。它是由四個閘門(人類圖裡的數字)加起來而形成的。既然這是很重要的資訊，那我當然用了相當多的時間在這裡。從人類圖報告書裡，你會得到不只一次，不只兩次，而是三次輪迴交叉的解釋。為什麼需要這麼多次？因為這是非常重要的資訊，而我必需要慢慢拆開給你閱讀而讓你能深深地明白。',
+    url:'https://picsum.photos/600/400?random=33'},
+    {id:2,title:'第一次',content:'是官方對每一種命運的簡單短句，作為官方代表的我當然必需要把它放到報告書裡去。它簡單卻直接地表達出擁有這個命運的你此生來做的事。它說的是一個大畫面，但並不會表達出具體的細節。它寫在報告書「輪迴交叉」的部份。',url:'https://picsum.photos/600/400?random=34'},
+]
 
 module.exports= {hoverHumanDesign,
                  explainHumanDesign,
@@ -73,5 +78,6 @@ module.exports= {hoverHumanDesign,
                  authorHumanDesign,
                  energyHumanDesign,
                  roadHumanDesign,
-                 writerHumanDesign
+                 writerHumanDesign,
+                 circleHumanDesign
                 }
