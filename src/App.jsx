@@ -20,7 +20,7 @@ import SignUp from "./PageComponents/AuthPageComponents/SignUp";
 import SignInAfterAuth from "./PageComponents/AuthPageComponents/SignInAfterAuth";
 import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
-import NotAuthBasiCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
+import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
 
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
             <Route path="bookingAfterSignIn/firstCheck" element={<CheckFirstBooking />}/>
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
-         <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasiCalendar/>}/>
+         <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
 
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>

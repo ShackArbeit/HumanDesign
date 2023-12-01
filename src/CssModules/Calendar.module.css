@@ -31,15 +31,11 @@ body,htmo{
     margin-top:1rem;
 } 
 .ButtonContainerTwo{
-    top:4rem;
-    border:2px solid red;
+    top:0;
 } 
 @media(max-width:576px){
     .ButtonContainerTwo{
         display:flex;
-        flex-direction:column;
-    }
-    .ButtonContainer{
-        top:2rem;
+        /* flex-direction:column; */
     }
 }

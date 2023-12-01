@@ -58,6 +58,9 @@ app.get("/", (req , res) => {
 // 關於連接到 MongoDB 的路由設定 
 const dayjs = require('dayjs');
 
+
+// 以下皆屬於未註冊及登入會員而直接預約的路由設定
+// 所對應的 Collection 為 forBooking 
 // 第一次輸入預約時間及項目時的路由設定
 app.post('/saveDateTimeAndItem', async (req, res) => {
   try {
@@ -144,7 +147,6 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
   }
 });
 
-
 // 第一次輸入後想要刪除 MongoDB 資料的路由設定
  app.delete('/deleteFirstBooking',async (req,res)=>{
   try {
@@ -164,6 +166,11 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 })
+
+// 以下為經過會員註冊後才預約的路由設定
+// 所對應的 Collection 為 BookingAfterAuth
+
+
 
 
 
@@ -230,13 +237,13 @@ app.get('/human/roadHuman',(req,res)=>{
 app.get('/human/circleHuman',(req,res)=>{
   res.send(circleHumanDesign)
 })
-// // 以下為預約系統的部分
-// app.get('/bookingIntroduction/isDesktop',(req,res)=>{
-//   res.send(isDesktopContent)
-// })
-// app.get('/bookingIntroduction/isMobile',(req,res)=>{
-//   res.send(isMobile)
-// })
+// 以下為預約系統的部分
+ app.get('/bookingIntroduction/isDesktop',(req,res)=>{
+  res.send(isDesktopContent)
+ })
+ app.get('/bookingIntroduction/isMobile',(req,res)=>{
+   res.send(isMobile)
+})
 
 // 以下為將所選取的日期及時間放進資料庫的路由
 app.post('/saveDateTime',async (req,res)=>{

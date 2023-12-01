@@ -41,9 +41,9 @@ export default function DateTimeProvider({ children }) {
   // 若選擇不想選的項目、日期時間後想要重新選取的 fucntion 
   const handleResetBooking=()=>{
       if(selectDateTime ||firstValue || secondItem ){
-         setSelectDateTime([])
-         setFirstValue(()=>{});
-         setSecondItem(()=>{});
+            setSelectDateTime([])
+            setFirstValue([]);
+            setSecondItem([]);
       }
   }
   // 選取完成預約項目後的送出的 function 
@@ -168,10 +168,10 @@ export default function DateTimeProvider({ children }) {
           icon: 'error',
           confirmButtonText: '了解'
         })
-         setSelectDateTime([])
-         setFirstValue([]);
-         setSecondItem([]);
-         setShowOriginButton(true);
+        //  setSelectDateTime([])
+        //  setFirstValue([]);
+        //  setSecondItem([]);
+        //  setShowOriginButton(true);
        }
      } else {
        alert('取消刪除預約');
