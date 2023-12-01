@@ -169,6 +169,15 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
 
 // 以下為經過會員註冊後才預約的路由設定
 // 所對應的 Collection 為 BookingAfterAuth
+// 從註冊頁面向資料庫放入資料的路由設定
+app.post('/signUp',async(req,res)=>{
+    try{
+        const collection=db.collection('AuthForBooking')
+        
+    }catch(error){
+
+    }
+})
 
 
 

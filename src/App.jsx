@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DateTimeProvider from "./ContextComponents/DataTimeContext";
+import SignUpProvider from "./ContextComponents/SignUpContext";
+import SignInProvider from "./ContextComponents/SignInContext";
+import SignInAfterAuthProvider from "./ContextComponents/SignInAfterAuthContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -27,6 +30,9 @@ function App() {
   return (
     <DateTimeProvider>
      <BrowserRouter>
+     <SignUpProvider>
+      <SignInProvider>
+        <SignInAfterAuthProvider>
       <Routes>
         <Route path="/HumanDesign" element={<Layout />}>
           <Route path="" element={<EntranceHome />}/>
@@ -57,6 +63,9 @@ function App() {
           <Route path='human/起源' element={<RaUraHumanDesign />}/>
         </Route>
       </Routes>
+      </SignInAfterAuthProvider>
+      </SignInProvider>
+      </SignUpProvider>
     </BrowserRouter>
     </DateTimeProvider>
   )

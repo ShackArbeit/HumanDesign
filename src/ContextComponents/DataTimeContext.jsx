@@ -21,9 +21,6 @@ export default function DateTimeProvider({ children }) {
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
 
- console.log(firstValue)
- console.log(secondItem)
-  
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
    setFirstValue(newValue);
