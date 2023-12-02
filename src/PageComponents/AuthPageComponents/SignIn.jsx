@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import {useState} from 'react';
+import {useEffect} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -19,14 +19,31 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import { SignInContext } from '../../ContextComponents/SignInContext';
+import { SingUpContext } from '../../ContextComponents/SignUpContext';
 
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
     const {
-      open,setOpen,passwordPattern,handleSubmit
+      open,setOpen,passwordPattern,handleSubmit,
+      email,setEmail,password,setPassword
     }=useContext(SignInContext)
+    
+    const {
+      setRememberMe,
+    } = useContext(SingUpContext);
+    useEffect(() => {
+      const rememberedEmail = localStorage.getItem('rememberedEmail');
+      if (rememberedEmail) {
+        setEmail(rememberedEmail);
+        setRememberMe(true); 
+      }
+      const rememberedPassword = localStorage.getItem('rememberMePassword');
+      if (rememberedPassword) {
+        setPassword(rememberedPassword);
+      }
+    }, []);
 
   return (
     <div className={style.signUpContainer}>
@@ -74,6 +91,8 @@ export default function SignIn() {
               label="請輸入有效的電子信箱"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -84,6 +103,8 @@ export default function SignIn() {
               label="密碼須包含至少一大寫及特殊符號及八位元"
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               InputProps={{
                 inputProps: {

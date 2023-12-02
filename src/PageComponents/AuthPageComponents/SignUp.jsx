@@ -25,7 +25,9 @@ export default function SignUp() {
     open,
     setOpen,
     handleSubmit,
-    passwordPattern
+    passwordPattern,
+    rememberMe,
+    setRememberMe
   }=useContext(SingUpContext)
 
   return (
@@ -109,6 +111,7 @@ export default function SignUp() {
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
+              onChange={() => setRememberMe(!rememberMe)} 
             />
             <Box sx={{
                 display:'flex'

@@ -173,10 +173,91 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
 app.post('/signUp',async(req,res)=>{
     try{
         const collection=db.collection('AuthForBooking')
-        
+        const{email,password,confirmPassword}=req.body;
+        let checkEmail=await collection.findOne({
+          Email:email
+        })
+        if(checkEmail!==null){
+          res.json({
+            success: false,
+            message: '註冊失敗，因為信箱重複',
+          });
+        }else{
+          result=collection.insertOne({
+            Email:email,
+            Password:password,
+            confirmPassword:confirmPassword
+          })
+          res.json({
+            success: true,
+            message: '已經收到你的信箱及密碼了!',
+            Email:email,
+            Password: password,
+            ConfirmPassword:confirmPassword
+          });
+        }   
     }catch(error){
-
+      console.log('無法儲存你的資料',error)
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
+})
+// 經過註冊後，需要判斷所輸入的 Email 及 Password 是否已存在資料庫內
+// 的路由設定
+app.post('/signInAfterAuth',async(req,res)=>{
+   try{
+    const collection=db.collection('AuthForBooking')
+    const{email,password}=req.body
+    const checkIfAuth=await collection.findOne({
+      $and: [
+        { Email: email },
+        { Password: password }
+  ]
+    })
+    if(checkIfAuth===null){
+      res.json({
+        success: false,
+        message: '登入失敗，Email 或 Password 有錯誤',
+      });
+    }else{
+      res.json({
+        success: true,
+        message: '登入成功 !',
+        Email:email,
+        Password:password
+      });
+    }
+   }catch(error){
+    console.log('登入過程中發生錯誤', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+   }
+})
+app.post('/directSignIn',async(req,res)=>{
+  try{
+    const collection=db.collection('AuthForBooking')
+    const{email,password}=req.body
+    const checkIfAuth=await collection.findOne({
+      $and: [
+        { Email: email },
+        { Password: password }
+  ]
+    })
+    if(checkIfAuth===null){
+      res.json({
+        success: false,
+        message: '登入失敗，Email 或 Password 有錯誤',
+      });
+    }else{
+      res.json({
+        success: true,
+        message: '登入成功 !',
+        Email:email,
+        Password:password
+      });
+    }
+   }catch(error){
+    console.log('登入過程中發生錯誤', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+   }
 })
 
 

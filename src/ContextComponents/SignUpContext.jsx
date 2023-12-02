@@ -9,9 +9,10 @@ export default function SignUpProvider({children}){
      const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const [open, setOpen] = useState(true);
+    const [rememberMe, setRememberMe] = useState(false);
     const negative=useNavigate()
     
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
@@ -56,8 +57,42 @@ export default function SignUpProvider({children}){
           return;
         }
         else{
-            negative('/HumanDesign/signinAfterAuth')
             console.log({email,password,});
+        }
+        try{
+            const response= await fetch('http://localhost:8000/signUp',{
+              method:'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body:JSON.stringify({email,password,confirmPassword})
+            })
+            const responseData=await response.json()
+            console.log(responseData)
+            if(responseData.success){
+              Swal.fire({
+                title: '註冊成功',
+                text: `我們已成功接受您於的註冊了 !`,
+                icon: 'success',
+                confirmButtonText: '了解'
+              })
+              if (rememberMe) {
+                // 使用 localStorage 存儲使用者的 Email
+                localStorage.setItem('rememberedEmail', email);
+                localStorage.setItem('remeberMePassword',password)
+              }
+              negative('/HumanDesign/signinAfterAuth')
+            }else{
+              Swal.fire({
+                title: '註冊失敗',
+                text:'註冊失敗，因為信箱重複!',
+                icon: 'warning',
+                confirmButtonText: '了解'
+              })
+              return;
+            }
+        }catch(error){
+          console.log(error)
         }
 };
 
@@ -65,7 +100,8 @@ export default function SignUpProvider({children}){
       return(
             <SingUpContext.Provider value={{
                   open,setOpen,handleSubmit,
-                  passwordPattern
+                  passwordPattern,rememberMe,
+                  setRememberMe
             }}>
                   {children}
             </SingUpContext.Provider>

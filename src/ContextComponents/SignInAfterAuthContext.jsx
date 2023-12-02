@@ -8,7 +8,7 @@ export default function SignInAfterAuthProvider({children}){
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const [open, setOpen] = useState(true);
       const negative=useNavigate()
-      const handleSubmit = (event) => {
+      const handleSubmit = async (event) => {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
           const email = data.get('email');
@@ -43,8 +43,37 @@ export default function SignInAfterAuthProvider({children}){
           return 
         }
         else{
-            negative('/HumanDesign/bookingAfterSignIn')
             console.log({email,password,});
+        }
+        try{
+            const response=await fetch('http://localhost:8000/signInAfterAuth',{
+              method:'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body:JSON.stringify({email,password})
+            })
+            const responseData=await response.json()
+            console.log(responseData)
+            if(responseData.success){
+              Swal.fire({
+                title: '登入成功',
+                text: `你已經登入成功了 !`,
+                icon: 'success',
+                confirmButtonText: '了解'
+              })
+              negative('/HumanDesign/bookingAfterSignIn')
+            }else{
+              Swal.fire({
+                title: '登入失敗',
+                text:'輸入的信箱或密碼有錯誤!',
+                icon: 'warning',
+                confirmButtonText: '了解'
+              })
+              return;
+            }
+        }catch(error){
+          console.log('你所輸入的信箱及密碼有錯誤',error)
         }
       }
 
