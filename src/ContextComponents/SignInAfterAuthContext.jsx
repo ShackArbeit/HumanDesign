@@ -7,6 +7,8 @@ export default function SignInAfterAuthProvider({children}){
       const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const [open, setOpen] = useState(true);
+      const [email, setEmail] = useState('');
+      const[password,setPassword]=useState('')
       const negative=useNavigate()
       const handleSubmit = async (event) => {
           event.preventDefault();
@@ -80,7 +82,10 @@ export default function SignInAfterAuthProvider({children}){
 
       return (
             <SignInAfterAuthContext.Provider
-            value={{open,setOpen,handleSubmit,passwordPattern}}
+            value={{
+              open,setOpen,handleSubmit,passwordPattern,
+              email,setEmail,password,setPassword
+            }}
             >
                   {children}
             </SignInAfterAuthContext.Provider>

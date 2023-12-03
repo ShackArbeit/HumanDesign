@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect} from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -19,14 +17,29 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import { SignInAfterAuthContext } from '../../ContextComponents/SignInAfterAuthContext';
-
+import { SingUpContext } from '../../ContextComponents/SignUpContext';
 
 
 const defaultTheme = createTheme();
 
 export default function SignInAfterAuth() {
-   const{open,setOpen,handleSubmit,passwordPattern}=
+   const{open,setOpen,handleSubmit,passwordPattern,
+  password,setPassword,email,setEmail}=
    useContext(SignInAfterAuthContext)
+   const{rememberMe, setRememberMe}=useContext(SingUpContext)
+   useEffect(() => {
+    const rememberedEmail = localStorage.getItem(' rememberedEmail');
+    const rememberedPassword = localStorage.getItem('remeberMePassword');
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true); 
+    }
+    else if(rememberedPassword) {
+      setPassword(rememberedPassword);
+      setRememberMe(true);
+    }
+  }, []);
+
   return (
     <div className={style.signUpContainer}>
     <Stack sx={{ width: '100%'}}>
@@ -72,6 +85,8 @@ export default function SignInAfterAuth() {
               id="email"
               label="請輸入有效的電子信箱"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               autoFocus
             />
@@ -83,16 +98,14 @@ export default function SignInAfterAuth() {
               label="密碼須包含至少一大寫及特殊符號及八位元"
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               InputProps={{
                 inputProps: {
                   pattern: passwordPattern,
                 },
               }}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Box sx={{
                 display:'flex'

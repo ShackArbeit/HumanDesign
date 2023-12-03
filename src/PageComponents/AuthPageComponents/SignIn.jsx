@@ -3,8 +3,6 @@ import Button from '@mui/material/Button';
 import {useEffect} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -32,16 +30,18 @@ export default function SignIn() {
     
     const {
       setRememberMe,
+      remeberMe
     } = useContext(SingUpContext);
     useEffect(() => {
-      const rememberedEmail = localStorage.getItem('rememberedEmail');
+      const rememberedEmail = localStorage.getItem(' rememberedEmail');
+      const rememberedPassword = localStorage.getItem('remeberMePassword');
       if (rememberedEmail) {
         setEmail(rememberedEmail);
         setRememberMe(true); 
       }
-      const rememberedPassword = localStorage.getItem('rememberMePassword');
-      if (rememberedPassword) {
+      else if(rememberedPassword) {
         setPassword(rememberedPassword);
+        setRememberMe(true);
       }
     }, []);
 
@@ -111,10 +111,6 @@ export default function SignIn() {
                   pattern: passwordPattern,
                 },
               }}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Box sx={{
                 display:'flex'
