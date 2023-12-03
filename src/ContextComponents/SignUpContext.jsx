@@ -10,6 +10,7 @@ export default function SignUpProvider({children}){
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const [open, setOpen] = useState(true);
     const [rememberMe, setRememberMe] = useState(false);
+    const [emailValue, setEmailValue] = useState('');
     const negative=useNavigate()
     
     const handleSubmit = async (event) => {
@@ -81,7 +82,8 @@ export default function SignUpProvider({children}){
                 localStorage.setItem('rememberedEmail', email);
                 localStorage.setItem('remeberMePassword',password)
               }
-              negative('/HumanDesign/signinAfterAuth')
+              setEmailValue(email);
+              negative('/HumanDesign/afterSignUp')
             }else{
               Swal.fire({
                 title: '註冊失敗',
@@ -101,7 +103,7 @@ export default function SignUpProvider({children}){
             <SingUpContext.Provider value={{
                   open,setOpen,handleSubmit,
                   passwordPattern,rememberMe,
-                  setRememberMe
+                  setRememberMe,emailValue
             }}>
                   {children}
             </SingUpContext.Provider>

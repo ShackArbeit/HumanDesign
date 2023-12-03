@@ -10,6 +10,7 @@ export default function SignInProvider({children}){
       const [open, setOpen] = useState(true);
       const [email, setEmail] = useState('');
       const[password,setPassword]=useState('')
+      const[isLoggin,setIsLoggin]=useState(false)
       const negative=useNavigate()
       const handleSubmit = async (event) => {
             event.preventDefault();
@@ -66,6 +67,7 @@ export default function SignInProvider({children}){
                 icon: 'success',
                 confirmButtonText: '了解'
               })
+              setIsLoggin(true)
               negative('/HumanDesign/bookingAfterSignIn')
             }else{
               Swal.fire({
@@ -87,7 +89,8 @@ export default function SignInProvider({children}){
             <SignInContext.Provider 
             value={{
                   open,setOpen,passwordPattern,handleSubmit,
-                  email,setEmail,password,setPassword
+                  email,setEmail,password,setPassword,isLoggin,
+                  setIsLoggin
             }}
             >
                   {children}

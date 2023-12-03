@@ -1,13 +1,17 @@
-import { Link } from 'react-router-dom';
-import {useState,useEffect} from 'react'
-
-
+import { Link, useNavigate } from 'react-router-dom';
+import {useState,useEffect,useContext} from 'react';
 import style from '../CssModules/Header.module.css'
+import { SignInContext } from '../ContextComponents/SignInContext';
+import Swal from 'sweetalert2';
+
 
 
 const Header = () => {
   
   const[isOpen,setIsOpen]=useState(false)
+  const {isLoggin,setIsLoggin}= useContext(SignInContext)
+  const nevigate=useNavigate()
+
   useEffect(() => {
     const handleResize = () => {
       // 這裡是設定不管漢堡列是否被開啟或是關閉，當螢幕寬度大於768px時，漢堡列裡面的項目都會不顯示
@@ -20,6 +24,23 @@ const Header = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  const handleLogOut=()=>{
+    Swal.fire({
+      title: '確定要登出嗎？',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        nevigate('logout')
+        setIsLoggin(false)
+        console.log('已經成功登出了!')
+      }
+    });
+  }
   return (
    <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>
@@ -39,9 +60,29 @@ const Header = () => {
     <li className={style.Navitem}>
       <Link className={style.Navlink} to="Feedback">體驗回饋</Link>
     </li>
-    <li className={style.Navitem}>
-      <Link className={style.Navlink} to="signup">註冊 & 預約</Link>
-    </li>
+    {!isLoggin && (
+          <li className={style.Navitem}>
+            <Link className={style.Navlink} to="signup">
+              註冊 & 預約
+            </Link>
+          </li>
+        )}
+    {isLoggin &&(
+          <>
+            <li className={style.Navitem}>
+              <Link className={style.Navlink} 
+              onClick={handleLogOut}
+              >
+                登出
+              </Link>
+            </li>
+            <li className={style.Navitem}>
+              <Link className={style.Navlink} to="record">
+                查看預約紀錄
+              </Link>
+            </li>
+          </>
+        )}
   </ul>
   <a className={style.menuToggle}
   onClick={()=>setIsOpen(!isOpen)}

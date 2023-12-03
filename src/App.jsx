@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DateTimeProvider from "./ContextComponents/DataTimeContext";
 import SignUpProvider from "./ContextComponents/SignUpContext";
 import SignInProvider from "./ContextComponents/SignInContext";
-import SignInAfterAuthProvider from "./ContextComponents/SignInAfterAuthContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -20,10 +19,11 @@ import CircileHumanDesign from "./PageComponents/WhatIsHumanComponents/CircileHu
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
-import SignInAfterAuth from "./PageComponents/AuthPageComponents/SignInAfterAuth";
+import AfterSignUp from "./PageComponents/AuthPageComponents/AfterSignUp";
 import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
 import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
+import SignOut from "./PageComponents/AuthPageComponents/SignOut";
 
 
 function App() {
@@ -32,7 +32,6 @@ function App() {
      <BrowserRouter>
      <SignUpProvider>
       <SignInProvider>
-        <SignInAfterAuthProvider>
       <Routes>
         <Route path="/HumanDesign" element={<Layout />}>
           <Route path="" element={<EntranceHome />}/>
@@ -40,7 +39,7 @@ function App() {
           <Route path="Feedback" element={<UserFeedBack/>}/>
           //以下為註冊的路由
           <Route path='signup' element={<SignUp/>}/>
-          <Route path='signinAfterAuth' element={<SignInAfterAuth/>}/>
+          <Route path='afterSignUp' element={<AfterSignUp/>}/>
         // 以下為登入的路由
         <Route path='signin' element={<SignIn/>}/>
         // 這裡是有經過註冊後所到的預約頁面的路由
@@ -50,6 +49,8 @@ function App() {
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
+        // 這裡是登出的頁面路由
+        <Route path='logout' element={<SignOut/>}/>
 
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
@@ -63,7 +64,6 @@ function App() {
           <Route path='human/起源' element={<RaUraHumanDesign />}/>
         </Route>
       </Routes>
-      </SignInAfterAuthProvider>
       </SignInProvider>
       </SignUpProvider>
     </BrowserRouter>
