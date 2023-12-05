@@ -23,7 +23,7 @@ import AfterSignUp from "./PageComponents/AuthPageComponents/AfterSignUp";
 import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
 import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
-import SignOut from "./PageComponents/AuthPageComponents/SignOut";
+
 
 
 function App() {
@@ -49,9 +49,6 @@ function App() {
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
-        // 這裡是登出的頁面路由
-        <Route path='logout' element={<SignOut/>}/>
-
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>

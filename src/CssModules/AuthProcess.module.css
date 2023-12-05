@@ -12,24 +12,15 @@ body,html{
 .signUpContainer{
     width:100%;
     padding-top:4rem;
+    height:100%;
 }
-.signOutContainer{
+.signInContainer{
     width:100%;
     padding-top:4rem;
-}
-.afterSignUpContainer{
-    width:100%;
-    padding-top:5rem;
-    padding-bottom:3rem;
+    height:80vh;
 }
 @media(max-width:450px){
     .signUpContainer{
-        height:780px;
-    }
-    .signOutContainer{
-        height:780px;
-    }
-    .afterSignUpContainer{
         height:780px;
     }
 }

@@ -26,7 +26,7 @@ const Header = () => {
   }, []);
   const handleLogOut=()=>{
     Swal.fire({
-      title: '確定要登出嗎？',
+      title: '登出後將會到首頁，確定要登出嗎 !',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -35,12 +35,15 @@ const Header = () => {
       cancelButtonText: '取消',
     }).then((result) => {
       if (result.isConfirmed) {
-        nevigate('logout')
+        localStorage.removeItem('isLoggin');
+        nevigate('/HumanDesign')
         setIsLoggin(false)
         console.log('已經成功登出了!')
       }
     });
   }
+ 
+ 
   return (
    <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>

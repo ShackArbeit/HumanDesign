@@ -46,8 +46,8 @@ export default function SignIn() {
     }, []);
 
   return (
-    <div className={style.signUpContainer}>
-    <Stack sx={{ width: '100%'}}>
+    <div className={style.signInContainer}>
+    <Stack sx={{ width: '100%',marginBottom:'7rem'}}>
     <Collapse in={open}>
         <Alert
           action={
@@ -73,7 +73,6 @@ export default function SignIn() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

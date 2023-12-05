@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react';
+import { useState, createContext,useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -67,6 +67,7 @@ export default function SignInProvider({children}){
                 icon: 'success',
                 confirmButtonText: '了解'
               })
+              localStorage.setItem('isLoggin', true);
               setIsLoggin(true)
               negative('/HumanDesign/bookingAfterSignIn')
             }else{
@@ -80,9 +81,14 @@ export default function SignInProvider({children}){
             }
         }catch(error){
           console.log('你所輸入的信箱及密碼有錯誤',error)
-        }
-          
+        }      
   };
+  useEffect(() => {
+    const storedIsLoggin = localStorage.getItem('isLoggin');
+    if (storedIsLoggin) {
+      setIsLoggin(true);
+    }
+  }, []);
 
 
       return (
