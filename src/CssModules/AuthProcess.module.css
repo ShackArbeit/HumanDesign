@@ -19,8 +19,16 @@ body,html{
     padding-top:4rem;
     height:80vh;
 }
+.afterSignUpContainer{
+    width:100%;
+    padding-top:8rem;
+    height:80vh;
+}
 @media(max-width:450px){
     .signUpContainer{
         height:780px;
+    }
+    .afterSignUpContainer{
+        eight:780px;
     }
 }

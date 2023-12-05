@@ -14,7 +14,8 @@ const { writerHumanDesign} =require('./WhatIsHumanDesign')
 const {circleHumanDesign}=require('./WhatIsHumanDesign')
 const {isDesktopContent}=require('./BookingIntroduction')
 const cors = require('cors');
-const {isMobile}=require('./BookingIntroduction')
+const {isMobile}=require('./BookingIntroduction');
+const { v4: uuidv4 } = require('uuid');
 
 
 const mongo  = require('mongodb');
@@ -25,6 +26,7 @@ const client = new mongo.MongoClient(url);
 let db = null
 let result
 let id
+let userId=uuidv4()
 
 async function initDB() {
       try {
@@ -58,13 +60,76 @@ app.get("/", (req , res) => {
 // 關於連接到 MongoDB 的路由設定 
 const dayjs = require('dayjs');
 
+// 以下為經過會員註冊後才預約的路由設定
+// 所對應的 Collection 為 BookingAfterAuth
+// 從註冊頁面向資料庫放入資料的路由設定
+app.post('/signUp',async(req,res)=>{
+  try{
+      const collection=db.collection('AuthForBooking')
+      const{email,password,confirmPassword}=req.body;
+      let checkEmail=await collection.findOne({
+        Email:email
+      })
+      if(checkEmail!==null){
+        res.json({
+          success: false,
+          message: '註冊失敗，因為信箱重複',
+        });
+      }else{
+        result=collection.insertOne({
+          UserId:userId,
+          Email:email,
+          Password:password,
+          confirmPassword:confirmPassword
+        })
+        res.json({
+          success: true,
+          message: '已經收到你的信箱及密碼了!',
+          Email:email,
+          Password: password,
+          ConfirmPassword:confirmPassword
+        });
+      }   
+  }catch(error){
+    console.log('無法儲存你的資料',error)
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+})
+// 經過註冊後，需要判斷所輸入的 Email 及 Password 是否已存在資料庫內
+// 的路由設定
+app.post('/directSignIn',async(req,res)=>{
+try{
+  const collection=db.collection('AuthForBooking')
+  const{email,password}=req.body
+  const checkIfAuth=await collection.findOne({
+    $and: [
+      { Email: email },
+      { Password: password }
+]
+  })
+  if(checkIfAuth===null){
+    res.json({
+      success: false,
+      message: '登入失敗，Email 或 Password 有錯誤',
+    });
+  }else{
+    res.json({
+      success: true,
+      message: '登入成功 !',
+      Email:email,
+      Password:password
+    });
+  }
+ }catch(error){
+  console.log('登入過程中發生錯誤', error);
+  res.status(500).json({ success: false, message: 'Internal server error' });
+ }
+})
 
-// 以下皆屬於未註冊及登入會員而直接預約的路由設定
-// 所對應的 Collection 為 forBooking 
 // 第一次輸入預約時間及項目時的路由設定
 app.post('/saveDateTimeAndItem', async (req, res) => {
   try {
-    const collection = db.collection('ForBooking');
+    const collection= db.collection('AuthForBooking');
     const { selectDateTime,firstValue, secondItem } = req.body;
     const newBooking = new Date(selectDateTime);
    // 將存放的時間點做前後 90 分鐘的區間設定
@@ -120,6 +185,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
       const minute = newBooking.getMinutes();
      
       result=await collection.insertOne({
+          UserId:userId,
           Year: year,
           Month: month,
           Day: day,
@@ -153,10 +219,9 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
     if (!id) {
       return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
     }
-    const collection = db.collection('ForBooking');
+    const collection = db.collection('AuthForBooking');
     result = await collection.deleteOne({ _id: new ObjectId(id) });
     if (result.deletedCount === 1) {
-  
       return res.json({ success: true, message: 'Booking deleted successfully' });
     } else {
       return res.status(404).json({ success: false, message: 'Booking not found' });
@@ -167,98 +232,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
   }
 })
 
-// 以下為經過會員註冊後才預約的路由設定
-// 所對應的 Collection 為 BookingAfterAuth
-// 從註冊頁面向資料庫放入資料的路由設定
-app.post('/signUp',async(req,res)=>{
-    try{
-        const collection=db.collection('AuthForBooking')
-        const{email,password,confirmPassword}=req.body;
-        let checkEmail=await collection.findOne({
-          Email:email
-        })
-        if(checkEmail!==null){
-          res.json({
-            success: false,
-            message: '註冊失敗，因為信箱重複',
-          });
-        }else{
-          result=collection.insertOne({
-            Email:email,
-            Password:password,
-            confirmPassword:confirmPassword
-          })
-          res.json({
-            success: true,
-            message: '已經收到你的信箱及密碼了!',
-            Email:email,
-            Password: password,
-            ConfirmPassword:confirmPassword
-          });
-        }   
-    }catch(error){
-      console.log('無法儲存你的資料',error)
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-})
-// 經過註冊後，需要判斷所輸入的 Email 及 Password 是否已存在資料庫內
-// 的路由設定
-app.post('/signInAfterAuth',async(req,res)=>{
-   try{
-    const collection=db.collection('AuthForBooking')
-    const{email,password}=req.body
-    const checkIfAuth=await collection.findOne({
-      $and: [
-        { Email: email },
-        { Password: password }
-  ]
-    })
-    if(checkIfAuth===null){
-      res.json({
-        success: false,
-        message: '登入失敗，Email 或 Password 有錯誤',
-      });
-    }else{
-      res.json({
-        success: true,
-        message: '登入成功 !',
-        Email:email,
-        Password:password
-      });
-    }
-   }catch(error){
-    console.log('登入過程中發生錯誤', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-   }
-})
-app.post('/directSignIn',async(req,res)=>{
-  try{
-    const collection=db.collection('AuthForBooking')
-    const{email,password}=req.body
-    const checkIfAuth=await collection.findOne({
-      $and: [
-        { Email: email },
-        { Password: password }
-  ]
-    })
-    if(checkIfAuth===null){
-      res.json({
-        success: false,
-        message: '登入失敗，Email 或 Password 有錯誤',
-      });
-    }else{
-      res.json({
-        success: true,
-        message: '登入成功 !',
-        Email:email,
-        Password:password
-      });
-    }
-   }catch(error){
-    console.log('登入過程中發生錯誤', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-   }
-})
+
 
 
 
