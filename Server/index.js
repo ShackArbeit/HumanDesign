@@ -213,6 +213,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
   }
 });
 
+
 // 第一次輸入後想要刪除 MongoDB 資料的路由設定
  app.delete('/deleteFirstBooking',async (req,res)=>{
   try {
@@ -232,7 +233,29 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
   }
 })
 
+app.get('/fetchData/:id', async (req, res) => {
+  try {
+    const collection = db.collection('AuthForBooking');
+    id = req.params.id;
+    const bookingData = await collection.findOne({ _id: new ObjectId(id) });
 
+    if (bookingData) {
+      res.json({
+        // success: true,
+        // message: 'Booking data retrieved successfully!',
+        data: bookingData,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'Booking not found',
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching booking data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 
@@ -309,26 +332,26 @@ app.get('/human/circleHuman',(req,res)=>{
    res.send(isMobile)
 })
 
-// 以下為將所選取的日期及時間放進資料庫的路由
-app.post('/saveDateTime',async (req,res)=>{
-     try{
-      const collection=db.collection('ForBooking')
-      const { selectDateTime } = req.body;
-      let result = await collection.findOne({ dateTime: selectDateTime });
-      if (result) {
-        // If dateTime already exists, you might want to handle this case accordingly
-        res.json({ success: false, message: 'DateTime already exists!' });
-      } else {
-        // Insert the dateTime into the MongoDB collection
-        result = await collection.insertOne({ dateTime: selectDateTime });
-        res.json({ success: true, message: 'DateTime inserted successfully!' });
-      }
-     }catch(error){
-      console.error('Error inserting DateTime into MongoDB:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-     }
-)
+// // 以下為將所選取的日期及時間放進資料庫的路由
+// app.post('/saveDateTime',async (req,res)=>{
+//      try{
+//       const collection=db.collection('ForBooking')
+//       const { selectDateTime } = req.body;
+//       let result = await collection.findOne({ dateTime: selectDateTime });
+//       if (result) {
+//         // If dateTime already exists, you might want to handle this case accordingly
+//         res.json({ success: false, message: 'DateTime already exists!' });
+//       } else {
+//         // Insert the dateTime into the MongoDB collection
+//         result = await collection.insertOne({ dateTime: selectDateTime });
+//         res.json({ success: true, message: 'DateTime inserted successfully!' });
+//       }
+//      }catch(error){
+//       console.error('Error inserting DateTime into MongoDB:', error);
+//       res.status(500).json({ success: false, message: 'Internal server error' });
+//     }
+//      }
+// )
 
 
 
