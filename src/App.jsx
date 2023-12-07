@@ -17,12 +17,12 @@ import RoadHumanDesign from "./PageComponents/WhatIsHumanComponents/RoadHumanDes
 import RaUraHumanDesign from "./PageComponents/WhatIsHumanComponents/RaUraHumanDesign";
 import CircileHumanDesign from "./PageComponents/WhatIsHumanComponents/CircileHumanDesign";
 import BasicCalendar from "./PageComponents/CalendarComponents/BasicCalendar";
-import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import SignUp from "./PageComponents/AuthPageComponents/SignUp";
 import AfterSignUp from "./PageComponents/AuthPageComponents/AfterSignUp";
 import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
 import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
+import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 
 
 

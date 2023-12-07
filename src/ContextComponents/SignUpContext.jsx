@@ -70,6 +70,7 @@ export default function SignUpProvider({children}){
             })
             const responseData=await response.json()
             console.log(responseData)
+        
             if(responseData.success){
               Swal.fire({
                 title: '註冊成功',

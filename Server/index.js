@@ -85,6 +85,7 @@ app.post('/signUp',async(req,res)=>{
         res.json({
           success: true,
           message: '已經收到你的信箱及密碼了!',
+          UserID:userId,
           Email:email,
           Password: password,
           ConfirmPassword:confirmPassword
@@ -233,11 +234,17 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
   }
 })
 
-app.get('/fetchData/:id', async (req, res) => {
+app.get('/fetchData', async (req, res) => {
   try {
+    let Email,Password
     const collection = db.collection('AuthForBooking');
-    id = req.params.id;
-    const bookingData = await collection.findOne({ _id: new ObjectId(id) });
+    const bookingData = await collection.findOne({
+      $and:[
+        {Email},
+        {Password}
+      ]
+    });
+    console.log(bookingData)
 
     if (bookingData) {
       res.json({
