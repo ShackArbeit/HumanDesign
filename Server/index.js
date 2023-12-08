@@ -15,7 +15,9 @@ const {circleHumanDesign}=require('./WhatIsHumanDesign')
 const {isDesktopContent}=require('./BookingIntroduction')
 const cors = require('cors');
 const {isMobile}=require('./BookingIntroduction');
+const session = require('express-session');
 const { v4: uuidv4 } = require('uuid');
+const mongoStore = require('connect-mongo')(session);
 
 
 const mongo  = require('mongodb');
@@ -26,7 +28,7 @@ const client = new mongo.MongoClient(url);
 let db = null
 let result
 let id
-let userId=uuidv4()
+// let globalUserId;
 
 async function initDB() {
       try {
@@ -52,10 +54,15 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
-
-app.get("/", (req , res) => {
-    res.send( "Hello world!" );
-});
+app.use(session({
+   secret:uuidv4(),
+   resave: false,
+   saveUninitialized: false, 
+   store:mongoStore.create({
+     mongoUrl:url,
+     collection:'AuthForBooking'
+   })
+}))
 
 // 關於連接到 MongoDB 的路由設定 
 const dayjs = require('dayjs');
@@ -67,6 +74,10 @@ app.post('/signUp',async(req,res)=>{
   try{
       const collection=db.collection('AuthForBooking')
       const{email,password,confirmPassword}=req.body;
+      
+     // 從 session 中獲取使用者的 UserId
+    const userId = req.session.userId;
+
       let checkEmail=await collection.findOne({
         Email:email
       })
@@ -120,6 +131,7 @@ try{
       Email:email,
       Password:password
     });
+    req.session.userId = checkIfAuth.UserId;
   }
  }catch(error){
   console.log('登入過程中發生錯誤', error);
@@ -136,6 +148,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
    // 將存放的時間點做前後 90 分鐘的區間設定
     const startTime = dayjs(newBooking).subtract(90, 'minutes');
     const endTime = dayjs(newBooking).add(90,'minutes');
+    const userId = globalUserId;
   // 先向集合內搜尋存在區間內的所有可能
     const existingReservations = await collection.find({
       $or: [
@@ -200,6 +213,7 @@ app.post('/saveDateTimeAndItem', async (req, res) => {
         success: true,
         message: 'DateTime inserted successfully!',
         id:id,
+        UserId:userId,
         Year: year,
         Month: month,
         Day: day,
@@ -238,13 +252,14 @@ app.get('/fetchData', async (req, res) => {
   try {
     let Email,Password
     const collection = db.collection('AuthForBooking');
-    const bookingData = await collection.findOne({
-      $and:[
-        {Email},
-        {Password}
-      ]
-    });
-    console.log(bookingData)
+      const bookingData = await collection.findOne({
+        $and:[
+          {Email},
+          {Password}
+        ]
+      });
+      console.log(bookingData)
+   
 
     if (bookingData) {
       res.json({

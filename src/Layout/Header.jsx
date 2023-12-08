@@ -36,6 +36,8 @@ const Header = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('isLoggin');
+        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('remeberMePassword');
         nevigate('/HumanDesign')
         setIsLoggin(false)
         console.log('已經成功登出了!')
@@ -80,7 +82,7 @@ const Header = () => {
               </Link>
             </li>
             <li className={style.Navitem}>
-              <Link className={style.Navlink} to="record">
+              <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/checkBooking">
                 查看預約紀錄
               </Link>
             </li>

@@ -14,6 +14,7 @@ const CheckFirstBooking = () => {
       <div style={{height:'50vh',paddingTop:'64px'}}>
         <div>
           {datas.data.Year}, {datas.data.Month}, {datas.data.Day}, {datas.data.Hour}, {datas.data.Minute}
+          ,{datas.data.BookingItem},{datas.data.TimeItem}
         </div>
       </div>
     );

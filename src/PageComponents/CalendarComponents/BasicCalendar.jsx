@@ -168,7 +168,7 @@ export default function BasicCalendar() {
           >
             刪除 & 重新預約
           </Button>
-          <Link to="/HumanDesign/bookingAfterSignIn/firstCheck">
+          <Link to="/HumanDesign/bookingAfterSignIn/checkBooking">
             <Button
               variant="contained"
               size="large"
@@ -346,7 +346,7 @@ export default function BasicCalendar() {
               >
                 刪除 & 重新預約
               </Button>
-              <Link to="/HumanDesign/bookingAfterSignIn/firstCheck">
+              <Link to="/HumanDesign/bookingAfterSignIn/checkBooking">
                 <Button
                   variant="contained"
                   size="large"

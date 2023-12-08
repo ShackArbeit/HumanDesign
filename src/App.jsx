@@ -45,7 +45,7 @@ function App() {
         // 這裡是有經過註冊後所到的預約頁面的路由
           <Route path="bookingAfterSignIn" element={<EntraceBooking/>}/>
             <Route path="bookingAfterSignIn/calendar" element={<BasicCalendar />}/>
-            <Route path="bookingAfterSignIn/firstCheck" element={<CheckFirstBooking />}/>
+            <Route path="bookingAfterSignIn/checkBooking" element={<CheckFirstBooking />}/>
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
