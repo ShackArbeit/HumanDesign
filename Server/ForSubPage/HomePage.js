@@ -1,3 +1,4 @@
+const router = require('express').Router();
 const serviceContent=[
       {id:1,title:'個人解析',content:'個人解析是讓你知道自己是屬於何種類型，以了解並應用自己的人生策略，讓人活活得更自在。'},
       {id:2,title:'多人解析',content:'多人解析是讓你與你的伴侶知道彼此的類型並找出最佳的互動策略。'},
@@ -10,8 +11,11 @@ const bookingProcess=[
       {id:3,title:'預約繳費',content:'請依照指示於三日內將匯解析費用',url:'https://sorehunter.com/wp-content/uploads/2020/07/3.png'},
       {id:4,title:'準時上線',content:'收到確認信後請於指定日期準時上線參加解析',url:'https://sorehunter.com/wp-content/uploads/2020/07/4.png'}
 ]
+router.get('/home/serviceProcess',(req,res)=>{
+      res.send(serviceContent)
+})
+router.get('/home/bookingProcess',(req,res)=>{
+      res.send(bookingProcess)
+})
 
-module.exports = {
-      serviceContent,
-      bookingProcess
-};
+module.exports =router

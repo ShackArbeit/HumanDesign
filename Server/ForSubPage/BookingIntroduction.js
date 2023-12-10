@@ -1,3 +1,4 @@
+const router = require('express').Router();
 const isDesktopContent=[
     {id:1,title:'個人解析',content:'個人解析是讓你知道自己是屬於何種類型，以了解並應用自己的人生策略，讓人活活得更自在。',
     urlOne:'https://sb-drops.s3.amazonaws.com/drop/rmopt-5c383bea38f68-923333400-1547189226.png',urlTwo:'https://sb-drops.s3.amazonaws.com/drop/rmopt-5ec6355532914-920713800-1590048085.jpg',
@@ -28,4 +29,12 @@ const isMobile=[
      price60:9000,price90:15000},
 ]
 
-module.exports={isDesktopContent,isMobile}
+
+router.get('/bookingIntroduction/isDesktop',(req,res)=>{
+    res.send(isDesktopContent)
+   })
+router.get('/bookingIntroduction/isMobile',(req,res)=>{
+     res.send(isMobile)
+  })
+
+module.exports=router

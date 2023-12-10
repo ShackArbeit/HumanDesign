@@ -1,3 +1,4 @@
+const router = require('express').Router();
 const JeromeProfile=[
       {id:2013,title:'改變開始',content:'創辦人Jerome 開始傾聽自己內在聲音，給自己一年一個不受限的時間離開職場，專心修讀奇蹟課程。'},
       {id:2016,title:'接觸人類圖',content:'首次接觸人類圖並一步步學習人類圖的精隨。'},
@@ -6,4 +7,16 @@ const JeromeProfile=[
       {id:2022,title:'遇見八字',content:'生命機緣將Jerome帶入新領域 =>八字，開始學習八字。'},
 ]
 
-module.exports=JeromeProfile
+router.get('/aboutJerome/:id', (req, res) => {
+      const id = parseInt(req.params.id);
+      const profile=JeromeProfile.find(item=>item.id===id)
+      if (!profile) {
+        return res.status(404).json({ error: 'Profile not found' });
+      }else{
+      res.json({id:profile.id,title:profile.title,content:profile.content});
+      }
+    });
+module.exports=router
+
+
+

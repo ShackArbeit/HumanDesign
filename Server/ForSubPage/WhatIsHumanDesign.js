@@ -1,3 +1,4 @@
+const router = require('express').Router();
 const hoverHumanDesign=[
     {id:1,title:'人類圖是你的人生使用說明書',content:'人類圖不是一個信念體系，而是一套能讓我們看見自我的邏輯方法，了解自己在人類圖中的類型定位及人生策略，逐步練習去制約、回到內在權威與策略，為自己開啟了一扇接受自己、愛自己並活出自己的可能之大門。',url:'http://localhost:5173/HumanDesign/human/使用說明書'},
     {id:2,title:'類型 = 你的天職',content:'知道自己的天職，就能知道自己基本上要做的事，也讓你更懂得把自己放進適合的工作環境裡。這樣你就能在基礎上開始調整自己的人生。',url:'http://localhost:5173/HumanDesign/human/天賦類型'},
@@ -70,14 +71,44 @@ const circleHumanDesign=[
     url:'https://picsum.photos/600/400?random=33'},
     {id:2,title:'第一次',content:'是官方對每一種命運的簡單短句，作為官方代表的我當然必需要把它放到報告書裡去。它簡單卻直接地表達出擁有這個命運的你此生來做的事。它說的是一個大畫面，但並不會表達出具體的細節。它寫在報告書「輪迴交叉」的部份。',url:'https://picsum.photos/600/400?random=34'},
 ]
-
-module.exports= {hoverHumanDesign,
-                 explainHumanDesign,
-                 TalentHumanDesign,
-                 roleHumanDesign,
-                 authorHumanDesign,
-                 energyHumanDesign,
-                 roadHumanDesign,
-                 writerHumanDesign,
-                 circleHumanDesign
-                }
+// 人類圖是什麼分頁
+router.get('/human/hoverIntroducer',(req,res)=>{
+  res.send(hoverHumanDesign)
+ })
+// 人類圖較紹子分頁 1 (簡介)
+router.get('/human/explainHuman',(req,res)=>{
+    res.send(explainHumanDesign)
+})
+// 人類圖較紹子分頁 2 (類型與天賦)
+router.get('/human/talentHuman',(req,res)=>{
+    res.send(TalentHumanDesign)
+})
+// 人類圖較紹子分頁 3 (角色部分)
+router.get('/human/roleHuman',(req,res)=>{
+    res.send(roleHumanDesign)
+})
+// 人類圖介紹分頁 4 (內在權威部分)
+router.get('/human/authorHuman',(req,res)=>{
+    res.send(authorHumanDesign)
+})
+// 九大中心
+router.get('/human/energyHuman',(req,res)=>{
+    res.send(energyHumanDesign)
+})
+// 作者部分
+router.get('/human/writerHuman',(req,res)=>{
+    res.send( writerHumanDesign)
+})
+// 通道部分
+router.get('/human/roadHuman',(req,res)=>{
+    res.send(roadHumanDesign)
+})
+// 輪迴交叉
+router.get('/human/circleHuman',(req,res)=>{
+    res.send(circleHumanDesign)
+})
+// 輪迴交叉
+router.get('/human/circleHuman',(req,res)=>{
+    res.send(circleHumanDesign)
+  })
+module.exports= router
