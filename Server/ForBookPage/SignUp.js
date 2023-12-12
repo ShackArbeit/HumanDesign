@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const connectToDB=require('../ConnectToMongoDB')
 const mongoose=require('mongoose')
-const {signUpSchema}=require('../Schema')
+const {ParentSchema}=require('../AuthSchema')
 
-const SignUpModel = mongoose.model('AuthForBooking', signUpSchema);
+const SignUpModel =  mongoose.model('AuthForBooking', ParentSchema);
 
 router.post('/signUp',async(req,res)=>{
       try{

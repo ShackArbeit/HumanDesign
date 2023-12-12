@@ -1,40 +1,22 @@
 const router = require('express').Router();
 const connectToDB=require('../ConnectToMongoDB')
 const mongoose=require('mongoose')
-const {signInSchema}=require('../Schema')
-const mongo  = require('mongodb');
-
-
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
-const client = new mongo.MongoClient(url);
-let db = null
-
-async function initDB() {
-      try {
-            await client.connect()
-            console.log('連線成功')
-            db = client.db("myWebsite");
-  
-      } catch (err) {
-            console.log('連線失敗', err)
-            return
-      }
-}
-initDB()
-
+const {signInSchema}=require('../AuthSchema')
+const signInModel = mongoose.models.AuthForBooking || mongoose.model('AuthForBooking', signInSchema);
 
 
 
 router.post('/directSignIn',async(req,res)=>{
       try{
-        const collection=db.collection('AuthForBooking')
+        await connectToDB()
         const{email,password}=req.body
-        const checkIfAuth=await collection.findOne({
+        const checkIfAuth=signInModel.findOne({
           $and: [
             { Email: email },
             { Password: password }
-      ]
+          ]
         })
+
         if(checkIfAuth===null){
           res.json({
             success: false,
