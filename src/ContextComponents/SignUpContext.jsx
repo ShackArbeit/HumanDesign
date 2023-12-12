@@ -70,7 +70,6 @@ export default function SignUpProvider({children}){
             })
             const responseData=await response.json()
             console.log(responseData)
-        
             if(responseData.success){
               Swal.fire({
                 title: '註冊成功',
@@ -88,7 +87,7 @@ export default function SignUpProvider({children}){
             }else{
               Swal.fire({
                 title: '註冊失敗',
-                text:'註冊失敗，因為信箱重複!',
+                text:'系統發生問題或是信箱重複註冊了 !',
                 icon: 'warning',
                 confirmButtonText: '了解'
               })

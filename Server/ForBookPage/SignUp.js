@@ -1,43 +1,27 @@
 const router = require('express').Router();
-const mongo  = require('mongodb');
+const connectToDB=require('../ConnectToMongoDB')
+const mongoose=require('mongoose')
+const {signUpSchema}=require('../Schema')
 
-
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
-const client = new mongo.MongoClient(url);
-let db = null
-
-async function initDB() {
-      try {
-            await client.connect()
-            console.log('連線成功')
-            db = client.db("myWebsite");
-  
-      } catch (err) {
-            console.log('連線失敗', err)
-            return
-      }
-}
-initDB()
+const SignUpModel = mongoose.model('AuthForBooking', signUpSchema);
 
 router.post('/signUp',async(req,res)=>{
       try{
-          const collection=db.collection('AuthForBooking')
-          const{email,password,confirmPassword}=req.body;
-    
-          let checkEmail=await collection.findOne({
-            Email:email
-          })
+          await connectToDB()  
+          const{email,password,confirmPassword}=req.body;  
+          const checkEmail = await SignUpModel.findOne({ Email: email });
           if(checkEmail!==null){
             res.json({
               success: false,
               message: '註冊失敗，因為信箱重複',
             });
           }else{
-            result=collection.insertOne({
-              Email:email,
-              Password:password,
-              confirmPassword:confirmPassword
-            })
+            const newUser = new SignUpModel({
+              Email: email,
+              Password: password,
+              ConfirmPassword: confirmPassword,
+            });
+            await newUser.save();
             res.json({
               success: true,
               message: '已經收到你的信箱及密碼了!',
