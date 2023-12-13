@@ -1,12 +1,11 @@
 const router = require('express').Router();
-const connectToDB=require('../ConnectToMongoDB')
-const mongoose=require('mongoose')
-const {ParentSchema}=require('../AuthSchema')
-
-const SignUpModel =  mongoose.model('AuthForBooking', ParentSchema);
+const connectToDB=require('../Databse/ConnectToMongoDB')
+// const mongoose=require('mongoose')
+const {SignUpModel}=require('../Model/ForAuth')
 
 router.post('/signUp',async(req,res)=>{
       try{
+         console.log(SignUpModel)
           await connectToDB()  
           const{email,password,confirmPassword}=req.body;  
           const checkEmail = await SignUpModel.findOne({ Email: email });

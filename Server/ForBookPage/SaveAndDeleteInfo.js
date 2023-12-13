@@ -1,35 +1,28 @@
 const router = require('express').Router();
-const connectToDB=require('../ConnectToMongoDB')
-const mongoose=require('mongoose')
-const {bookingSchema}=require('../AuthSchema')
-const {ParentSchema}=require('../AuthSchema')
-const { v4: uuidv4 } = require('uuid')
+const connectToDB=require('../Databse/ConnectToMongoDB')
+const BookingModel=require('../Model/ForBooking')
+const {SignUpModel} = require('../Model/ForAuth');
 const dayjs = require('dayjs');
 
-const SignUpModel =  mongoose.model('AuthForBooking', ParentSchema);
-
-// const saveItemsModel=new SignUpModel(bookingSchema)
-const saveItemsModel = new SignUpModel({}, 'AuthForBooking');
 
 
-
-
-let id=uuidv4()
 
 
 router.post('/saveDateTimeAndItem', async (req, res) => {
-
       try {
         await connectToDB()
         const { selectDateTime,firstValue, secondItem } = req.body;
+        // 從 SignUpModel 中抓取 _id 項
+        const user = await SignUpModel.findOne({});
+        const BookingPerson = user._id;
         const newBooking = new Date(selectDateTime);
        // 將存放的時間點做前後 90 分鐘的區間設定
         const startTime = dayjs(newBooking).subtract(90, 'minutes');
         const endTime = dayjs(newBooking).add(90,'minutes');
       // 先向集合內搜尋存在區間內的所有可能
-      console.log(saveItemsModel)
+      console.log(BookingModel)
       console.log(newBooking)
-      const existingReservations=await saveItemsModel.find({
+      const existingReservations=await BookingModel.find({
         $or: [
            {
              $and: [
@@ -58,7 +51,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       console.log(firstValue)
       console.log(secondItem)
        // 若有搜尋到，則將所有符合條件且已存放在 MongoDB 的資料透過解構賦值返回給前端
-         if (existingReservations[0].children.length > 0) {
+         if (existingReservations.length > 0) {
            for(i=0;i<existingReservations.length;i++){
              const { Year, Month, Day, Hour, Minute } = existingReservations[i];
              return res.status(400).json({
@@ -79,8 +72,8 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
           const day = newBooking.getDate();
           const hour = newBooking.getHours();
           const minute = newBooking.getMinutes();
-          await saveItemsModel.create({
-            _id:id,
+          await BookingModel.create({
+            BookingPerson,
             Year: year,
             Month: month,
             Day: day,
@@ -92,7 +85,6 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
           res.json({
             success: true,
             message: 'DateTime inserted successfully!',
-            id:id,
             Year: year,
             Month: month,
             Day: day,
@@ -111,21 +103,23 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
 
 router.delete('/deleteFirstBooking',async (req,res)=>{
   try {
-    if (!id) {
-      return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
-    }
-    const collection = db.collection('AuthForBooking');
-    result = await collection.deleteOne({ _id: new ObjectId(id) });
-    if (result.deletedCount === 1) {
-      return res.json({ success: true, message: 'Booking deleted successfully' });
-    } else {
-      return res.status(404).json({ success: false, message: 'Booking not found' });
-    }
-  } catch (error) {
-    console.error('Error deleting booking:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
-  }
-})
+     await connectToDB()
+     const BookingData=await BookingModel.findOne({})
+     BookingId=BookingData._id
+     if(!BookingId){
+       return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
+     }
+     const result = await BookingModel.deleteOne({});
+     if (result.deletedCount === 1) {
+       return res.json({ success: true, message: 'Booking deleted successfully' });
+     } else {
+       return res.status(404).json({ success: false, message: 'Booking not found' });
+     }
+   } catch (error) {
+     console.error('Error deleting booking:', error);
+     res.status(500).json({ success: false, message: 'Internal server error' });
+   }
+ })
     
 
 

@@ -1,16 +1,12 @@
 const router = require('express').Router();
-const connectToDB=require('../ConnectToMongoDB')
-const mongoose=require('mongoose')
-const {signInSchema}=require('../AuthSchema')
-const signInModel = mongoose.models.AuthForBooking || mongoose.model('AuthForBooking', signInSchema);
-
-
+const connectToDB=require('../Databse/ConnectToMongoDB')
+const {SignInModel}=require('../Model/ForAuth')
 
 router.post('/directSignIn',async(req,res)=>{
       try{
         await connectToDB()
         const{email,password}=req.body
-        const checkIfAuth=signInModel.findOne({
+        const checkIfAuth=SignInModel.findOne({
           $and: [
             { Email: email },
             { Password: password }
@@ -35,8 +31,5 @@ router.post('/directSignIn',async(req,res)=>{
         res.status(500).json({ success: false, message: 'Internal server error' });
        }
       })
-
-
-
 
 module.exports=router
