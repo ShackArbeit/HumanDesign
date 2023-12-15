@@ -2,21 +2,25 @@ const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
 const { SignUpModel } = require('../Model/ForAuth');
+const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority";
+const MongoDBStore = require('connect-mongodb-session')(session);
+
 
 app.use(session({
   secret: 'HumanDesign Booking',
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({
-    mongoUrl: url
+  store:new MongoDBStore({
+    uri:url,
+    databaseName: 'myWebsite',
+    collection: 'users'
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
   },
-}));
+}))
+
 
 const router = require('express').Router();
 
@@ -25,6 +29,7 @@ router.post('/signUp', async (req, res) => {
     console.log(SignUpModel);
     await connectToDB();
     const { email, password, confirmPassword } = req.body;
+
     const checkEmail = await SignUpModel.findOne({ Email: email });
     if (checkEmail !== null) {
       res.json({
@@ -38,7 +43,14 @@ router.post('/signUp', async (req, res) => {
         ConfirmPassword: confirmPassword,
       });
       await newUser.save();
-      req.session.user = { Email: newUser.Email, Password: newUser.Password };
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Error regenerating session:', err);
+        }
+        // 將新用戶的信息存儲在會話中
+        req.session.user = { Email: newUser.Email, Password: newUser.Password };
+      })
+      console.log(req.sessionID)
       res.json({
         success: true,
         message: '已經收到你的信箱及密碼了!',
