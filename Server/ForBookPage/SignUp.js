@@ -1,46 +1,58 @@
-const express=require('express')
+const express = require('express');
 const app = express();
+const connectToDB = require('../Databse/ConnectToMongoDB');
+const { SignUpModel } = require('../Model/ForAuth');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority";
+
+app.use(session({
+  secret: 'HumanDesign Booking',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: url
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+  },
+}));
+
 const router = require('express').Router();
-const connectToDB=require('../Databse/ConnectToMongoDB')
-const {SignUpModel}=require('../Model/ForAuth')
-const {sessionMiddleware}=require('../Databse/Session')
-const {myMiddleware}=require('../Databse/Session')
 
+router.post('/signUp', async (req, res) => {
+  try {
+    console.log(SignUpModel);
+    await connectToDB();
+    const { email, password, confirmPassword } = req.body;
+    const checkEmail = await SignUpModel.findOne({ Email: email });
+    if (checkEmail !== null) {
+      res.json({
+        success: false,
+        message: '註冊失敗，因為信箱重複',
+      });
+    } else {
+      const newUser = new SignUpModel({
+        Email: email,
+        Password: password,
+        ConfirmPassword: confirmPassword,
+      });
+      await newUser.save();
+      req.session.user = { Email: newUser.Email, Password: newUser.Password };
+      res.json({
+        success: true,
+        message: '已經收到你的信箱及密碼了!',
+        Email: email,
+        Password: password,
+        ConfirmPassword: confirmPassword
+      });
+    }
+  } catch (error) {
+    console.log('無法儲存你的資料', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
-app.use(myMiddleware)
-app.use(sessionMiddleware)
+app.use(router);
 
-
-router.post('/signUp',async(req,res)=>{
-      try{
-         console.log(SignUpModel)
-          await connectToDB()  
-          const{email,password,confirmPassword}=req.body;  
-          const checkEmail = await SignUpModel.findOne({ Email: email });
-          if(checkEmail!==null){
-            res.json({
-              success: false,
-              message: '註冊失敗，因為信箱重複',
-            });
-          }else{
-            const newUser = new SignUpModel({
-              Email: email,
-              Password: password,
-              ConfirmPassword: confirmPassword,
-            });
-            await newUser.save();
-          req.session.user={email:newUser.email,password:newUser.password}
-            res.json({
-              success: true,
-              message: '已經收到你的信箱及密碼了!',
-              Email:email,
-              Password: password,
-              ConfirmPassword:confirmPassword
-            });
-          }   
-      }catch(error){
-        console.log('無法儲存你的資料',error)
-        res.status(500).json({ success: false, message: 'Internal server error' });
-      }
-})
-module.exports=router
+module.exports = app;
