@@ -1,7 +1,15 @@
+const express=require('express')
+const app = express();
 const router = require('express').Router();
 const connectToDB=require('../Databse/ConnectToMongoDB')
-// const mongoose=require('mongoose')
 const {SignUpModel}=require('../Model/ForAuth')
+const {sessionMiddleware}=require('../Databse/Session')
+const {myMiddleware}=require('../Databse/Session')
+
+
+app.use(myMiddleware)
+app.use(sessionMiddleware)
+
 
 router.post('/signUp',async(req,res)=>{
       try{
@@ -21,6 +29,7 @@ router.post('/signUp',async(req,res)=>{
               ConfirmPassword: confirmPassword,
             });
             await newUser.save();
+          req.session.user={email:newUser.email,password:newUser.password}
             res.json({
               success: true,
               message: '已經收到你的信箱及密碼了!',

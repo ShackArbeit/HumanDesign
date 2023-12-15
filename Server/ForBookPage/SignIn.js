@@ -12,7 +12,6 @@ router.post('/directSignIn',async(req,res)=>{
             { Password: password }
           ]
         })
-
         if(checkIfAuth===null){
           res.json({
             success: false,
