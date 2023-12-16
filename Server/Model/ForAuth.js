@@ -16,6 +16,13 @@ const ParentSchema=new Schema({
         type:String,
         required:[true,'ConfirmPassword is required']
     },
+    sessions: [
+        {
+          sessionID: String,
+          cookie: Object, 
+          user: Object, 
+        }
+      ],
 })
 
 // 以下為登入的 Schema 
