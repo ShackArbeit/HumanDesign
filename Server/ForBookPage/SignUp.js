@@ -2,18 +2,11 @@ const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
 const { SignUpModel } = require('../Model/ForAuth');
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
-const session = require('express-session');
+const sessionMiddleware = require('../Databse/Session');
 
 
-app.use(session({
-  secret: 'HumanDesign Booking',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 3 // 1 week
-  },
-}))
+app.use(sessionMiddleware);
+
 
 
 const router = require('express').Router();
@@ -29,7 +22,7 @@ router.post('/signUp', async (req, res) => {
       user: { Email: email, Password: password },
     };
 
-    req.session.user = sessionInfo 
+    req.session.users = sessionInfo; 
     const checkEmail = await SignUpModel.findOne({ Email: email });
     if (checkEmail !== null) {
       res.json({
@@ -41,12 +34,10 @@ router.post('/signUp', async (req, res) => {
         Email: email,
         Password: password,
         ConfirmPassword: confirmPassword,
-        sessions: [sessionInfo]
+        sessions:req.session.users
       });
       await newUser.save();
-      console.log(req.sessionID)
       console.log(req.session.users)
-      console.log(req.session.cookie)
       res.json({
         success: true,
         message: '已經收到你的信箱及密碼了!',
