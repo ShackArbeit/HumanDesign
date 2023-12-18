@@ -9,8 +9,11 @@ const SaveAndDeleteRouter=require('./ForBookPage/SaveAndDeleteInfo')
 const GetRecordRouter=require('./ForBookPage/GetRecord')
 const BookingIttroduceRouter=require('./ForSubPage/BookingIntroduction');
 const cors = require('cors');
+const sessionMiddleware=require('./Databse/Session')
+
 
 const app = express();
+app.use(sessionMiddleware)
 app.use(cors());
 app.use(express.json())
 const corsOptions = {
@@ -18,6 +21,8 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+
+
 
 // 以下為經過會員註冊後才預約的路由設定
 // 所對應的 Collection 為 BookingAfterAuth

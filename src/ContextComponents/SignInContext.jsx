@@ -56,7 +56,7 @@ export default function SignInProvider({children}){
               headers: {
                 'Content-Type': 'application/json',
               },
-              body:JSON.stringify({email,password})
+              body:JSON.stringify({email,password}),
             })
             const responseData=await response.json()
             console.log(responseData)

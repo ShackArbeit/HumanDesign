@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const connectToDB=require('../Databse/ConnectToMongoDB')
 const {SignInModel}=require('../Model/ForAuth')
+const { SignUpModel } = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 
 app.use(sessionMiddleware);
@@ -11,7 +12,11 @@ const router = require('express').Router();
 router.post('/directSignIn',async(req,res)=>{
       try{
         await connectToDB()
-        console.log(req.session.users)
+        const checkLogIn = req.sessionID;
+        const SeesionForAuth=await SignUpModel.findOne({sessionId:checkLogIn})
+        console.log(SeesionForAuth)
+        // const checkLogIn=req.session.users
+        // console.log(checkLogIn)
         const{email,password}=req.body
         const checkIfAuth=SignInModel.findOne({
           $and: [
