@@ -37,7 +37,6 @@ router.post('/signUp', async (req, res) => {
         sessions:req.session.users
       });
       await newUser.save();
-      // console.log(req.session.users)
       res.json({
         success: true,
         message: '已經收到你的信箱及密碼了!',
