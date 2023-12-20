@@ -8,6 +8,7 @@ const SignInRouter=require('./ForBookPage/SignIn')
 const SaveAndDeleteRouter=require('./ForBookPage/SaveAndDeleteInfo')
 const GetRecordRouter=require('./ForBookPage/GetRecord')
 const BookingIttroduceRouter=require('./ForSubPage/BookingIntroduction');
+const CheckBookingRouter=require('./ForCheckBooking/CheckBookingAuth')
 const cors = require('cors');
 const sessionMiddleware=require('./Databse/Session')
 
@@ -46,6 +47,11 @@ app.use(HomePageRouter)
 app.use(WhatHumanRouter)
 // 以下為介紹不同預約類型的部分
 app.use(BookingIttroduceRouter)
+
+// 以下為有註冊會員且預約後查詢預約資料的部分
+app.use(CheckBookingRouter)
+
+
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')
