@@ -1,5 +1,5 @@
 import { useCheckBooking } from '../../ReactQueryCompoents/CheckBookingQuery';
-
+import style from '../../CssModules/Booking.module.css'
 
 
 const CheckFirstBooking = () => {
@@ -11,19 +11,21 @@ const CheckFirstBooking = () => {
 
   return (
     <>
-    <h1>In This Page You Can Check Your Bookig !!</h1>
-    {datas.map((data)=>{
+    {datas.map((data) => {
       return (
-        <div>
-        <h2> 年: {data.Year}</h2>
-        <h2> 月: {data.Month + 1}</h2>
-        <h2> 日: {data.Day}</h2>
-        <h2> {data.Hour}時 {data.Miunte}分</h2>
-        <h2>預約項目 : {data.BookingItem}</h2>
-        <h2>預約時長 : {data.TimeItem} </h2>
+        <div class={style.bookingEntranceContainer}>
+        <h1>In This Page You Can Check Your Bookig !!</h1>
+          <div key={data._id} className={style.bookingItem}>
+              <h2 className={style.bookingInfo}> 年: {data.Year}</h2>
+              <h2 className={style.bookingInfo}> 月: {data.Month + 1}</h2>
+              <h2 className={style.bookingInfo}> 日: {data.Day}</h2>
+              <h2 className={style.bookingInfo}> {data.Hour}時 {data.Minute}分</h2>
+              <h2 className={style.bookingInfo}>預約項目 : {data.BookingItem}</h2>
+              <h2 className={style.bookingInfo}>預約時長 : {data.TimeItem} </h2>
+          </div>
         </div>
-    )
-    })}
+      );
+  })}
     </>
   )
 };
