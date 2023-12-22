@@ -134,21 +134,9 @@ body,html{
         margin: 0.5rem;
     }
 } 
-/* 以下為第一次輸入預約項目後的確認頁面的 CSS 樣式 */
+/* 以下為登入會員後，查看預約紀錄的樣式設定 */
 
-.checkBookingItem{
-    margin-top:2rem;
-    margin-bottom:2rem;
-    font-size:33px;
-    font-weight:bold;
-}
-@media screen and (max-width:768px){
-    .checkBookingItem{
-        margin-top:1rem;
-        margin-bottom:1rem;
-        font-size:25px;
-    }
-}
+
 
 
 

@@ -1,28 +1,29 @@
-import {useEffect,useState} from 'react'
-
+import { useCheckBooking } from '../../ReactQueryCompoents/CheckBookingQuery';
 
 
 
 const CheckFirstBooking = () => {
+  const { data: datas, isLoading, error } = useCheckBooking (); 
+  console.log(datas)
+  if(isLoading) return<p>Loading...</p>
+  if(error) return <p>Error:{error.message}</p>
+   
 
-    const[datas,setDatas]=useState([])
-    useEffect(()=>{
-        const checkBooking=async()=>{
-          const response = await fetch('http://localhost:8000/checkBooking');
-          const data=await response.json()
-          setDatas(data)
-          console.log(data)
-        }
-        checkBooking()
-    },[])
-
-  
   return (
     <>
     <h1>In This Page You Can Check Your Bookig !!</h1>
-    <h2>City: {datas.City}</h2>
-    <h2>Name: {datas.Name}</h2>
-    <h2>Age: {datas.Age}</h2>
+    {datas.map((data)=>{
+      return (
+        <div>
+        <h2> 年: {data.Year}</h2>
+        <h2> 月: {data.Month + 1}</h2>
+        <h2> 日: {data.Day}</h2>
+        <h2> {data.Hour}時 {data.Miunte}分</h2>
+        <h2>預約項目 : {data.BookingItem}</h2>
+        <h2>預約時長 : {data.TimeItem} </h2>
+        </div>
+    )
+    })}
     </>
   )
 };
