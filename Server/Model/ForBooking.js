@@ -1,11 +1,11 @@
 const mongoose =require('mongoose');
 const { Schema,models,model} = mongoose
 
-
-
 const BookingSchema=new Schema({
     BookingPerson:
-    { type: Schema.Types.ObjectId, ref: 'User' },
+    // { type: Schema.Types.ObjectId, ref: 'User' ,
+    // },
+    {type:String},
     Year:{
         type:Number,
         required:[true,'Year is required']

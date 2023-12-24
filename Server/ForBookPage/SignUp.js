@@ -13,7 +13,6 @@ const router = require('express').Router();
 
 router.post('/signUp', async (req, res) => {
   try {
-    console.log(SignUpModel);
     await connectToDB();
     const { email, password, confirmPassword } = req.body;
     const sessionInfo = {
@@ -21,8 +20,6 @@ router.post('/signUp', async (req, res) => {
       cookie: req.session.cookie,
       user: { Email: email, Password: password },
     };
-
-    req.session.users = sessionInfo; 
     const checkEmail = await SignUpModel.findOne({ Email: email });
     if (checkEmail !== null) {
       res.json({
@@ -34,7 +31,7 @@ router.post('/signUp', async (req, res) => {
         Email: email,
         Password: password,
         ConfirmPassword: confirmPassword,
-        sessions:req.session.users
+        Sessions: sessionInfo
       });
       await newUser.save();
       res.json({

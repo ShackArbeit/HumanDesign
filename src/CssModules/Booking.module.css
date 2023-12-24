@@ -134,18 +134,7 @@ body,html{
         margin: 0.5rem;
     }
 } 
-/* 以下為登入會員後，查看預約紀錄的樣式設定 */
-.bookingItem {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-}
 
-.bookingInfo {
-    color: #333;
-    font-size: 18px;
-    /* Add any other styles you want */
-}
 
 
 

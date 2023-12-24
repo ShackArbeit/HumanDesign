@@ -14,15 +14,16 @@ const router = require('express').Router();
 
 router.post('/saveDateTimeAndItem', async (req, res) => {
       try {
-        await connectToDB()
-        const checkLogIn=req.sessionID
-        const SeesionForAuth=await SignUpModel.findOne({sessionId:checkLogIn})
-        console.log(SeesionForAuth.sessions[0].sessionID)
-        if(SeesionForAuth.sessions[0].sessionID){
+        await connectToDB()  
+        // const SeesionForAuth=await SignUpModel.distinct('sessions')
+        const SessionForAuth= req.session.LogInUser
+        console.log(SessionForAuth)
+  
           const { selectDateTime,firstValue, secondItem } = req.body;
-          // 從 SignUpModel 中抓取 _id 項
-          const user = await SignUpModel.findOne({});
-          const BookingPerson = user._id;
+          // 從 SignUpModel 中抓取 _id 項 
+          // const BookingPerson = SeesionForAuth[0].sessionID;
+
+          // console.log(BookingPerson)
           const newBooking = new Date(selectDateTime);
          // 將存放的時間點做前後 90 分鐘的區間設定
           const startTime = dayjs(newBooking).subtract(90, 'minutes');
@@ -82,7 +83,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
             const minute = newBooking.getMinutes();
 
             const newBookings=new BookingModel({
-              BookingPerson,
+              // BookingPerson,
               Year: year,
               Month: month,
               Day: day,
@@ -102,11 +103,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
               Minute: minute,
               BookingItem:firstValue,
             });
-          } 
-        }else{
-          console.log('你並非該使用者，所以無法預約諮詢')
-          res.status(500).json({ success: false, message: '你並非該使用者，所以無法預約諮詢' });
-        }   
+          }  
       } catch (error) {
         console.error('Error inserting DateTime into MongoDB:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -118,10 +115,6 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
 router.delete('/deleteFirstBooking',async (req,res)=>{
   try {
      await connectToDB()
-     const checkLogIn=req.sessionID
-     const SeesionForAuth=await SignUpModel.findOne({sessionId:checkLogIn})
-     console.log(SeesionForAuth.sessions[0].sessionID)
-     if(SeesionForAuth.sessions[0].sessionID){
       const BookingData=await BookingModel.findOne({})
       BookingId=BookingData._id
       if(!BookingId){
@@ -132,12 +125,7 @@ router.delete('/deleteFirstBooking',async (req,res)=>{
         return res.json({ success: true, message: 'Booking deleted successfully' });
       } else {
         return res.status(404).json({ success: false, message: 'Booking not found' });
-      }
-     }else{
-      console.log('並非該使用者，無法被刪除')
-      return res.status(404).json({ success: false, message: '並非該使用者，無法被刪除' });
-     }
-    
+      }   
    } catch (error) {
      console.error('Error deleting booking:', error);
      res.status(500).json({ success: false, message: 'Internal server error' });
