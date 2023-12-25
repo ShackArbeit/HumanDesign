@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
-const { SignUpModel } = require('../Model/ForAuth');
+const  SignUpModel  = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 
 

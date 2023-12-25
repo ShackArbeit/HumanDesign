@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
-const { SignUpModel } = require('../Model/ForAuth');
+const  SignUpModel  = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 
 app.use(sessionMiddleware);
 
 const router = require('express').Router();
+
+
 
 router.post('/directSignIn', async (req, res) => {
   try {
@@ -20,15 +22,7 @@ router.post('/directSignIn', async (req, res) => {
         { Password: password }
       ]
     });
-
     if (user) {
-      req.session.LogInUser = {
-        sessionID: user.Sessions[0].sessionID,
-        // 其他相關用戶信息...
-      };
-
-      console.log(req.session.LogInUser);
-
       res.json({
         success: true,
         message: '登入成功 !',
