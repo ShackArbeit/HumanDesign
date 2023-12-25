@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
-const  SignUpModel  = require('../Model/ForAuth');
+const SignUpModel = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 
 app.use(sessionMiddleware);
 
 const router = require('express').Router();
-
-
 
 router.post('/directSignIn', async (req, res) => {
   try {
@@ -22,7 +20,21 @@ router.post('/directSignIn', async (req, res) => {
         { Password: password }
       ]
     });
+    console.log(user)
+    console.log(user.Sessions)
     if (user) {
+      
+      user.Sessions = user.Sessions || [];
+
+      // 在登入成功後，將 session 放入 MongoDB 中
+      user.Sessions.push({
+        sessionID: req.sessionID,
+        cookie: req.session.cookie,
+        user: { Email: email, Password: password },
+      });
+
+      await user.save();
+
       res.json({
         success: true,
         message: '登入成功 !',

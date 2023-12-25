@@ -1,13 +1,10 @@
 const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
-const  SignUpModel  = require('../Model/ForAuth');
+const SignUpModel = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 
-
 app.use(sessionMiddleware);
-
-
 
 const router = require('express').Router();
 
@@ -15,11 +12,7 @@ router.post('/signUp', async (req, res) => {
   try {
     await connectToDB();
     const { email, password, confirmPassword } = req.body;
-    const sessionInfo = {
-      sessionID: req.sessionID,
-      cookie: req.session.cookie,
-      user: { Email: email, Password: password },
-    };
+
     const checkEmail = await SignUpModel.findOne({ Email: email });
     if (checkEmail !== null) {
       res.json({
@@ -31,7 +24,6 @@ router.post('/signUp', async (req, res) => {
         Email: email,
         Password: password,
         ConfirmPassword: confirmPassword,
-        Sessions: sessionInfo
       });
       await newUser.save();
       res.json({

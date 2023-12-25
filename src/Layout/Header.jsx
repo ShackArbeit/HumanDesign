@@ -38,6 +38,7 @@ const Header = () => {
         localStorage.removeItem('isLoggin');
         localStorage.removeItem('rememberedEmail');
         localStorage.removeItem('remeberMePassword');
+        localStorage.removeItem('Sessions');
         nevigate('/HumanDesign')
         setIsLoggin(false)
         console.log('已經成功登出了!')

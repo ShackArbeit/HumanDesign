@@ -16,13 +16,16 @@ const ParentSchema=new Schema({
         type:String,
         required:[true,'ConfirmPassword is required']
     },
-    Sessions: [
-        {
-          sessionID: String,
-          cookie: Object, 
-          user: Object, 
-        }
-      ],
+    Sessions:[
+        
+    ]
+    //Sessions: [
+    //     {
+    //       sessionID: String,
+    //       cookie: Object, 
+    //       user: Object, 
+    //     }
+    //   ],
 })
 
 const SignUpModel=models.User||model('User',ParentSchema)
