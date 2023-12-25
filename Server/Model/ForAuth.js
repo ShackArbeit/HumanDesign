@@ -16,17 +16,11 @@ const ParentSchema=new Schema({
         type:String,
         required:[true,'ConfirmPassword is required']
     },
+    // 這裡的 Sessions 在註冊時是空陣列，只有等到登入時才會建立 Sessions 物件
     Sessions:[]
-    //Sessions: [
-    //     {
-    //       sessionID: String,
-    //       cookie: Object, 
-    //       user: Object, 
-    //     }
-    //   ],
 })
 
-const SignUpModel=models.User||model('User',ParentSchema)
+const SignUpModel=models.User|| model('User',ParentSchema)
 
 
 module.exports=SignUpModel

@@ -11,12 +11,16 @@ const router = require('express').Router();
 router.post('/logout', async (req, res) => {
   try {
     await connectToDB();
-    const currentUser=await SignUpModel.findOne({})
-     console.log(currentUser)
-    if (currentUser) {
+    // 先取得目前登入狀態使用者的 Sessions 物件
+    const CheckcurrentUser = await SignUpModel.distinct('Sessions')
+    // 將該 Sessions 物件當所蒐尋的標籤，取出目前真正登入狀態的使用者
+    const currentUser=await SignUpModel.findOne({Sessions:CheckcurrentUser})
+    console.log(currentUser)
+    // 若是登入狀態，就將 Sessions 物件刪除，讓下次登入時建立新的 Sessions 物件
+    if (CheckcurrentUser) {
       currentUser.Sessions = [];
       await currentUser.save()
-      res.json({
+    res.json({
         success: true,
         message: '登出成功!',
       });

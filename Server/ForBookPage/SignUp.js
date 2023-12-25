@@ -12,7 +12,6 @@ router.post('/signUp', async (req, res) => {
   try {
     await connectToDB();
     const { email, password, confirmPassword } = req.body;
-
     const checkEmail = await SignUpModel.findOne({ Email: email });
     if (checkEmail !== null) {
       res.json({
@@ -20,6 +19,7 @@ router.post('/signUp', async (req, res) => {
         message: '註冊失敗，因為信箱重複',
       });
     } else {
+    // 這裡沒有建立 Sessions 物件，而是等到登入時才會建立
       const newUser = new SignUpModel({
         Email: email,
         Password: password,
