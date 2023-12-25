@@ -11,9 +11,7 @@ const router = require('express').Router();
 router.post('/directSignIn', async (req, res) => {
   try {
     await connectToDB();
-
     const { email, password } = req.body;
-
     const user = await SignUpModel.findOne({
       $and: [
         { Email: email },
@@ -23,18 +21,13 @@ router.post('/directSignIn', async (req, res) => {
     console.log(user)
     console.log(user.Sessions)
     if (user) {
-      
       user.Sessions = user.Sessions || [];
-
-      // 在登入成功後，將 session 放入 MongoDB 中
       user.Sessions.push({
         sessionID: req.sessionID,
         cookie: req.session.cookie,
         user: { Email: email, Password: password },
       });
-
       await user.save();
-
       res.json({
         success: true,
         message: '登入成功 !',

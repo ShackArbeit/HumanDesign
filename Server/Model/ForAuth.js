@@ -16,9 +16,7 @@ const ParentSchema=new Schema({
         type:String,
         required:[true,'ConfirmPassword is required']
     },
-    Sessions:[
-        
-    ]
+    Sessions:[]
     //Sessions: [
     //     {
     //       sessionID: String,

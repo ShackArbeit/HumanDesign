@@ -17,8 +17,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
         await connectToDB()  
            const SeesionForAuth=await SignUpModel.distinct('Sessions')
            console.log(SeesionForAuth[0].sessionID)
-           if(SeesionForAuth[0].sessionID){
-            const User = await SignUpModel.findOne({ 'Sessions.sessionID': SeesionForAuth[0].sessionID });
+           const User = await SignUpModel.findOne({ 'Sessions.sessionID': SeesionForAuth[0].sessionID });
             if(User){
               const UserId=User._id
               const { selectDateTime,firstValue, secondItem } = req.body;
@@ -105,7 +104,6 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                 });
              }
             }
-          }
       } catch (error) {
         console.error('Error inserting DateTime into MongoDB:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });

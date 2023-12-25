@@ -24,7 +24,7 @@ const Header = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  const handleLogOut=()=>{
+  const handleLogOut = async () => {
     Swal.fire({
       title: '登出後將會到首頁，確定要登出嗎 !',
       icon: 'question',
@@ -33,18 +33,33 @@ const Header = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: '確認',
       cancelButtonText: '取消',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('isLoggin');
         localStorage.removeItem('rememberedEmail');
         localStorage.removeItem('remeberMePassword');
-        localStorage.removeItem('Sessions');
-        nevigate('/HumanDesign')
-        setIsLoggin(false)
-        console.log('已經成功登出了!')
+        try {
+          const response = await fetch('http://localhost:8000/logout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const responseData = await response.json();
+          console.log(responseData);
+          if (responseData.success) {
+            nevigate('/HumanDesign');
+            setIsLoggin(false);
+            console.log('已經成功登出了!');
+          } else {
+            console.log('登出失敗:', responseData.message);
+          }
+        } catch (error) { 
+          console.error('登出請求失敗:', error);
+        }
       }
     });
-  }
+  };
  
  
   return (
