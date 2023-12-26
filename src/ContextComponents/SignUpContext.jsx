@@ -51,7 +51,7 @@ export default function SignUpProvider({children}){
       else if (password !== confirmPassword) {
           Swal.fire({
             title: '格式錯誤',
-            text: '你所輸入的確認密碼有誤，請重新輸入 !',
+            text: '你的密碼與確認密碼不相同，請重新輸入 !',
             icon: 'error',
             confirmButtonText: '了解'
           })

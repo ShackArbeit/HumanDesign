@@ -3,6 +3,7 @@ import {useState,useEffect,useContext} from 'react';
 import style from '../CssModules/Header.module.css'
 import { SignInContext } from '../ContextComponents/SignInContext';
 import Swal from 'sweetalert2';
+import { DateTimeContext } from '../ContextComponents/DataTimeContext';
 
 
 
@@ -11,6 +12,7 @@ const Header = () => {
   
   const[isOpen,setIsOpen]=useState(false)
   const {isLoggin,setIsLoggin}= useContext(SignInContext)
+ const{  handleResetBooking}=useContext(DateTimeContext)
   const nevigate=useNavigate()
 
   useEffect(() => {
@@ -49,8 +51,9 @@ const Header = () => {
           const responseData = await response.json();
           console.log(responseData);
           if (responseData.success) {
-            nevigate('/HumanDesign');
             setIsLoggin(false);
+            handleResetBooking()
+            nevigate('/HumanDesign');
             console.log('已經成功登出了!');
           } else {
             console.log('登出失敗:', responseData.message);
@@ -103,6 +106,11 @@ const Header = () => {
                 查看預約紀錄
               </Link>
             </li>
+            <li className={style.Navitem}>
+            <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
+              再次預約 !
+            </Link>
+          </li>
           </>
         )}
   </ul>

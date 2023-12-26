@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import {useEffect} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -30,16 +29,13 @@ export default function SignIn() {
     
     const {
       setRememberMe,
-      remeberMe
     } = useContext(SingUpContext);
     useEffect(() => {
       const rememberedEmail = localStorage.getItem(' rememberedEmail');
       const rememberedPassword = localStorage.getItem('remeberMePassword');
-      if (rememberedEmail) {
+      if (rememberedEmail && rememberedPassword ) {
         setEmail(rememberedEmail);
         setRememberMe(true); 
-      }
-      else if(rememberedPassword) {
         setPassword(rememberedPassword);
         setRememberMe(true);
       }
