@@ -165,10 +165,6 @@ export default function DateTimeProvider({ children }) {
           icon: 'error',
           confirmButtonText: '了解'
         })
-        //  setSelectDateTime([])
-        //  setFirstValue([]);
-        //  setSecondItem([]);
-        //  setShowOriginButton(true);
        }
      } else {
        alert('取消刪除預約');

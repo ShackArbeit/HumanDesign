@@ -94,6 +94,21 @@ const Header = () => {
         )}
     {isLoggin &&(
           <>
+          <li className={style.Navitem}>
+            <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/checkBooking">
+              查看預約紀錄
+            </Link>
+           </li>
+          <li className={style.Navitem}>
+           <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
+                寫寫心得!
+            </Link>
+          </li>
+          <li className={style.Navitem}>
+           <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
+             再次預約 !
+             </Link>
+          </li>
             <li className={style.Navitem}>
               <Link className={style.Navlink} 
               onClick={handleLogOut}
@@ -101,16 +116,7 @@ const Header = () => {
                 登出
               </Link>
             </li>
-            <li className={style.Navitem}>
-              <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/checkBooking">
-                查看預約紀錄
-              </Link>
-            </li>
-            <li className={style.Navitem}>
-            <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
-              再次預約 !
-            </Link>
-          </li>
+         
           </>
         )}
   </ul>
