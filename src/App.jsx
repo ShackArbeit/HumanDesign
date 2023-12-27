@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DateTimeProvider from "./ContextComponents/DataTimeContext";
 import SignUpProvider from "./ContextComponents/SignUpContext";
 import SignInProvider from "./ContextComponents/SignInContext";
+import SendEmailProvider from "./ContextComponents/SendEmailContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -32,6 +33,7 @@ function App() {
      <BrowserRouter>
      <SignUpProvider>
       <SignInProvider>
+      <SendEmailProvider>
       <Routes>
         <Route path="/HumanDesign" element={<Layout />}>
           <Route path="" element={<EntranceHome />}/>
@@ -61,6 +63,7 @@ function App() {
           <Route path='human/起源' element={<RaUraHumanDesign />}/>
         </Route>
       </Routes>
+      </SendEmailProvider>
       </SignInProvider>
       </SignUpProvider>
     </BrowserRouter>

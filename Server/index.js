@@ -10,6 +10,7 @@ const GetRecordRouter=require('./ForBookPage/GetRecord')
 const BookingIttroduceRouter=require('./ForSubPage/BookingIntroduction');
 const CheckBookingRouter=require('./ForCheckBooking/CheckBookingAuth')
 const LogOutRouter=require('./ForBookPage/LogOut')
+const SendEmailRouter=require('./ForSendEmai/SendCheckEmail')
 const cors = require('cors');
 const sessionMiddleware=require('./Databse/Session')
 
@@ -51,6 +52,9 @@ app.use(BookingIttroduceRouter)
 
 // 以下為登入的路由部分
 app.use(LogOutRouter)
+
+// 以下為寄送確認 Email 的部分
+app.use(SendEmailRouter)
 
 // 以下為有註冊會員且預約後查詢預約資料的部分
 app.use(CheckBookingRouter)

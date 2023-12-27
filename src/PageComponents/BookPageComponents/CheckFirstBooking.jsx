@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import {useContext} from 'react'
 import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
+import { SendEmailContext } from '../../ContextComponents/SendEmailContext';
 
 
 const theme = createTheme({
@@ -23,6 +24,7 @@ const theme = createTheme({
 
 const CheckFirstBooking = () => {
   const {handleDeleteFirstBooking,notbooking}=useContext(DateTimeContext)
+  const {handleSendEamil}=useContext( SendEmailContext )
   const { data: datas, isLoading, error } = useCheckBooking (); 
   console.log(datas)
   if(isLoading) return<p>Loading...</p>
@@ -35,10 +37,7 @@ const CheckFirstBooking = () => {
       {notbooking?(
         <h1 style={{top:'3rem'}}>你的預約已刪除，請趕緊再次預約 !</h1>
       ):(
-        <>
         <h2 className={style.serviceTitle}>謝謝你的預約以下為你的所有預約紀錄</h2>
-        <h2 className={style.serviceTitle}>我們已經預約後匯款的流程及其他注意事項寄送到你的 Email ，請查照 !</h2>
-        </>
       )}
       {notbooking ?( <div className={style.serviceContainer2}></div>):(
         <Box sx={{ flexGrow: 1 }}>
@@ -75,8 +74,23 @@ const CheckFirstBooking = () => {
         </Grid>
       </Box>
       )}
-      
+      <Button
+      variant="contained"
+      size="small"
+      onClick={handleSendEamil}
+      sx={{
+        fontWeight: 900,
+        size:'large',
+        fontSize: '20px',
+        '&:hover': {
+          border: '2px solid #ffa811',
+          color: 'black',
+          backgroundColor: '#fff',
+        },
+      }}
+      >確認預約無誤</Button>
       </Container>
+     
     ):(
       <div className={style.homeBannder}>
       <h1 style={{top:'3rem'}}>你還沒有任何預約紀錄，請趕緊預約 !</h1>
