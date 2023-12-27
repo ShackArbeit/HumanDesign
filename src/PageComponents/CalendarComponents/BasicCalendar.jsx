@@ -1,7 +1,7 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useContext} from 'react'
+import {useContext,useState} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -31,6 +31,15 @@ const options = {
 export default function BasicCalendar() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
+  // const[check,setCheck]=useState(false);
+  // const handleCheck=()=>{
+  //   const userConfirmed = window.confirm('前往確認頁面後將無法刪除此預約，你確定要前往?');
+  //    if(userConfirmed){
+  //      setCheck(!check)
+  //    }else{
+  //     alert('取消前往確認預約');
+  //    }
+  // }
   const {
     selectDateTime,
     handleSelectDateTime,

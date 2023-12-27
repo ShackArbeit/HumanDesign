@@ -20,6 +20,7 @@ export default function DateTimeProvider({ children }) {
  const [firstValue, setFirstValue] = useState(null);
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
+ const [notbooking,setNotbooking]=useState(false)
 
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
@@ -108,6 +109,7 @@ export default function DateTimeProvider({ children }) {
         })
         setShowGoButton(true)
         setShowOriginButton(false); 
+    setNotbooking(!notbooking)
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
       // 90 分鐘的區間內
       } else {
@@ -157,6 +159,7 @@ export default function DateTimeProvider({ children }) {
          setFirstValue([]);
          setSecondItem([]);
          setShowOriginButton(true);
+         setNotbooking(true)
        } else {
          alert('刪除失敗或找不到預約');
          Swal.fire({
@@ -188,7 +191,9 @@ export default function DateTimeProvider({ children }) {
      secondItem,
      handleSecondAutocompleteChange,
      handleDeleteFirstBooking,
-     handleResetBooking
+     handleResetBooking,
+     notbooking,
+     setNotbooking
    }}>
       {children}
     </DateTimeContext.Provider>
