@@ -2,8 +2,6 @@ import { useState, createContext } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
 import Swal from 'sweetalert2';
-import {useNavigate} from 'react-router-dom'
-
 export const DateTimeContext = createContext();
 
 
@@ -16,7 +14,6 @@ const options = {
 
 
 export default function DateTimeProvider({ children }) {
- const navigate=useNavigate()
  const [selectDateTime, setSelectDateTime] = useState([]);
  const[showGoButton,setShowGoButton]=useState(false)
  const [showOriginButton,setShowOriginButton]=useState(false)
@@ -180,31 +177,6 @@ export default function DateTimeProvider({ children }) {
      console.error('Error deleting booking:', error);
    }
  };
- // 確認預約後回到首頁
- const handleConfirmBooking = async () => {
-  try {
-    const result = await Swal.fire({
-      title: '請確認預約',
-      text: '將返回首頁，若要查看預約項目，請點擊右上角查看預約',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '確認',
-      cancelButtonText: '取消',
-    });
-    if (result.isConfirmed) {
-      navigate('/HumanDesign')
-    } else {
-      Swal.fire({
-        title: '再想想',
-        text: '若想要預約新的日期請先刪除此次預約!',
-        icon: 'error',
-        confirmButtonText: '了解',
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
  
   return (
     <DateTimeContext.Provider value={{ 
@@ -221,8 +193,7 @@ export default function DateTimeProvider({ children }) {
      handleDeleteFirstBooking,
      handleResetBooking,
      notbooking,
-     setNotbooking,
-     handleConfirmBooking
+     setNotbooking
    }}>
       {children}
     </DateTimeContext.Provider>

@@ -29,8 +29,8 @@ import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBoo
 
 function App() {
   return (
-    <DateTimeProvider>
      <BrowserRouter>
+     <DateTimeProvider>
      <SignUpProvider>
       <SignInProvider>
       <SendEmailProvider>
@@ -66,8 +66,8 @@ function App() {
       </SendEmailProvider>
       </SignInProvider>
       </SignUpProvider>
+      </DateTimeProvider>
     </BrowserRouter>
-    </DateTimeProvider>
   )
 }
 

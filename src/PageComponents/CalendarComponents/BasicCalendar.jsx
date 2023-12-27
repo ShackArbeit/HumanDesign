@@ -1,7 +1,7 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useContext,useState} from 'react'
+import {useContext} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -31,15 +31,6 @@ const options = {
 export default function BasicCalendar() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
-  // const[check,setCheck]=useState(false);
-  // const handleCheck=()=>{
-  //   const userConfirmed = window.confirm('前往確認頁面後將無法刪除此預約，你確定要前往?');
-  //    if(userConfirmed){
-  //      setCheck(!check)
-  //    }else{
-  //     alert('取消前往確認預約');
-  //    }
-  // }
   const {
     selectDateTime,
     handleSelectDateTime,
@@ -52,7 +43,8 @@ export default function BasicCalendar() {
     handleSecondAutocompleteChange,
     handleDeleteFirstBooking,
     handleResetBooking,
-    showOriginButton
+    showOriginButton,
+    handleConfirmBooking
   }=useContext(DateTimeContext)
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -175,12 +167,12 @@ export default function BasicCalendar() {
               },
             }}
           >
-            刪除 & 重新預約
+            刪除此次預約
           </Button>
-          <Link to="/HumanDesign/bookingAfterSignIn/checkBooking">
             <Button
               variant="contained"
               size="large"
+              onClick={handleConfirmBooking}
               sx={{
                 fontWeight: 900,
                 fontSize: '20px',
@@ -191,9 +183,8 @@ export default function BasicCalendar() {
                 },
               }}
             >
-              前往確認頁面
+              確認此次預約
             </Button>
-          </Link>
         </>
       )}
       </div>    
@@ -353,7 +344,7 @@ export default function BasicCalendar() {
                   },
                 }}
               >
-                刪除 & 重新預約
+                刪除此次預約
               </Button>
               <Link to="/HumanDesign/bookingAfterSignIn/checkBooking">
                 <Button
@@ -369,7 +360,7 @@ export default function BasicCalendar() {
                     },
                   }}
                 >
-                  前往確認頁面
+                  確認預約
                 </Button>
               </Link>
               </div>
