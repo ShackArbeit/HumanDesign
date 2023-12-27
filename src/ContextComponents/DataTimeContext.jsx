@@ -112,7 +112,7 @@ export default function DateTimeProvider({ children }) {
         })
         setShowGoButton(true)
         setShowOriginButton(false); 
-    setNotbooking(!notbooking)
+        setNotbooking(!notbooking)
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
       // 90 分鐘的區間內
       } else {

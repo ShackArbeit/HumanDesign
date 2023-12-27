@@ -2,7 +2,7 @@ import { useState, createContext } from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
 import Swal from 'sweetalert2';
-export const DateTimeContext = createContext();
+export const NoAuthDateTimeContext = createContext();
 
 
 const options = {
@@ -13,7 +13,7 @@ const options = {
 };
 
 
-export default function DateTimeProvider({ children }) {
+export default function NoAuthDateTimeProvider({ children }) {
  const [selectDateTime, setSelectDateTime] = useState([]);
  const[showGoButton,setShowGoButton]=useState(false)
  const [showOriginButton,setShowOriginButton]=useState(false)
@@ -179,7 +179,7 @@ export default function DateTimeProvider({ children }) {
  };
  
   return (
-    <DateTimeContext.Provider value={{ 
+    <NoAuthDateTimeContext.Provider value={{ 
      selectDateTime, 
      handleSelectDateTime,
      handleSendDateTime,
@@ -196,6 +196,6 @@ export default function DateTimeProvider({ children }) {
      setNotbooking
    }}>
       {children}
-    </DateTimeContext.Provider>
+    </NoAuthDateTimeContext.Provider>
     )
   }

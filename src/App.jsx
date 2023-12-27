@@ -3,6 +3,7 @@ import DateTimeProvider from "./ContextComponents/DataTimeContext";
 import SignUpProvider from "./ContextComponents/SignUpContext";
 import SignInProvider from "./ContextComponents/SignInContext";
 import SendEmailProvider from "./ContextComponents/SendEmailContext";
+import NoAuthDateTimeProvider from "./ContextComponents/NoAuthDateContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -30,6 +31,7 @@ import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBoo
 function App() {
   return (
      <BrowserRouter>
+     <NoAuthDateTimeProvider>
      <DateTimeProvider>
      <SignUpProvider>
       <SignInProvider>
@@ -67,6 +69,7 @@ function App() {
       </SignInProvider>
       </SignUpProvider>
       </DateTimeProvider>
+      </NoAuthDateTimeProvider>
     </BrowserRouter>
   )
 }

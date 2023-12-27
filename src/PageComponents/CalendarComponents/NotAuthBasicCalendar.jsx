@@ -10,7 +10,7 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import dayjs from 'dayjs';
 dayjs.locale('zh-cn');
 import Button from '@mui/material/Button';
-import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
+import { NoAuthDateTimeContext } from '../../ContextComponents/NoAuthDateContext';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -43,15 +43,25 @@ export default function NotAuthBasicCalendar() {
     handleDeleteFirstBooking,
     handleResetBooking,
     showOriginButton
-  }=useContext(DateTimeContext)
+  }=useContext(NoAuthDateTimeContext )
   
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
-    <h3 style={{marginBottom:"1rem"}}>請點選日期及項目</h3>
+    <h3 style={{marginBottom:"1rem"}}>請先輸入 Email 後點選日期及項目</h3>
     {isDesktop?(
     <div className={style.ItemContainer}>
         <DemoItem >
+        <Autocomplete
+            id="email-autocomplete"
+            options={[]} // Options for autocomplete (can be an array of emails)
+            freeSolo
+            getOptionLabel={(option) => option}
+            onChange={(e, newValue) => onChange(newValue)}
+            renderInput={(params) => (
+              <input {...params} type="email" placeholder="Enter Email" />
+            )}
+         />
         <DesktopDateTimePicker 
         sx={{
           width:"350px",
