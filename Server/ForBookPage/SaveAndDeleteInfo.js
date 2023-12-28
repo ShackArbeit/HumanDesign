@@ -55,6 +55,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                  },
                ],
              }).exec();
+            
             console.log(existingReservations)
             console.log(firstValue)
             console.log(secondItem)

@@ -14,13 +14,14 @@ const options = {
 
 
 export default function NoAuthDateTimeProvider({ children }) {
+ const [email,setEmail]=useState('')
  const [selectDateTime, setSelectDateTime] = useState([]);
- const[showGoButton,setShowGoButton]=useState(false)
+ const [showGoButton,setShowGoButton]=useState(false)
  const [showOriginButton,setShowOriginButton]=useState(false)
  const [firstValue, setFirstValue] = useState(null);
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
- const [notbooking,setNotbooking]=useState(false)
+
 
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
@@ -89,12 +90,12 @@ export default function NoAuthDateTimeProvider({ children }) {
     // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
   try {
       // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
-      const response = await fetch('http://localhost:8000/saveDateTimeAndItem', {
+      const response = await fetch('http://localhost:8000/noAuthBooking', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ selectDateTime,firstValue, secondItem}),
+        body: JSON.stringify({ selectDateTime,firstValue, secondItem,email}),
       });
       // 將資料 JSON 格式化
       const responseData = await response.json();
@@ -109,7 +110,6 @@ export default function NoAuthDateTimeProvider({ children }) {
         })
         setShowGoButton(true)
         setShowOriginButton(false); 
-    setNotbooking(!notbooking)
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
       // 90 分鐘的區間內
       } else {
@@ -140,7 +140,7 @@ export default function NoAuthDateTimeProvider({ children }) {
    try {
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
-       const response = await fetch(`http://localhost:8000/deleteFirstBooking`, {
+       const response = await fetch(`http://localhost:8000/noAuthDelete`, {
          method: 'DELETE',
          headers: {
            'Content-Type': 'application/json',
@@ -159,7 +159,6 @@ export default function NoAuthDateTimeProvider({ children }) {
          setFirstValue([]);
          setSecondItem([]);
          setShowOriginButton(true);
-         setNotbooking(true)
        } else {
          alert('刪除失敗或找不到預約');
          Swal.fire({
@@ -192,8 +191,7 @@ export default function NoAuthDateTimeProvider({ children }) {
      handleSecondAutocompleteChange,
      handleDeleteFirstBooking,
      handleResetBooking,
-     notbooking,
-     setNotbooking
+     setEmail
    }}>
       {children}
     </NoAuthDateTimeContext.Provider>

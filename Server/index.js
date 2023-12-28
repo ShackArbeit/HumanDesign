@@ -11,6 +11,8 @@ const BookingIttroduceRouter=require('./ForSubPage/BookingIntroduction');
 const CheckBookingRouter=require('./ForCheckBooking/CheckBookingAuth')
 const LogOutRouter=require('./ForBookPage/LogOut')
 const SendEmailRouter=require('./ForSendEmai/SendCheckEmail')
+const NotAuthBooking=require('./ForNoAuthBooking/NoAuthBooking')
+const NotAuthDelete=require('./ForNoAuthBooking/NoAuthDelet')
 const cors = require('cors');
 const sessionMiddleware=require('./Databse/Session')
 
@@ -59,7 +61,11 @@ app.use(SendEmailRouter)
 // 以下為有註冊會員且預約後查詢預約資料的部分
 app.use(CheckBookingRouter)
 
+// 以下為未經註冊會員而預約的部分
+app.use(NotAuthBooking)
 
+// 以下為未經註冊會員預約後要刪除預約的部分
+app.use(NotAuthDelete)
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

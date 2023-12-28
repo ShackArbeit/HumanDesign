@@ -42,7 +42,9 @@ export default function NotAuthBasicCalendar() {
     handleSecondAutocompleteChange,
     handleDeleteFirstBooking,
     handleResetBooking,
-    showOriginButton
+    showOriginButton,
+    email,
+    setEmail
   }=useContext(NoAuthDateTimeContext )
   
   return (
@@ -52,16 +54,13 @@ export default function NotAuthBasicCalendar() {
     {isDesktop?(
     <div className={style.ItemContainer}>
         <DemoItem >
-        <Autocomplete
-            id="email-autocomplete"
-            options={[]} // Options for autocomplete (can be an array of emails)
-            freeSolo
-            getOptionLabel={(option) => option}
-            onChange={(e, newValue) => onChange(newValue)}
-            renderInput={(params) => (
-              <input {...params} type="email" placeholder="Enter Email" />
-            )}
-         />
+        <input 
+        type='email'
+        placeholder='請輸入Email'
+        value={email}
+        onChange={(e)=>setEmail(e.target.value)}
+        className={style.EmailInput}
+        />
         <DesktopDateTimePicker 
         sx={{
           width:"350px",
@@ -176,9 +175,9 @@ export default function NotAuthBasicCalendar() {
               },
             }}
           >
-            刪除 & 重新預約
+            刪除此次預約
           </Button>
-          <Link to="/HumanDesign/booking/firstCheck">
+          <Link to="/HumanDesign">
             <Button
               variant="contained"
               size="large"
@@ -192,7 +191,7 @@ export default function NotAuthBasicCalendar() {
                 },
               }}
             >
-              前往確認頁面
+              回首頁
             </Button>
           </Link>
         </>
@@ -238,6 +237,13 @@ export default function NotAuthBasicCalendar() {
       {isMobile?(
         <div className={style.ItemContainer}>
             <DemoItem >
+            <input 
+              type='email'
+              placeholder='請輸入Email'
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
+              className={style.EmailInput}
+            />
             <MobileDateTimePicker  
             sx={{
               width:"350px",
@@ -354,9 +360,9 @@ export default function NotAuthBasicCalendar() {
                   },
                 }}
               >
-                刪除 & 重新預約
+                刪除此次預約
               </Button>
-              <Link to="/HumanDesign/booking/firstCheck">
+              <Link to="/HumanDesign">
                 <Button
                   variant="contained"
                   size="large"
@@ -370,7 +376,7 @@ export default function NotAuthBasicCalendar() {
                     },
                   }}
                 >
-                  前往確認頁面
+                  回首頁
                 </Button>
               </Link>
               </div>
