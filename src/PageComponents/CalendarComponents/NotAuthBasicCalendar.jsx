@@ -44,7 +44,8 @@ export default function NotAuthBasicCalendar() {
     handleResetBooking,
     showOriginButton,
     email,
-    setEmail
+    setEmail,
+    handleSendEmail
   }=useContext(NoAuthDateTimeContext )
   
   return (
@@ -177,10 +178,10 @@ export default function NotAuthBasicCalendar() {
           >
             刪除此次預約
           </Button>
-          <Link to="/HumanDesign">
             <Button
               variant="contained"
               size="large"
+              onClick={handleSendEmail}
               sx={{
                 fontWeight: 900,
                 fontSize: '20px',
@@ -193,7 +194,6 @@ export default function NotAuthBasicCalendar() {
             >
               回首頁
             </Button>
-          </Link>
         </>
       )}
       </div>    
@@ -362,10 +362,10 @@ export default function NotAuthBasicCalendar() {
               >
                 刪除此次預約
               </Button>
-              <Link to="/HumanDesign">
                 <Button
                   variant="contained"
                   size="large"
+                  onClick={handleSendEmail}
                   sx={{
                     fontWeight: 900,
                     fontSize: '20px',
@@ -378,7 +378,6 @@ export default function NotAuthBasicCalendar() {
                 >
                   回首頁
                 </Button>
-              </Link>
               </div>
             </>
           )}

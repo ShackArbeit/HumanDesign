@@ -34,7 +34,8 @@ const NoAuthSchema=new Schema({
     TimeItem:{
         type:String,
         required:[true,' TimeItem is required']
-    }
+    },
+    Sessions:[]
 })
 
 const NoAuthModel=models.NoAuthBooking|| model('NoAuthBooking',NoAuthSchema)

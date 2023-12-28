@@ -13,6 +13,7 @@ const LogOutRouter=require('./ForBookPage/LogOut')
 const SendEmailRouter=require('./ForSendEmai/SendCheckEmail')
 const NotAuthBooking=require('./ForNoAuthBooking/NoAuthBooking')
 const NotAuthDelete=require('./ForNoAuthBooking/NoAuthDelet')
+const NotAuthSendEmail=require('./ForSendEmai/NotAuthSendEmail')
 const cors = require('cors');
 const sessionMiddleware=require('./Databse/Session')
 
@@ -66,6 +67,9 @@ app.use(NotAuthBooking)
 
 // 以下為未經註冊會員預約後要刪除預約的部分
 app.use(NotAuthDelete)
+
+// 以下為未經註冊會員預約後寄出確認 Email 的部分
+app.use( NotAuthSendEmail)
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

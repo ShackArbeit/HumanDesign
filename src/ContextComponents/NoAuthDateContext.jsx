@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; 
 import Swal from 'sweetalert2';
 export const NoAuthDateTimeContext = createContext();
+import {useNavigate } from 'react-router-dom'
 
 
 const options = {
@@ -14,6 +15,7 @@ const options = {
 
 
 export default function NoAuthDateTimeProvider({ children }) {
+  const negative=useNavigate()
  const [email,setEmail]=useState('')
  const [selectDateTime, setSelectDateTime] = useState([]);
  const [showGoButton,setShowGoButton]=useState(false)
@@ -176,6 +178,34 @@ export default function NoAuthDateTimeProvider({ children }) {
      console.error('Error deleting booking:', error);
    }
  };
+ // 回到首頁，順便寄確認 Email 給沒有註冊的使用者
+ const handleSendEmail=async ()=>{
+    try{
+        // const userConfirmed = window.confirm('我們已經將匯款相關流程寄 Email 給你 !');
+     
+          const response=await fetch('http://localhost:8000/NoauthSendEmail',{
+            method:'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          const responseData=await response.json();
+          if(responseData.success){
+            Swal.fire({
+              title: '預約成功',
+              text: `我們已成功接受您於 ${formattedDate} 的預約了 !`,
+              icon: 'success',
+              confirmButtonText: '了解'
+            })
+          }
+          negative('/HumanDesign')
+          console.log(responseData)
+        
+        
+    }catch(error){
+      console.log('無法寄出確認信',error)
+    }
+ }
  
   return (
     <NoAuthDateTimeContext.Provider value={{ 
@@ -191,7 +221,8 @@ export default function NoAuthDateTimeProvider({ children }) {
      handleSecondAutocompleteChange,
      handleDeleteFirstBooking,
      handleResetBooking,
-     setEmail
+     setEmail,
+     handleSendEmail
    }}>
       {children}
     </NoAuthDateTimeContext.Provider>

@@ -107,7 +107,12 @@ router.post('/noAuthBooking',async(req,res)=>{
                  Hour: hour,
                  Minute: minute,
                  BookingItem:firstValue,
-                 TimeItem:secondItem
+                 TimeItem:secondItem,
+                 Sessions:[{
+                   UserEmail:email,
+                   sessionID: req.sessionID,
+                   cookie: req.session.cookie
+                 }]
                })
                await newBookings.save()
                res.json({
