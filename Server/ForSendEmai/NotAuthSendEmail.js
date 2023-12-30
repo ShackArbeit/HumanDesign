@@ -45,23 +45,23 @@ router.post('/NoauthSendEmail', async (req, res) => {
             }
           ]
         };
-        transporter.sendMail(mailOptions, (error, info) => {
+        transporter.sendMail(mailOptions,async (error, info) => {
           if (error) {
             console.error('郵件發送失敗:', error);
             res.status(500).json({ success: false, message: '郵件發送失敗' });
           } else {
             console.log('郵件已發送:', info.response);
-            res.json({ success: true, message: '預約確認郵件已發送' });
-            NoAuthModel.updateOne({ Sessions: currentUser }, { $set: { Sessions: [] } }, (updateError) => {
-                if (updateError) {
-                  console.error('Error clearing Sessions:', updateError);
-                  res.status(500).json({ success: false, message: 'Error clearing Sessions' });
-                } else {
-                  res.json({ success: true, message: '預約確認郵件已發送' });
-                }
-              });
-            }
-          });
+            await NoAuthModel.updateOne(
+              { Sessions: currentUser },
+              { $set: { Sessions: [] } }
+          ).then(() => {
+              res.json({ success: true, message: '預約確認郵件已發送' });
+          }).catch(updateError => {
+              console.error('Error clearing Sessions:', updateError);
+              res.status(500).json({ success: false, message: 'Error clearing Sessions' });
+     });
+          //   res.json({ success: true, message: '預約確認郵件已發送' });
+          }})
       } else {
         res.json({
           'State': '這位使用者前還沒有登入'

@@ -189,19 +189,28 @@ export default function NoAuthDateTimeProvider({ children }) {
               'Content-Type': 'application/json',
             },
           })
-          const responseData=await response.json();
-          if(responseData.success){
-            Swal.fire({
-              title: '預約成功',
-              text: `我們已成功接受您於 ${formattedDate} 的預約了 !`,
-              icon: 'success',
-              confirmButtonText: '了解'
-            })
-          }
-          negative('/HumanDesign')
+          const responseData=await response.json()
           console.log(responseData)
-        
-        
+          if(responseData.success){
+            const result = await Swal.fire({
+              title: '確認信',
+              text: '將返回首頁，請到你的信箱查看確認信',
+              icon: 'success',
+              showCancelButton: true,
+              confirmButtonText: '了解並返回首頁',
+              cancelButtonText: '再想想',
+            });
+            if (result.isConfirmed) {
+              negative('/HumanDesign')
+            } else {
+              Swal.fire({
+                title: '再想想',
+                text: '請刪除預約或重新選取',
+                icon: 'question',
+                confirmButtonText: '了解',
+              });
+            }
+          }  
     }catch(error){
       console.log('無法寄出確認信',error)
     }
