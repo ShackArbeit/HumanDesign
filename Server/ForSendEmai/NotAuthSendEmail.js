@@ -17,6 +17,14 @@ router.post('/NoauthSendEmail', async (req, res) => {
     await connectToDB();
       
       const currentUser = await NoAuthModel.distinct('Sessions');
+      const Year=await NoAuthModel.distinct('Year')
+      const Month=await NoAuthModel.distinct('Month')
+      const Day=await NoAuthModel.distinct('Day')
+      const Hour=await NoAuthModel.distinct('Hour')
+      const Minute=await NoAuthModel.distinct('Minute')
+      const BookItem=await NoAuthModel.distinct('BookingItem')
+      const TimeItem=await NoAuthModel.distinct('TimeItem')
+      console.log({Year,Month,Day,Hour,Minute,BookItem,TimeItem})
       console.log(currentUser);
       const currentEmail=currentUser[0].UserEmail
       console.log(currentEmail)
@@ -36,7 +44,11 @@ router.post('/NoauthSendEmail', async (req, res) => {
           from: 'g0972222165@gmail.com',
           to: currentEmail,
           subject: '預約確認信',
-          text: '感謝您的預約！預約詳情等內容',
+          text: `
+          感謝你的預約，你所預約的日期為${Year}.${Number(Month)+1}.${Day}
+          時間為: ${Hour}時${Minute}分，預約項目為
+          ${BookItem} 及 ${TimeItem}
+          `,
           attachments: [
             {
               filename: 'test.pdf',
