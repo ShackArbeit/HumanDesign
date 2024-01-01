@@ -14,8 +14,7 @@ const router = require('express').Router();
 
 router.post('/NoauthSendEmail', async (req, res) => {
   try {
-    await connectToDB();
-      
+    await connectToDB();   
       const currentUser = await NoAuthModel.distinct('Sessions');
       const Year=await NoAuthModel.distinct('Year')
       const Month=await NoAuthModel.distinct('Month')
@@ -24,10 +23,8 @@ router.post('/NoauthSendEmail', async (req, res) => {
       const Minute=await NoAuthModel.distinct('Minute')
       const BookItem=await NoAuthModel.distinct('BookingItem')
       const TimeItem=await NoAuthModel.distinct('TimeItem')
-      console.log({Year,Month,Day,Hour,Minute,BookItem,TimeItem})
       console.log(currentUser);
       const currentEmail=currentUser[0].UserEmail
-      console.log(currentEmail)
       if (currentUser !== null) {
         const transporter = nodemailer.createTransport({
           service: 'gmail',

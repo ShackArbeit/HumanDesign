@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
 const SignUpModel = require('../Model/ForAuth');
+const BookingModel=require('../Model/ForBooking')
 const nodemailer = require('nodemailer');
 require('dotenv').config()
 const path = require('path');
@@ -17,7 +18,15 @@ router.post('/sendEmail', async (req, res) => {
     await connectToDB();
    
       const currentUser = await SignUpModel.distinct('Sessions');
+      const Year = await BookingModel.distinct('Year');
+      const Month = await BookingModel.distinct('Month');
+      const Day = await BookingModel.distinct('Day');
+      const Hour = await BookingModel.distinct('Hour');
+      const Minute = await BookingModel.distinct('Minute');
+      const BookingItem = await BookingModel.distinct('BookingItem');
+      const TimeItem = await BookingModel.distinct('TimeItem');
       console.log(currentUser);
+      console.log({Year,Month,Day,Hour,Minute,BookingItem,TimeItem})
 
       if (currentUser !== null) {
         const currentEmail = currentUser[0].user.Email;
@@ -36,7 +45,12 @@ router.post('/sendEmail', async (req, res) => {
           from: 'g0972222165@gmail.com',
           to: currentEmail,
           subject: '預約確認信',
-          text: '感謝您的預約！預約詳情等內容',
+          html: `
+            <p style="font-size: 40px; color: #333;">感謝你的預約</p>
+            <p style="font-size: 30px; color: #333;">你所預約的日期為 ${Year}.${Number(Month)+1}.${Day}</p>
+            <p style="font-size: 30px; color: #333;">時間為: ${Hour} 時 ${Minute} 分</p>
+            <p style="font-size: 30px; color: #333;">預約項目為 ${BookingItem} & ${TimeItem}</p>
+          `,
           attachments: [
             {
               filename: 'test.pdf',

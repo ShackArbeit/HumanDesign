@@ -2,14 +2,17 @@ const dayjs = require('dayjs');
 const connectToDB=require('../Databse/ConnectToMongoDB')
 const BookingModel=require('../Model/ForBooking')
 const SignUpModel = require('../Model/ForAuth');
+// const { ObjectId } = require('mongoose').Types;
 const express = require('express');
 const app = express();
 const sessionMiddleware = require('../Databse/Session');
+const { v4: uuidv4 } = require('uuid');
 
 app.use(sessionMiddleware);
 
 
 const router = require('express').Router();
+let BookingNumber=''
 
 
 router.post('/saveDateTimeAndItem', async (req, res) => {
@@ -22,14 +25,11 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
               const UserId=User._id
               const { selectDateTime,firstValue, secondItem } = req.body;
               const BookingPerson = UserId
-              console.log(BookingPerson)
               const newBooking = new Date(selectDateTime);
              // 將存放的時間點做前後 90 分鐘的區間設定
               const startTime = dayjs(newBooking).subtract(90, 'minutes');
               const endTime = dayjs(newBooking).add(90,'minutes');
             // 先向集合內搜尋存在區間內的所有可能
-            console.log(BookingModel)
-            console.log(newBooking)
             const existingReservations=await BookingModel.find({
               $or: [
                  {
@@ -83,6 +83,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                 const minute = newBooking.getMinutes();
     
                 const newBookings=new BookingModel({
+                  BookingNumber:uuidv4(),
                   BookingPerson,
                   Year: year,
                   Month: month,
@@ -92,6 +93,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                   BookingItem:firstValue,
                   TimeItem:secondItem
                 })
+                BookingNumber = newBookings.BookingNumber;
                 await newBookings.save()
                 res.json({
                   success: true,
@@ -116,12 +118,19 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
 router.delete('/deleteFirstBooking',async (req,res)=>{
   try {
      await connectToDB()
-      const BookingData=await BookingModel.findOne({})
+     console.log(BookingNumber)
+    const BookingData = await BookingModel.findOne(
+      {BookingNumber:BookingNumber
+      }
+    );
+    
+    console.log(BookingData);
       BookingId=BookingData._id
+       console.log(BookingId)
       if(!BookingId){
         return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
       }
-      const result = await BookingModel.deleteOne({});
+      const result = await BookingModel.deleteOne({ _id: BookingId });
       if (result.deletedCount === 1) {
         return res.json({ success: true, message: 'Booking deleted successfully' });
       } else {
