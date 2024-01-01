@@ -74,23 +74,7 @@ const CheckFirstBooking = () => {
         </Grid>
       </Box>
       )}
-      <Button
-      variant="contained"
-      size="small"
-      onClick={handleSendEamil}
-      sx={{
-        fontWeight: 900,
-        size:'large',
-        fontSize: '20px',
-        '&:hover': {
-          border: '2px solid #ffa811',
-          color: 'black',
-          backgroundColor: '#fff',
-        },
-      }}
-      >確認預約無誤</Button>
       </Container>
-     
     ):(
       <div className={style.homeBannder}>
       <h1 style={{top:'3rem'}}>你還沒有任何預約紀錄，請趕緊預約 !</h1>

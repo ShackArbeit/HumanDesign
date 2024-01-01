@@ -4,7 +4,7 @@ import 'dayjs/locale/zh-cn';
 import Swal from 'sweetalert2';
 import {useNavigate} from 'react-router-dom'
 
-export const DateTimeContext = createContext();
+export const ReDateTimeContext = createContext();
 
 
 const options = {
@@ -15,7 +15,7 @@ const options = {
 };
 
 
-export default function DateTimeProvider({ children }) {
+export default function ReDateTimeProvider({ children }) {
  const navigate=useNavigate()
  const [selectDateTime, setSelectDateTime] = useState([]);
  const[showGoButton,setShowGoButton]=useState(false)
@@ -148,7 +148,6 @@ export default function DateTimeProvider({ children }) {
          headers: {
            'Content-Type': 'application/json',
          },
-         body: JSON.stringify({ firstValue, secondItem}),
        });
        const responseData = await response.json();
        console.log(responseData);
@@ -208,7 +207,7 @@ export default function DateTimeProvider({ children }) {
 };
  
   return (
-    <DateTimeContext.Provider value={{ 
+    <ReDateTimeContext.Provider value={{ 
      selectDateTime, 
      handleSelectDateTime,
      handleSendDateTime,
@@ -218,6 +217,10 @@ export default function DateTimeProvider({ children }) {
      secondOptions,
      handleFirstAutocompleteChange,
      secondItem,
+     setSelectDateTime,
+     setFirstValue,
+     setSecondItem,
+     setShowGoButton,
      handleSecondAutocompleteChange,
      handleDeleteFirstBooking,
      handleResetBooking,
@@ -226,6 +229,6 @@ export default function DateTimeProvider({ children }) {
      handleConfirmBooking
    }}>
       {children}
-    </DateTimeContext.Provider>
+    </ReDateTimeContext.Provider>
     )
   }

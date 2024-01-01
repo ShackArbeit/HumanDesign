@@ -1,10 +1,12 @@
-import { createContext } from 'react';
+import { createContext} from 'react';
 import Swal from 'sweetalert2';
 import {useNavigate} from 'react-router-dom'
+
 
 export const SendEmailContext=createContext()
 
 export default function SendEmailProvider({ children }){
+    
        const negative=useNavigate()
         const handleSendEamil=async ()=>{
             try{

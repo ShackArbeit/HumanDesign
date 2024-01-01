@@ -6,13 +6,14 @@ const SignUpModel = require('../Model/ForAuth');
 const express = require('express');
 const app = express();
 const sessionMiddleware = require('../Databse/Session');
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 
 app.use(sessionMiddleware);
 
+let year,month,day,minute,hour
 
 const router = require('express').Router();
-let BookingNumber=''
+
 
 
 router.post('/saveDateTimeAndItem', async (req, res) => {
@@ -76,14 +77,14 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                }
                // 若沒有搜尋到，就額外新增一筆預約資料
                else{
-                const year = newBooking.getFullYear();
-                const month = newBooking.getMonth();
-                const day = newBooking.getDate();
-                const hour = newBooking.getHours();
-                const minute = newBooking.getMinutes();
+                 year = newBooking.getFullYear();
+                 month = newBooking.getMonth();
+                 day = newBooking.getDate();
+                 hour = newBooking.getHours();
+                 minute = newBooking.getMinutes();
     
                 const newBookings=new BookingModel({
-                  BookingNumber:uuidv4(),
+                  // BookingNumber:uuidv4(),
                   BookingPerson,
                   Year: year,
                   Month: month,
@@ -118,11 +119,9 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
 router.delete('/deleteFirstBooking',async (req,res)=>{
   try {
      await connectToDB()
-     console.log(BookingNumber)
+     console.log({year,month,day,hour,minute})
     const BookingData = await BookingModel.findOne(
-      {BookingNumber:BookingNumber
-      }
-    );
+     {Year:year,Month:month,Day:day,Hour:hour,Minute:minute});
     
     console.log(BookingData);
       BookingId=BookingData._id

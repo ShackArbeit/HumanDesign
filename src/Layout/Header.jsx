@@ -105,7 +105,7 @@ const Header = () => {
             </Link>
           </li>
           <li className={style.Navitem}>
-           <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
+           <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/reBooking">
              再次預約 !
              </Link>
           </li>

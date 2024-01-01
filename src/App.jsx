@@ -4,6 +4,7 @@ import SignUpProvider from "./ContextComponents/SignUpContext";
 import SignInProvider from "./ContextComponents/SignInContext";
 import SendEmailProvider from "./ContextComponents/SendEmailContext";
 import NoAuthDateTimeProvider from "./ContextComponents/NoAuthDateContext";
+import ReDateTimeProvider from "./ContextComponents/ReBookingDateTimteContext";
 import Layout from './Layout/Layout'
 import AboutJerome from './PageComponents/AboutJerome';
 import UserFeedBack from "./PageComponents/UserFeedBack";
@@ -25,12 +26,14 @@ import SignIn from "./PageComponents/AuthPageComponents/SignIn";
 import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEntranceBooking";
 import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
+import AgainBookingCalendar from "./PageComponents/CalendarComponents/AgainBookingCalendar";
 
 
 
 function App() {
   return (
      <BrowserRouter>
+     <ReDateTimeProvider>
      <NoAuthDateTimeProvider>
      <DateTimeProvider>
      <SignUpProvider>
@@ -50,6 +53,7 @@ function App() {
           <Route path="bookingAfterSignIn" element={<EntraceBooking/>}/>
             <Route path="bookingAfterSignIn/calendar" element={<BasicCalendar />}/>
             <Route path="bookingAfterSignIn/checkBooking" element={<CheckFirstBooking />}/>
+            <Route path="bookingAfterSignIn/reBooking" element={<AgainBookingCalendar />}/>
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
@@ -70,6 +74,7 @@ function App() {
       </SignUpProvider>
       </DateTimeProvider>
       </NoAuthDateTimeProvider>
+      </ReDateTimeProvider>
     </BrowserRouter>
   )
 }

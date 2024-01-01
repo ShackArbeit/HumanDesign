@@ -1,7 +1,7 @@
 import style from '../../CssModules/Calendar.module.css'
 import {Link} from 'react-router-dom'
 import {  useMediaQuery } from '@mui/material';
-import {useContext} from 'react'
+import {useContext,useEffect} from 'react'
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,7 +10,7 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import dayjs from 'dayjs';
 dayjs.locale('zh-cn');
 import Button from '@mui/material/Button';
-import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
+import { ReDateTimeContext } from '../../ContextComponents/ReBookingDateTimteContext';
 import { SendEmailContext } from '../../ContextComponents/SendEmailContext';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
@@ -29,7 +29,7 @@ const options = {
 
 
 
-export default function BasicCalendar() {
+export default function AgainBookingCalendar() {
   const isDesktop = useMediaQuery('(min-width:576px)');
   const isMobile=useMediaQuery('(max-width:576px');
   const {
@@ -45,8 +45,20 @@ export default function BasicCalendar() {
     handleDeleteFirstBooking,
     handleResetBooking,
     showOriginButton,
-  }=useContext(DateTimeContext)
+    setSelectDateTime,
+    setSecondItem,
+    setFirstValue,
+    setShowGoButton
+  }=useContext(ReDateTimeContext)
   const{handleSendEamil}=useContext(SendEmailContext)
+  useEffect(() => {
+    // 在進入特定路由時自動將狀態重置為 null
+    setSelectDateTime([]);
+    setFirstValue([]);
+    setSecondItem([]);
+    setShowGoButton(false)
+  }, []); // 空的依賴陣列表示這個效果只會在組件掛載時運行一次
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div className={style.BasicCalendarContainer}>
