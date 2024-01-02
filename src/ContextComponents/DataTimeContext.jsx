@@ -24,6 +24,7 @@ export default function DateTimeProvider({ children }) {
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
  const [notbooking,setNotbooking]=useState(false)
+ const [bookingIdToDelete, setBookingIdToDelete] = useState('');
 
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
@@ -102,6 +103,7 @@ export default function DateTimeProvider({ children }) {
       // 將資料 JSON 格式化
       const responseData = await response.json();
       console.log(responseData)
+      console.log(responseData.id)
       // 若是成功放入資料庫則返回放入成功的訊息並 Alert 出來
       if (responseData.success) {
         Swal.fire({
@@ -110,13 +112,15 @@ export default function DateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+        console.log(responseData)
+        console.log(responseData.id)
+        setBookingIdToDelete(responseData.id);
         setShowGoButton(true)
         setShowOriginButton(false); 
-        setNotbooking(!notbooking)
+        setNotbooking(!notbooking);
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
       // 90 分鐘的區間內
       } else {
-      
         // responseData 是 status 為 400 時所返回的物件，並透過解構賦值存放在變數 Year,Month,Day,Hour,Minute 中
           const { Year, Month, Day, Hour, Minute } = responseData;
         // 設定前端要 Alert 訊息的變數，將前後 90 分鐘的區間透過 day.js 做計算
@@ -143,12 +147,13 @@ export default function DateTimeProvider({ children }) {
    try {
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
-       const response = await fetch(`http://localhost:8000/deleteFirstBooking`, {
+    
+       const response = await fetch(`http://localhost:8000/deleteBooking/${bookingIdToDelete}`, {
          method: 'DELETE',
          headers: {
            'Content-Type': 'application/json',
          },
-         body: JSON.stringify({ firstValue, secondItem}),
+         body: JSON.stringify({}),
        });
        const responseData = await response.json();
        console.log(responseData);

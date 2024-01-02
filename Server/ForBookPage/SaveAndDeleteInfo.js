@@ -2,11 +2,11 @@ const dayjs = require('dayjs');
 const connectToDB=require('../Databse/ConnectToMongoDB')
 const BookingModel=require('../Model/ForBooking')
 const SignUpModel = require('../Model/ForAuth');
-// const { ObjectId } = require('mongoose').Types;
+const { ObjectId } = require('mongoose').Types;
 const express = require('express');
 const app = express();
 const sessionMiddleware = require('../Databse/Session');
-// const { v4: uuidv4 } = require('uuid');
+
 
 app.use(sessionMiddleware);
 
@@ -20,7 +20,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       try {
         await connectToDB()  
            const SeesionForAuth=await SignUpModel.distinct('Sessions')
-           console.log(SeesionForAuth[0].sessionID)
+
            const User = await SignUpModel.findOne({ 'Sessions.sessionID': SeesionForAuth[0].sessionID });
             if(User){
               const UserId=User._id
@@ -84,7 +84,6 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                  minute = newBooking.getMinutes();
     
                 const newBookings=new BookingModel({
-                  // BookingNumber:uuidv4(),
                   BookingPerson,
                   Year: year,
                   Month: month,
@@ -94,11 +93,11 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                   BookingItem:firstValue,
                   TimeItem:secondItem
                 })
-                BookingNumber = newBookings.BookingNumber;
                 await newBookings.save()
                 res.json({
                   success: true,
                   message: 'DateTime inserted successfully!',
+                  id: newBookings._id,
                   Year: year,
                   Month: month,
                   Day: day,
@@ -114,33 +113,25 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       }
 });
 
-
-
-router.delete('/deleteFirstBooking',async (req,res)=>{
+router.delete('/deleteBooking/:bookingId', async (req, res) => {
   try {
-     await connectToDB()
-     console.log({year,month,day,hour,minute})
-    const BookingData = await BookingModel.findOne(
-     {Year:year,Month:month,Day:day,Hour:hour,Minute:minute});
-    
-    console.log(BookingData);
-      BookingId=BookingData._id
-       console.log(BookingId)
-      if(!BookingId){
-        return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
-      }
-      const result = await BookingModel.deleteOne({ _id: BookingId });
-      if (result.deletedCount === 1) {
-        return res.json({ success: true, message: 'Booking deleted successfully' });
-      } else {
-        return res.status(404).json({ success: false, message: 'Booking not found' });
-      }   
-   } catch (error) {
-     console.error('Error deleting booking:', error);
-     res.status(500).json({ success: false, message: 'Internal server error' });
-   }
- })
-    
+    const bookingId = req.params.bookingId;
+    console.log(bookingId)
+    if (!bookingId || !ObjectId.isValid(bookingId)) {
+      return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });
+    }
+    const result = await BookingModel.deleteOne({ _id: bookingId });
+    console.log(result); 
+    if (result.deletedCount === 1) {
+      return res.json({ success: true, message: 'Booking deleted successfully' });
+    } else {
+      return res.status(404).json({ success: false, message: 'Booking not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
 
 
 
