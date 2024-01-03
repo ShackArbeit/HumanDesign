@@ -31,7 +31,8 @@ const BookingSchema=new Schema({
     TimeItem:{
         type:String,
         required:[true,' TimeItem is required']
-    }
+    },
+    Sessions:[]
 })
 
 

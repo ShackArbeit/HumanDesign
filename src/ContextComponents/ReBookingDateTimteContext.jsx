@@ -24,7 +24,7 @@ export default function ReDateTimeProvider({ children }) {
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
  const [notbooking,setNotbooking]=useState(false)
- const [bookingIdToDelete, setBookingIdToDelete] = useState(null);
+//  const [bookingIdToDelete, setBookingIdToDelete] = useState(null);
 
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
@@ -112,6 +112,7 @@ export default function ReDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+        localStorage.setItem('bookingIdToDelete', responseData.id);
         setBookingIdToDelete(responseData.id);
         setShowGoButton(true)
         setShowOriginButton(false); 
@@ -144,6 +145,7 @@ export default function ReDateTimeProvider({ children }) {
  // 刪除預約的 function 
  const handleDeleteFirstBooking = async () => {
    try {
+    const bookingIdToDelete = localStorage.getItem('bookingIdToDelete');
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
       console.log('Deleting booking with ID:', bookingIdToDelete);
@@ -163,6 +165,7 @@ export default function ReDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+        
          setSelectDateTime([])
          setFirstValue([]);
          setSecondItem([]);
