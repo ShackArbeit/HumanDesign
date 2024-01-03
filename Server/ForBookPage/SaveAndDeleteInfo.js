@@ -113,14 +113,15 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       }
 });
 
-router.delete('/deleteBooking/:bookingId', async (req, res) => {
+router.delete('/deleteBooking/:bookingIdToDelete', async (req, res) => {
   try {
-    const bookingId = req.params.bookingId;
+    const bookingId = req.params.bookingIdToDelete;
     console.log(bookingId)
-    if (!bookingId || !ObjectId.isValid(bookingId)) {
+    if (!bookingId ) {
       return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });
     }
     const result = await BookingModel.deleteOne({ _id: bookingId });
+   
     console.log(result); 
     if (result.deletedCount === 1) {
       return res.json({ success: true, message: 'Booking deleted successfully' });

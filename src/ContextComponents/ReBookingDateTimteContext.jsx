@@ -152,7 +152,7 @@ export default function ReDateTimeProvider({ children }) {
          headers: {
            'Content-Type': 'application/json',
          },
-        //  body: JSON.stringify({}),
+        body: JSON.stringify({}),
        });
        const responseData = await response.json();
        console.log(responseData);

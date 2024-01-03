@@ -6,8 +6,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import {useContext} from 'react'
-import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
-import { SendEmailContext } from '../../ContextComponents/SendEmailContext';
+import { ReDateTimeContext } from '../../ContextComponents/ReBookingDateTimteContext';
+// import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
+// import { SendEmailContext } from '../../ContextComponents/SendEmailContext';
 
 
 const theme = createTheme({
@@ -23,8 +24,8 @@ const theme = createTheme({
 })
 
 const CheckFirstBooking = () => {
-  const {handleDeleteFirstBooking,notbooking}=useContext(DateTimeContext)
-  const {handleSendEamil}=useContext( SendEmailContext )
+  const {handleDeleteFirstBooking,notbooking}=useContext(ReDateTimeContext)
+  // const {handleSendEamil}=useContext( SendEmailContext )
   const { data: datas, isLoading, error } = useCheckBooking (); 
   console.log(datas)
   if(isLoading) return<p>Loading...</p>
