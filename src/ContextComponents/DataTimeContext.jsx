@@ -75,10 +75,10 @@ export default function DateTimeProvider({ children }) {
         })
         return;
       }
-      if (selectDateTime && selectDateTime.length > 0 && (firstValue==='' || secondItem ==='')) {
-       alert('你尚未選取任何項目！');
-        return; 
-      }
+      // if (selectDateTime && selectDateTime.length > 0 && (firstValue==='' || secondItem ==='')) {
+      //  alert('你尚未選取任何項目！');
+      //   return; 
+      // }
         // 只接受三天前的預約
    if (selectedDate.isBefore(minimumReservationDate, 'day')) {
      Swal.fire({

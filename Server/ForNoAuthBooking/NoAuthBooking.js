@@ -48,7 +48,7 @@ router.post('/noAuthBooking',async(req,res)=>{
                   ],
                 },
               ],
-            }).exec()  && await NoAuthModel.findOne({
+            }).exec()  && await NoAuthModel.find({
                 $or: [
                     {
                       $and: [
