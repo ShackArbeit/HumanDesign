@@ -20,7 +20,6 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       try {
         await connectToDB()  
            const SeesionForAuth=await SignUpModel.distinct('Sessions')
-
            const User = await SignUpModel.findOne({ 'Sessions.sessionID': SeesionForAuth[0].sessionID });
             if(User){
               const UserId=User._id
@@ -56,10 +55,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                  },
                ],
              }).exec();
-            
             console.log(existingReservations)
-            console.log(firstValue)
-            console.log(secondItem)
              // 若有搜尋到，則將所有符合條件且已存放在 MongoDB 的資料透過解構賦值返回給前端
                if (existingReservations.length > 0) {
                  for(i=0;i<existingReservations.length;i++){
@@ -82,7 +78,8 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                  day = newBooking.getDate();
                  hour = newBooking.getHours();
                  minute = newBooking.getMinutes();
-    
+                 SessionInfo=[{'SessionId':req.sessionID,'Cookie':req.session.cookie}]
+
                 const newBookings=new BookingModel({
                   BookingPerson,
                   Year: year,
@@ -91,7 +88,8 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                   Hour: hour,
                   Minute: minute,
                   BookingItem:firstValue,
-                  TimeItem:secondItem
+                  TimeItem:secondItem,
+                  Sessions:SessionInfo
                 })
                 await newBookings.save()
                 res.json({
@@ -113,9 +111,10 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
       }
 });
 
-router.delete('/deleteBooking/:bookingIdToDelete', async (req, res) => {
+router.delete('/deleteBooking/:bookingIdsToDelete', async (req, res) => {
   try {
-    const bookingId = req.params.bookingIdToDelete;
+    await connectToDB();
+    const bookingId = req.params.bookingIdsToDelete;
     console.log(bookingId)
     if (!bookingId ) {
       return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });

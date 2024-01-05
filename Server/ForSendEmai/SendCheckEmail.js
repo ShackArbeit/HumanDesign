@@ -18,17 +18,22 @@ router.post('/sendEmail', async (req, res) => {
     await connectToDB();
    
       const currentUser = await SignUpModel.distinct('Sessions');
-      const Year = await BookingModel.distinct('Year');
-      const Month = await BookingModel.distinct('Month');
-      const Day = await BookingModel.distinct('Day');
-      const Hour = await BookingModel.distinct('Hour');
-      const Minute = await BookingModel.distinct('Minute');
-      const BookingItem = await BookingModel.distinct('BookingItem');
-      const TimeItem = await BookingModel.distinct('TimeItem');
-      console.log(currentUser);
-      console.log({Year,Month,Day,Hour,Minute,BookingItem,TimeItem})
-
-      if (currentUser !== null) {
+      // 這裡 CheckBookingSession 是返回剛剛預約資料內的 Sessions 項目的各項值
+      const CheckBookingSession=await BookingModel.distinct('Sessions')
+      // 這裡  currentBookingSession 是使用剛剛的 Sessions 來查詢該筆所返回預約資料
+      const currentBookingSession=await BookingModel.findOne({Sessions:CheckBookingSession})
+      const Year = await currentBookingSession.Year;
+      const Month = await currentBookingSession.Month;
+      const Day = await currentBookingSession.Day;
+      const Hour = await currentBookingSession.Hour;
+      const Minute = await currentBookingSession.Minute
+      const BookingItem = await currentBookingSession.BookingItem;
+      const TimeItem = await currentBookingSession.TimeItem
+      console.log(currentBookingSession)
+      // console.log({Year,Month,Day,Hour,Minute,BookingItem,TimeItem})
+   
+      // 之前當 Sessions 裡面不是空值時才會寄送 Email 
+      if (currentUser !== null && currentBookingSession.Sessions!==null) {
         const currentEmail = currentUser[0].user.Email;
         const transporter = nodemailer.createTransport({
           service: 'gmail',
@@ -36,8 +41,8 @@ router.post('/sendEmail', async (req, res) => {
           port: 587,
           secure: false,
           auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_PASS
+            user: 'g0972222165@gmail.com',
+            pass: 'zttn zhgf cqdh dpoy'
           }
         });
 
@@ -59,12 +64,15 @@ router.post('/sendEmail', async (req, res) => {
             }
           ]
         };
-        transporter.sendMail(mailOptions, (error, info) => {
+        transporter.sendMail(mailOptions, async (error, info) => {
           if (error) {
             console.error('郵件發送失敗:', error);
             res.status(500).json({ success: false, message: '郵件發送失敗' });
           } else {
             console.log('郵件已發送:', info.response);
+        // 寄送 Email 後清除 Sessions 為空陣列，確保每一次寄送 Emial 都是當前預約的值
+            currentBookingSession.Sessions=[];
+            await currentBookingSession.save();
             res.json({ success: true, message: '預約確認郵件已發送' });
           }
         });

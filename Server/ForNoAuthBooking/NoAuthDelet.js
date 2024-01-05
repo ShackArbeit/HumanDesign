@@ -9,23 +9,21 @@ app.use(AuthsessionMiddleware);
 
 const router = require('express').Router();
 
-router.delete('/noAuthDelete', async (req, res) => {
+router.delete('/noAuthDelete/:bookingIdToDelete', async (req, res) => {
     try {
         await connectToDB();
-        const BookingData = await NoAuthModel.findOne({});
-        const BookingId = BookingData._id;
-        console.log(BookingId);
-        if (!BookingId) {
-            return res.status(400).json({ success: false, message: 'No ID provided for deletion' });
-         }
-
-        const result = await NoAuthModel.deleteOne({ _id: BookingId });
+        const bookingId = req.params.bookingIdToDelete;
+        console.log(bookingId)
+        if (!bookingId ) {
+            return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });
+          }
+        const result = await NoAuthModel.deleteOne({ _id: bookingId });
         console.log(result)
-        if (result.deletedCount === 1) {    
-             return res.json({ success: true, message: 'Booking deleted successfully' });
-         } else {
-             return res.status(404).json({ success: false, message: 'Booking not found' });
-         }
+        if (result.deletedCount === 1) {
+            return res.json({ success: true, message: 'Booking deleted successfully' });
+          } else {
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+          }
     } catch (error) {
         console.error('Error deleting booking:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });

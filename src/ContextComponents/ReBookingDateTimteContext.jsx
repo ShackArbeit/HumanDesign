@@ -24,7 +24,6 @@ export default function ReDateTimeProvider({ children }) {
  const [secondOptions, setSecondOptions] = useState([]);
  const [secondItem,setSecondItem]=useState(null);
  const [notbooking,setNotbooking]=useState(false)
-//  const [bookingIdToDelete, setBookingIdToDelete] = useState(null);
 
  // 選取預約項目第一分項的 function 
  const handleFirstAutocompleteChange = (event, newValue) => {
@@ -112,11 +111,11 @@ export default function ReDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+
         localStorage.setItem('bookingIdToDelete', responseData.id);
-        setBookingIdToDelete(responseData.id);
         setShowGoButton(true)
         setShowOriginButton(false); 
-        setNotbooking(!notbooking)
+        // setNotbooking(!notbooking)
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
       // 90 分鐘的區間內
       } else {
@@ -165,7 +164,7 @@ export default function ReDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
-        
+        localStorage.removeItem('bookingIdToDelete')
          setSelectDateTime([])
          setFirstValue([]);
          setSecondItem([]);
@@ -240,3 +239,4 @@ export default function ReDateTimeProvider({ children }) {
     </ReDateTimeContext.Provider>
     )
   }
+

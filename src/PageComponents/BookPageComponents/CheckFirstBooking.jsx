@@ -35,11 +35,7 @@ const CheckFirstBooking = () => {
     <ThemeProvider theme={theme} >
     {datas && datas.length > 0?(
       <Container className={style.serviceWrap2} fluid>
-      {notbooking?(
-        <h1 style={{top:'3rem'}}>你的預約已刪除，請趕緊再次預約 !</h1>
-      ):(
         <h2 className={style.serviceTitle}>謝謝你的預約以下為你的所有預約紀錄</h2>
-      )}
       {notbooking ?( <div className={style.serviceContainer2}></div>):(
         <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 2, sm: 6, md: 12 }}>
@@ -53,20 +49,6 @@ const CheckFirstBooking = () => {
                       <p>日期： {data.Year}.{data.Month + 1}.{data.Day}</p>
                       <p>時間：{data.Hour}時 {data.Minute}分</p>
                       <p>預約時長： {data.TimeItem}</p>
-                      <Button
-                      variant="contained"
-                      size="small"
-                      onClick={handleDeleteFirstBooking}
-                      sx={{
-                        fontWeight: 900,
-                        fontSize: '18px',
-                        '&:hover': {
-                          border: '2px solid #ffa811',
-                          color: 'black',
-                          backgroundColor: '#fff',
-                        },
-                      }}
-                      >刪除此次預約</Button>
                     </div>
                   </div>
                 </div>

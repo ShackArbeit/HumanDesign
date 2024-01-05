@@ -192,7 +192,7 @@ export default function NotAuthBasicCalendar() {
                 },
               }}
             >
-              回首頁
+              確認預約並返回首頁
             </Button>
         </>
       )}
@@ -376,7 +376,7 @@ export default function NotAuthBasicCalendar() {
                     },
                   }}
                 >
-                  回首頁
+                  確認預約並返回首頁
                 </Button>
               </div>
             </>

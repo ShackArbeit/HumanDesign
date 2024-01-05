@@ -110,6 +110,7 @@ export default function NoAuthDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+        localStorage.setItem('bookingIdToDelete', responseData.id);
         setShowGoButton(true)
         setShowOriginButton(false); 
       // 這裡透過後端的 Api 先比較所要放入的資料時間點是否存在已經在 MongoDB 資料庫內所存放的時間點之前後
@@ -140,9 +141,10 @@ export default function NoAuthDateTimeProvider({ children }) {
  // 刪除預約的 function 
  const handleDeleteFirstBooking = async () => {
    try {
+    const bookingIdToDelete = localStorage.getItem('bookingIdToDelete');
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
-       const response = await fetch(`http://localhost:8000/noAuthDelete`, {
+       const response = await fetch(`http://localhost:8000/noAuthDelete/${bookingIdToDelete}`, {
          method: 'DELETE',
          headers: {
            'Content-Type': 'application/json',
@@ -157,6 +159,7 @@ export default function NoAuthDateTimeProvider({ children }) {
           icon: 'success',
           confirmButtonText: '了解'
         })
+        localStorage.removeItem('bookingIdToDelete')
          setSelectDateTime([])
          setFirstValue([]);
          setSecondItem([]);
@@ -181,8 +184,8 @@ export default function NoAuthDateTimeProvider({ children }) {
  // 回到首頁，順便寄確認 Email 給沒有註冊的使用者
  const handleSendEmail=async ()=>{
     try{
-        // const userConfirmed = window.confirm('我們已經將匯款相關流程寄 Email 給你 !');
-     
+        const userConfirmed = window.confirm('確認預約後將無法再更改預約，已考慮清楚 ?');
+        if(userConfirmed){
           const response=await fetch('http://localhost:8000/NoauthSendEmail',{
             method:'POST',
             headers: {
@@ -211,11 +214,11 @@ export default function NoAuthDateTimeProvider({ children }) {
               });
             }
           }  
+        }      
     }catch(error){
       console.log('無法寄出確認信',error)
     }
  }
- 
   return (
     <NoAuthDateTimeContext.Provider value={{ 
      selectDateTime, 
