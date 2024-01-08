@@ -18,10 +18,10 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 const options = {
-  個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
-  多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
-  親子解析: ['60分鐘 8,000 元', '120 分鐘 14,000 元'],
-  團體解析: ['60分鐘 9,000 元', '120 分鐘 15,000 元'],
+  個人解析: {'60分鐘 5,000 元': '120 分鐘 9,000 元'},
+  多人解析: {'60分鐘 7,000 元':'120 分鐘 12,000 元'},
+  親子解析: {'60分鐘 8,000 元':'120 分鐘 14,000 元'},
+  團體解析: {'60分鐘 9,000 元':'120 分鐘 15,000 元'},
 };
  
 
@@ -84,7 +84,7 @@ export default function NotAuthBasicCalendar() {
         '&:hover': {
           border:'2px solid #1192ff;'
         }}}
-      id="free-solo-demo"
+      // id="free-solo-demo"
       freeSolo
       options={Object.keys(options)}
       value={firstValue}
@@ -103,7 +103,7 @@ export default function NotAuthBasicCalendar() {
           '&:hover': {
             border:'2px solid #1192ff;'
           }}}
-        id="free-solo-2-demo"
+        // id="free-solo-2-demo"
         disableClearable
         options={secondOptions}
         value={secondItem}

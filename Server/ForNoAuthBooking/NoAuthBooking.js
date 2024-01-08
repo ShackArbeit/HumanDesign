@@ -24,55 +24,57 @@ router.post('/noAuthBooking',async(req,res)=>{
              const endTime = dayjs(newBooking).add(90,'minutes');
            // 先向集合內搜尋存在區間內的所有可能
            console.log(newBooking)
-           const existingReservations=await BookingModel.find({
-             $or: [
-                {
-                  $and: [
-                   { Year: { $eq: newBooking.getFullYear() } },
-                    { Month: { $eq: newBooking.getMonth() } },
-                    { Day: { $eq: newBooking.getDate() } },
-                    { $or: [
-                        { $and: [
-                            { Hour: { $eq: startTime.hour() } },
-                            { Minute: { $gte: startTime.minute() } },
-                        ] },
-                        { $and: [
-                            { Hour: { $eq: endTime.hour() } },
-                           { Minute: { $lte: endTime.minute() } },
-                        ] },
-                        { $and: [
-                            { Hour: { $gt: startTime.hour() } },
-                            { Hour: { $lt: endTime.hour() } },
-                        ] },
-                    ] },
-                  ],
-                },
-              ],
-            }).exec()  && await NoAuthModel.find({
-                $or: [
-                    {
-                      $and: [
-                       { Year: { $eq: newBooking.getFullYear() } },
-                        { Month: { $eq: newBooking.getMonth() } },
-                        { Day: { $eq: newBooking.getDate() } },
-                        { $or: [
-                            { $and: [
-                                { Hour: { $eq: startTime.hour() } },
-                                { Minute: { $gte: startTime.minute() } },
-                            ] },
-                            { $and: [
-                                { Hour: { $eq: endTime.hour() } },
-                               { Minute: { $lte: endTime.minute() } },
-                            ] },
-                            { $and: [
-                                { Hour: { $gt: startTime.hour() } },
-                                { Hour: { $lt: endTime.hour() } },
-                            ] },
-                        ] },
-                      ],
-                    },
-                  ],
-            })
+           const existingReservationsBookingModel = await BookingModel.find({
+            $or: [
+              {
+                $and: [
+                 { Year: { $eq: newBooking.getFullYear() } },
+                  { Month: { $eq: newBooking.getMonth() } },
+                  { Day: { $eq: newBooking.getDate() } },
+                  { $or: [
+                      { $and: [
+                          { Hour: { $eq: startTime.hour() } },
+                          { Minute: { $gte: startTime.minute() } },
+                      ] },
+                      { $and: [
+                          { Hour: { $eq: endTime.hour() } },
+                         { Minute: { $lte: endTime.minute() } },
+                      ] },
+                      { $and: [
+                          { Hour: { $gt: startTime.hour() } },
+                          { Hour: { $lt: endTime.hour() } },
+                      ] },
+                  ] },
+                ],
+              },
+            ]
+           })
+           const existingReservationsNoAuthModel = await NoAuthModel.find({
+            $or: [
+              {
+                $and: [
+                 { Year: { $eq: newBooking.getFullYear() } },
+                  { Month: { $eq: newBooking.getMonth() } },
+                  { Day: { $eq: newBooking.getDate() } },
+                  { $or: [
+                      { $and: [
+                          { Hour: { $eq: startTime.hour() } },
+                          { Minute: { $gte: startTime.minute() } },
+                      ] },
+                      { $and: [
+                          { Hour: { $eq: endTime.hour() } },
+                         { Minute: { $lte: endTime.minute() } },
+                      ] },
+                      { $and: [
+                          { Hour: { $gt: startTime.hour() } },
+                          { Hour: { $lt: endTime.hour() } },
+                      ] },
+                  ] },
+                ],
+              },
+            ],
+           })
+           const existingReservations = existingReservationsBookingModel.concat(existingReservationsNoAuthModel);
            console.log(existingReservations)
            console.log(firstValue)
            console.log(secondItem)

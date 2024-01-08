@@ -44,8 +44,8 @@ export default function DateTimeProvider({ children }) {
   const handleResetBooking=()=>{
       if(selectDateTime ||firstValue || secondItem ){
             setSelectDateTime([])
-            setFirstValue([]);
-            setSecondItem([]);
+            setFirstValue('');
+            setSecondItem('');
       }
   }
   // 選取完成預約項目後的送出的 function 
@@ -165,8 +165,8 @@ export default function DateTimeProvider({ children }) {
           confirmButtonText: '了解'
         })
          setSelectDateTime([])
-         setFirstValue([]);
-         setSecondItem([]);
+         setFirstValue('');
+         setSecondItem('');
          setShowOriginButton(true);
          setNotbooking(true)
        } else {

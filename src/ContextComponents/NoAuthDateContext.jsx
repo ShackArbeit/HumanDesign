@@ -6,6 +6,7 @@ export const NoAuthDateTimeContext = createContext();
 import {useNavigate } from 'react-router-dom'
 
 
+
 const options = {
  個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
  多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
@@ -16,6 +17,7 @@ const options = {
 
 export default function NoAuthDateTimeProvider({ children }) {
   const negative=useNavigate()
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  const [email,setEmail]=useState('')
  const [selectDateTime, setSelectDateTime] = useState([]);
  const [showGoButton,setShowGoButton]=useState(false)
@@ -33,7 +35,7 @@ export default function NoAuthDateTimeProvider({ children }) {
  // 選取預約項目第二分項的 function 
  const handleSecondAutocompleteChange=(event,newItem)=>{
      setSecondItem(newItem)
-     setSecondOptions(options[newItem] || []);
+    setSecondOptions(options[newItem] || []);
  }
  // 選取項目的 function 
   const handleSelectDateTime = (newDateTime) => {
@@ -41,10 +43,10 @@ export default function NoAuthDateTimeProvider({ children }) {
   };
   // 若選擇不想選的項目、日期時間後想要重新選取的 fucntion 
   const handleResetBooking=()=>{
-      if(selectDateTime ||firstValue || secondItem ){
+      if(selectDateTime && firstValue && secondItem){
             setSelectDateTime([])
-            setFirstValue([]);
-            setSecondItem([]);
+            setFirstValue('');
+            setSecondItem('')
       }
   }
   // 選取完成預約項目後的送出的 function 
@@ -54,6 +56,16 @@ export default function NoAuthDateTimeProvider({ children }) {
     const selectedDate = dayjs(selectDateTime);
     const formattedDate = selectedDate.format(' YYYY   /   MM   /   DD    A hh:mm');
     const minimumReservationDate = currentDate.add(3, 'day');
+    // 確保 Email 格式正確 
+    if(!emailRegex.test(email)){
+      Swal.fire({
+        title: '格式錯誤',
+        text: '電子信箱格式不符合要求，請重新輸入 !',
+        icon: 'error',
+        confirmButtonText: '了解'
+      })
+      return 
+    }
     // 防止選取過去的日期
        if (selectedDate.isBefore(currentDate, 'day')) {
         Swal.fire({
@@ -161,8 +173,8 @@ export default function NoAuthDateTimeProvider({ children }) {
         })
         localStorage.removeItem('bookingIdToDelete')
          setSelectDateTime([])
-         setFirstValue([]);
-         setSecondItem([]);
+         setFirstValue('');
+         setSecondItem('')
          setShowOriginButton(true);
        } else {
          alert('刪除失敗或找不到預約');

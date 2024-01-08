@@ -8,10 +8,10 @@ export const ReDateTimeContext = createContext();
 
 
 const options = {
- 個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
- 多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
- 親子解析: ['60分鐘 8,000 元', '120 分鐘 14,000 元'],
- 團體解析: ['60分鐘 9,000 元', '120 分鐘 15,000 元'],
+  個人解析: ['60分鐘 5,000 元', '120 分鐘 9,000 元'],
+  多人解析: ['60分鐘 7,000 元', '120 分鐘 12,000 元'],
+  親子解析: ['60分鐘 8,000 元', '120 分鐘 14,000 元'],
+  團體解析: ['60分鐘 9,000 元', '120 分鐘 15,000 元'],
 };
 
 
@@ -43,8 +43,10 @@ export default function ReDateTimeProvider({ children }) {
   const handleResetBooking=()=>{
       if(selectDateTime ||firstValue || secondItem ){
             setSelectDateTime([])
-            setFirstValue([]);
-            setSecondItem([]);
+            setFirstValue('');
+            setSecondItem('');
+            // setFirstValue([]);
+            // setSecondItem([]);
       }
   }
   // 選取完成預約項目後的送出的 function 
@@ -166,8 +168,10 @@ export default function ReDateTimeProvider({ children }) {
         })
         localStorage.removeItem('bookingIdToDelete')
          setSelectDateTime([])
-         setFirstValue([]);
-         setSecondItem([]);
+         setFirstValue('');
+         setSecondItem('');
+        //  setFirstValue([]);
+        //  setSecondItem([]);
          setShowOriginButton(true);
          setNotbooking(true)
        } else {
