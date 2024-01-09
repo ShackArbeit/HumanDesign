@@ -4,12 +4,12 @@
       box-sizing: border-box;
       padding:0
 }
-body{
+/* body{
       width:100%;
-  }
+  } */
 
 .footer{
-      width:100%;
+      width:100vw;
       background-color: rgba(0,0,0,0.8);
       display:flex;
       padding-left:2rem;
@@ -19,7 +19,7 @@ body{
 }
 /* 有關介紹圖片的部分 */
 .footerBrand{
-    width:50%;
+    width:30%;
     display:flex;
     align-items: center;
 }
@@ -39,9 +39,11 @@ body{
 .footerIcon{
       padding:16px;
 }
-.footerIcon span{
-      margin-left:10px;
-} 
+.footerText{
+      margin-left:20px;
+      font-size:15px;
+      font-weight:700;
+}
 /* 有關介紹文字的部分 */
 .footerBooking{
       padding-top:10px;
@@ -49,15 +51,21 @@ body{
       display:flex;
       flex-direction: column;
 }
-.footerBooking p{
-      padding:0.5rem;
+.footerPara{
+      padding:1rem;
+      font-size:15px;
+      font-weight:700;
 }
 .CopyRight{
       width:100%;
       text-align: center;
       background-color:black;
       color:white;
-      font-size: 10px;
+}
+.footerParaCopy{
+      padding:1rem;
+      font-size:25px;
+      font-weight:700;
 }
 @media screen and (max-width: 768px){
       .footer{

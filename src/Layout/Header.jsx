@@ -6,13 +6,11 @@ import Swal from 'sweetalert2';
 import { DateTimeContext } from '../ContextComponents/DataTimeContext';
 
 
-
-
 const Header = () => {
   
   const[isOpen,setIsOpen]=useState(false)
-  const {isLoggin,setIsLoggin}= useContext(SignInContext)
- const{  handleResetBooking}=useContext(DateTimeContext)
+  const{isLoggin,setIsLoggin}= useContext(SignInContext)
+  const { handleResetBooking}=useContext(DateTimeContext)
   const nevigate=useNavigate()
 
   useEffect(() => {
@@ -120,7 +118,7 @@ const Header = () => {
           </>
         )}
   </ul>
-  <a className={style.menuToggle}
+  <a className={`${style.menuToggle} ${isOpen ? style.clicked : ''}`}
   onClick={()=>setIsOpen(!isOpen)}
   >
 						<span></span>
