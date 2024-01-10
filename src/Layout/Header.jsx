@@ -67,7 +67,7 @@ const Header = () => {
   return (
    <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>
-    <img src='https://funstudynestcamp.com/images/logo_text.png?v=3'
+    <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Major_League_Baseball_logo.svg/1200px-Major_League_Baseball_logo.svg.png'
          className={style.brand}/>
    </a>
   <ul className={isOpen?style.NavMenu:style.Nav}>

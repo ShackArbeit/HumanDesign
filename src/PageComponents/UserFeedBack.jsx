@@ -42,7 +42,9 @@ const UserFeedBack = () => {
                       <div className={style.jdCardDetail}>
                         <div className={style.jdCardTitle}>{data.title}</div>
                         <p>{data.content}</p>
-                        <a href={data.url}>觀看影片</a>
+                        <a href={data.url}  target="_blank"
+                        className={style.jdCardDetailLink}
+                        >觀看影片</a>
                       </div>
                     </div>
                   </div>

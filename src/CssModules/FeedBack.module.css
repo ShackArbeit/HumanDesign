@@ -51,21 +51,32 @@ body{
    font-size: 14px;
    color: #7f8c9b;
 }
-.jdCardDetail a{
+.jdCardDetailLink{
 	border: none;
-	padding: 12px 24px;
-	border-radius: 50px; 
 	font-weight: 600;
-	color: #0077ff;
-	background-color: #e0efff;
-	margin: 0 auto;
+	color: #fff;
+      font-size:18px;
 	display: block;
 	cursor: pointer;
+      background-color:#2369d6;
+      padding:8px 16px;
+      border-radius:8px;
 	text-decoration: none;
+      top:2rem;
 }
 .jdCardDetail a:hover{
-	background-color: #d5a26f;
+	background-color:#ffdb55;
 	color:black;
+}
+@media screen and (max-width:1000px){
+      .jdCardDetailLink{
+            top:0;
+      }
+}
+@media screen and (max-width:767px){
+      .jdCardDetailLink{
+            top:2rem;
+      }
 }
 .jdCardTitle{
    font-size: 18px;

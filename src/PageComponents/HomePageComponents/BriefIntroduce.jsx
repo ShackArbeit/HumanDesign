@@ -2,9 +2,9 @@ import style from '../../CssModules/HomePage.module.css'
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { orange, purple, yellow } from '@mui/material/colors';
+import { orange, purple } from '@mui/material/colors';
 import { Link } from 'react-router-dom';
-import { Bluetooth, BluetoothAudioOutlined } from '@mui/icons-material';
+import {  BluetoothAudioOutlined } from '@mui/icons-material';
 
 
 
