@@ -14,6 +14,7 @@ const SendEmailRouter=require('./ForSendEmai/SendCheckEmail')
 const NotAuthBooking=require('./ForNoAuthBooking/NoAuthBooking')
 const NotAuthDelete=require('./ForNoAuthBooking/NoAuthDelet')
 const NotAuthSendEmail=require('./ForSendEmai/NotAuthSendEmail')
+const ResendPassword=require('./ForBookPage/ResendPassword')
 const cors = require('cors');
 const sessionMiddleware=require('./Databse/Session')
 
@@ -70,6 +71,9 @@ app.use(NotAuthDelete)
 
 // 以下為未經註冊會員預約後寄出確認 Email 的部分
 app.use( NotAuthSendEmail)
+
+// 以下為忘記註冊時密碼的部分 
+app.use(ResendPassword)
 
 app.listen(8000,()=>{
       console.log('Server running at port 8000 !')

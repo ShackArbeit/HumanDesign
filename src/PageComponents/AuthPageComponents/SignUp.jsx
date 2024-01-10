@@ -3,8 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link }from 'react-router-dom'
 import Grid from '@mui/material/Grid';
+import {Link} from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -156,13 +156,6 @@ export default function SignUp() {
                 {"已有帳號 ? 點擊登入 !"}
                 </Link>
             </Grid>
-              <Grid item xs>
-                <Link href="#" variant="body2"
-                sx={{textDecoration:'none',fontSize:'18px'}}
-                >
-                  忘記密碼?
-                </Link>
-              </Grid>
             </Grid>
           </Box>
         </Box>

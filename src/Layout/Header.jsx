@@ -37,8 +37,6 @@ const Header = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('isLoggin');
-        localStorage.removeItem('rememberedEmail');
-        localStorage.removeItem('remeberMePassword');
         try {
           const response = await fetch('http://localhost:8000/logout', {
             method: 'POST',

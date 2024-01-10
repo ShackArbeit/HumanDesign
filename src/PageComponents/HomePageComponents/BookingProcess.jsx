@@ -22,8 +22,8 @@ const BookingProcess = () => {
   return (
   <ThemeProvider theme={theme}>
     <Container className={style.bookProcessWrap}>
-      <h2>預約流程</h2>
-      <h1 className={style.bookProcessSubtitle}>S   T   E   P   S </h1>
+      <h1>預約流程</h1>
+      <h2 className={style.bookProcessSubtitle}>S   T   E   P   S </h2>
       
       <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={{ xs: 1, md: 2 }} columns={{ xs: 2, sm: 6, md: 12 }}> 

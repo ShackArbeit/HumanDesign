@@ -27,6 +27,7 @@ import NotAuthEntraceBooking from "./PageComponents/BookPageComponents/NoAuthEnt
 import NotAuthBasicCalendar from "./PageComponents/CalendarComponents/NotAuthBasicCalendar";
 import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBooking";
 import AgainBookingCalendar from "./PageComponents/CalendarComponents/AgainBookingCalendar";
+import  ForgotPassword  from "./PageComponents/ForgotPasswordComponents/ForgotPassword";
 
 
 
@@ -57,6 +58,8 @@ function App() {
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
+        // 以下是註冊後忘記密碼的重新發送密碼的頁面路由
+        <Route path='signin/resendPassword' element={< ForgotPassword/>}/>
           // 以下是人類的分頁的子項目Router
           <Route path="human" element={<EntranceHumanDesign/>}/>
           <Route path='human/使用說明書' element={<ExplainHumanDesign/>}/>

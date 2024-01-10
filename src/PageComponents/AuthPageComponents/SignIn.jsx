@@ -1,8 +1,7 @@
 import Button from '@mui/material/Button';
-import {useEffect} from 'react';
+import {Link} from 'react-router-dom'
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -16,7 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContext } from 'react';
 import { SignInContext } from '../../ContextComponents/SignInContext';
-import { SingUpContext } from '../../ContextComponents/SignUpContext';
 
 
 const defaultTheme = createTheme();
@@ -24,23 +22,9 @@ const defaultTheme = createTheme();
 export default function SignIn() {
     const {
       open,setOpen,passwordPattern,handleSubmit,
-      email,setEmail,password,setPassword
+      email,setEmail,password,setPassword,StoragePassword,StorageEmail,
     }=useContext(SignInContext)
     
-    const {
-      setRememberMe,
-    } = useContext(SingUpContext);
-    useEffect(() => {
-      const rememberedEmail = localStorage.getItem(' rememberedEmail');
-      const rememberedPassword = localStorage.getItem('remeberMePassword');
-      if (rememberedEmail && rememberedPassword ) {
-        setEmail(rememberedEmail);
-        setRememberMe(true); 
-        setPassword(rememberedPassword);
-        setRememberMe(true);
-      }
-    }, []);
-
   return (
     <div className={style.signInContainer}>
     <Stack sx={{ width: '100%',marginBottom:'7rem'}}>
@@ -86,9 +70,10 @@ export default function SignIn() {
               label="請輸入有效的電子信箱"
               name="email"
               autoComplete="email"
-              value={email}
+              value={email || StorageEmail} 
               onChange={(e) => setEmail(e.target.value)}
               autoFocus
+              // placeholder={StorageEmail}
             />
             <TextField
               margin="normal"
@@ -98,7 +83,8 @@ export default function SignIn() {
               label="密碼須包含至少一大寫及特殊符號及八位元"
               type="password"
               id="password"
-              value={password}
+              // placeholder={StoragePassword}
+              value={password || StoragePassword}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
               InputProps={{
@@ -116,28 +102,16 @@ export default function SignIn() {
                 variant="contained"
                 sx={{ mt: 3, 
                     mb: 2,
-                    mr:2,
                     fontWeight: 'bold',
                     fontSize:'20px'
                 }}
             >
               登入
             </Button>
-            <Button
-                type="reset"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3,
-                     mb: 2,
-                     fontWeight: 'bold',
-                     fontSize:'20px'}}
-          >
-            重新輸入
-          </Button>
           </Box>
             <Grid container sx={{display:'flex',flexDirection:"column"}}>
               <Grid item xs>
-                <Link href="#" variant="body2"
+                <Link to='resendPassword' variant="body2"
                 sx={{textDecoration:'none',fontSize:'18px'}}
                 >
                   忘記密碼?

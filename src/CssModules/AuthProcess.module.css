@@ -24,6 +24,13 @@ body,html{
     padding-top:8rem;
     height:120vh;
 }
+/* 忘記密碼的路由樣式設定 */
+
+.ForgotPasswordContainer{
+    width:100%;
+    height:70vh;
+    padding-top:4rem;
+} 
 @media(max-width:450px){
     .signUpContainer{
         height:780px;

@@ -256,7 +256,8 @@ body{
     text-align: center;
 }
 .bookProcessSubtitle{
-    color:#f7f7f7;
+    /* color:#f7f7f7; */
+    color:black;
     letter-spacing:15px;
 }
 .BookingProcessContainer{
@@ -266,8 +267,7 @@ body{
     align-items: center;
 }
 .BookingProcessItem{
-    display: inline-block;
-     
+    display: inline-block;  
 }
 .BookingProcessItem img{
     display: block;
@@ -280,7 +280,8 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
     color: #fff;
-    font-size: 10px; 
+    font-size: 14px; 
+    font-weight:700;
     width: 100%;
     padding: 10px;
 }
