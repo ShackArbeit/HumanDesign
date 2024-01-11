@@ -96,8 +96,8 @@ const Header = () => {
             </Link>
            </li>
           <li className={style.Navitem}>
-           <Link className={style.Navlink} to="/HumanDesign/bookingAfterSignIn/calendar">
-                寫寫心得!
+           <Link className={style.Navlink} to="emailUs">
+                Email 我們 !
             </Link>
           </li>
           <li className={style.Navitem}>
