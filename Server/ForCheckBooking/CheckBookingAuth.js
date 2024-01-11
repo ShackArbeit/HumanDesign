@@ -13,12 +13,10 @@ router.get('/checkBooking', async (req, res) => {
   try {
     await connectToDB();
     const SeesionForAuth = await SignUpModel.distinct('Sessions');
-    
     if (SeesionForAuth[0].sessionID
       ) {
       const User = await SignUpModel.findOne({ 'Sessions.sessionID': SeesionForAuth[0].sessionID
        });
-      console.log(User)
       if (User) {
         const UserId = User._id;
         const userBookings = await BookingModel.find({ BookingPerson: UserId }).lean().exec();

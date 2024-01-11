@@ -2,7 +2,6 @@ const dayjs = require('dayjs');
 const connectToDB=require('../Databse/ConnectToMongoDB')
 const BookingModel=require('../Model/ForBooking')
 const SignUpModel = require('../Model/ForAuth');
-const { ObjectId } = require('mongoose').Types;
 const express = require('express');
 const app = express();
 const sessionMiddleware = require('../Databse/Session');
@@ -115,13 +114,10 @@ router.delete('/deleteBooking/:bookingIdsToDelete', async (req, res) => {
   try {
     await connectToDB();
     const bookingId = req.params.bookingIdsToDelete;
-    console.log(bookingId)
     if (!bookingId ) {
       return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });
     }
     const result = await BookingModel.deleteOne({ _id: bookingId });
-   
-    console.log(result); 
     if (result.deletedCount === 1) {
       return res.json({ success: true, message: 'Booking deleted successfully' });
     } else {

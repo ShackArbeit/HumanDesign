@@ -18,7 +18,6 @@ router.post('/directSignIn', async (req, res) => {
         { Password: password }
       ]
     });
-    // console.log(user)
     if (user) {
     // 若找到有註冊的使用者，就將登入時要建立的 Sessions 物件建立在同一個 document 下面
       user.Sessions = user.Sessions || [];

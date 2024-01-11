@@ -6,7 +6,7 @@ const WhatHumanRouter=require('./ForSubPage/WhatIsHumanDesign')
 const SignUpRouter=require('./ForBookPage/SignUp')
 const SignInRouter=require('./ForBookPage/SignIn')
 const SaveAndDeleteRouter=require('./ForBookPage/SaveAndDeleteInfo')
-const GetRecordRouter=require('./ForBookPage/GetRecord')
+// const GetRecordRouter=require('./ForBookPage/GetRecord')
 const BookingIttroduceRouter=require('./ForSubPage/BookingIntroduction');
 const CheckBookingRouter=require('./ForCheckBooking/CheckBookingAuth')
 const LogOutRouter=require('./ForBookPage/LogOut')
@@ -41,7 +41,7 @@ app.use(SignInRouter)
 // 第一次輸入預約時間及項目，以及要刪除的路由設定
 app.use(SaveAndDeleteRouter)
 
-app.use(GetRecordRouter)
+// app.use(GetRecordRouter)
 
 // 關於 Jerome 分頁
 app.use(JeromeRouter)

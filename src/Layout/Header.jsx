@@ -25,6 +25,7 @@ const Header = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+ 
   const handleLogOut = async () => {
     Swal.fire({
       title: '登出後將會到首頁，確定要登出嗎 !',
@@ -60,7 +61,7 @@ const Header = () => {
       }
     });
   };
- 
+
  
   return (
    <header className={style.navbar}>

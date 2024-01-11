@@ -5,8 +5,6 @@ const SignUpModel = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
-const path = require('path');
-
 
 app.use(sessionMiddleware);
 
@@ -34,17 +32,10 @@ router.post('/resendPassword', async (req, res) => {
           to: email,
           subject: '預約確認信',
           html: `<p style="font-size: 20px; color: #333;">你的密碼是 ${userEmail[0].Password}</p>`,
-        //   attachments: [
-        //     {
-        //       filename: 'test.pdf',
-        //       path: path.resolve(__dirname, '../ForSendEmai/test.pdf'),
-        //       contentType: 'application/pdf'
-        //     }
-        //   ]
         };
-        let responseSent = false; // Flag to track response status
+        let responseSent = false; 
         transporter.sendMail(mailOptions, async (error, info) => {
-          if (responseSent) return; // Response already sent, exit
+          if (responseSent) return; 
           if (error) {
             console.error('郵件發送失敗:', error);
             responseSent = true;
@@ -62,8 +53,5 @@ router.post('/resendPassword', async (req, res) => {
     }
   });
 
-
-
 app.use(router);
-
 module.exports = app;

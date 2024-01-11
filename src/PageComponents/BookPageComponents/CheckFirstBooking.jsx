@@ -3,12 +3,9 @@ import style from '../../CssModules/HomePage.module.css'
 import Box from '@mui/material/Box';
 import Container from 'react-bootstrap/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import {useContext} from 'react'
+import {useContext,useEffect} from 'react'
 import { ReDateTimeContext } from '../../ContextComponents/ReBookingDateTimteContext';
-// import { DateTimeContext } from '../../ContextComponents/DataTimeContext';
-// import { SendEmailContext } from '../../ContextComponents/SendEmailContext';
 
 
 const theme = createTheme({
@@ -24,9 +21,11 @@ const theme = createTheme({
 })
 
 const CheckFirstBooking = () => {
-  const {handleDeleteFirstBooking,notbooking}=useContext(ReDateTimeContext)
-  // const {handleSendEamil}=useContext( SendEmailContext )
-  const { data: datas, isLoading, error } = useCheckBooking (); 
+  const {notbooking}=useContext(ReDateTimeContext)
+  const { data: datas, isLoading, error,refetch } = useCheckBooking (); 
+  useEffect(() => {
+    refetch();
+  }, []);
   console.log(datas)
   if(isLoading) return<p>Loading...</p>
   if(error) return <p>Error:{error.message}</p>

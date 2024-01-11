@@ -75,7 +75,6 @@ router.post('/NoauthSendEmail', async (req, res) => {
               console.error('Error clearing Sessions:', updateError);
               res.status(500).json({ success: false, message: 'Error clearing Sessions' });
      });
-          //   res.json({ success: true, message: '預約確認郵件已發送' });
           }})
       } else {
         res.json({

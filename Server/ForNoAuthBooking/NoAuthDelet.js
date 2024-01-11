@@ -13,12 +13,10 @@ router.delete('/noAuthDelete/:bookingIdToDelete', async (req, res) => {
     try {
         await connectToDB();
         const bookingId = req.params.bookingIdToDelete;
-        console.log(bookingId)
         if (!bookingId ) {
             return res.status(400).json({ success: false, message: 'Invalid ID provided for deletion' });
           }
         const result = await NoAuthModel.deleteOne({ _id: bookingId });
-        console.log(result)
         if (result.deletedCount === 1) {
             return res.json({ success: true, message: 'Booking deleted successfully' });
           } else {

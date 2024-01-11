@@ -29,9 +29,6 @@ router.post('/sendEmail', async (req, res) => {
       const Minute = await currentBookingSession.Minute
       const BookingItem = await currentBookingSession.BookingItem;
       const TimeItem = await currentBookingSession.TimeItem
-      console.log(currentBookingSession)
-      // console.log({Year,Month,Day,Hour,Minute,BookingItem,TimeItem})
-   
       // 之前當 Sessions 裡面不是空值時才會寄送 Email 
       if (currentUser !== null && currentBookingSession.Sessions!==null) {
         const currentEmail = currentUser[0].user.Email;
@@ -45,7 +42,6 @@ router.post('/sendEmail', async (req, res) => {
             pass: 'zttn zhgf cqdh dpoy'
           }
         });
-
         const mailOptions = {
           from: 'g0972222165@gmail.com',
           to: currentEmail,

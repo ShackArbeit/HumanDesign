@@ -7,14 +7,16 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider,createTheme } from '@mui/material/styles';
-import style from '../../CssModules/AuthProcess.module.css'
-
+import style from '../../CssModules/AuthProcess.module.css';
+import {useNavigate} from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 
 
 const defaultTheme = createTheme();
 
 const EmailJormen = () => {
+    const negative=useNavigate()
     const[name,setName]=useState('')
     const[email,setEmail]=useState('')
     const[message,setMessage]=useState('')
@@ -29,17 +31,27 @@ const EmailJormen = () => {
             to_name:'Shack Lin',
             message:message
         }
-        emailjs.send(serviceId,templateId,templateParams,publicKey)
-        .then((response)=>{
-            console.log('Email sent successfully !',response);
-            setName('')
-            setEmail('')
-            setMessage('')
-        })
-        .catch((error)=>{
+        try{
+          emailjs.send(serviceId,templateId,templateParams,publicKey)
+          .then((response)=>{
+              console.log('Email sent successfully !',response);
+              setName('')
+              setEmail('')
+              setMessage('')
+              Swal.fire({
+                title: '收到你的回饋',
+                text: `我們已收到你的回饋，將儘速回復你 !`,
+                icon: 'success',
+                confirmButtonText: '返回首頁'
+              })
+              negative('/HumanDesign')
+          })
+          .catch((error)=>{
             console.log('Error to send email!',error)
         })
-
+        }catch(error){
+          console.log(error)
+        }
     }
   return (
     <div className={style.signInContainer}>
