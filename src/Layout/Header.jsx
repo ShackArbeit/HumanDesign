@@ -12,8 +12,8 @@ const Header = () => {
   const { isLoggin, setIsLoggin } = useContext(SignInContext);
   const { handleResetBooking } = useContext(DateTimeContext);
   const navigate = useNavigate();
-  const {email}=useContext(SignInContext )
-  console.log(email)
+  const StorageEmail=localStorage.getItem('rememberedEmail')
+  console.log(StorageEmail)
   // useEffect(() => {
   //   const handleUnload = (event) => {
   //     if (isLoggin) {
@@ -47,7 +47,7 @@ const Header = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body:JSON.stringify({email}),
+            body:JSON.stringify({StorageEmail}),
           });
           const responseData = await response.json();
           console.log(responseData);

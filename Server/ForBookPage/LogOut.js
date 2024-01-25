@@ -11,11 +11,11 @@ const router = require('express').Router();
 router.post('/logout', async (req, res) => {
   try {
     await connectToDB();
-    const { email} = req.body;
-    console.log(email)
+    const { StorageEmail} = req.body;
+    console.log(StorageEmail)
     // 透過登入時的 Email 取出目前真正登入狀態的使用者
     // const CheckcurrentUser = await SignUpModel.distinct('Sessions');
-    const CheckUserByEmail=await SignUpModel.findOne({Email:email})
+    const CheckUserByEmail=await SignUpModel.findOne({Email:StorageEmail})
     // const currentUser = await SignUpModel.findOne({ RegistrationOrder: 1 });
     console.log(CheckUserByEmail)
     // console.log(CheckcurrentUser);
