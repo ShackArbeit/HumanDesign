@@ -70,6 +70,8 @@ export default function SignInProvider({children}){
                 confirmButtonText: '了解'
               })
               localStorage.setItem('isLoggin', true);
+              localStorage.setItem('rememberedEmail',email)
+              localStorage.setItem('remeberMePassword',password)
               setIsLoggin(true)
               negative('/HumanDesign/bookingAfterSignIn')
             }else{

@@ -31,11 +31,10 @@ import  ForgotPassword  from "./PageComponents/ForgotPasswordComponents/ForgotPa
 import EmailJormen from "./PageComponents/EmailJormen/EmailJormen";
 
 
-
-
-
-
 function App() {
+  const StorageEmail=localStorage.getItem('rememberedEmail')
+  const StoragePassword=localStorage.getItem('remeberMePassword')
+  console.log(StorageEmail,StoragePassword)
   return (
      <BrowserRouter>
      <ReDateTimeProvider>
@@ -55,10 +54,17 @@ function App() {
         // 以下為登入的路由
         <Route path='signin' element={<SignIn/>}/>
         // 這裡是有經過註冊後所到的預約頁面的路由
+         {StorageEmail && StoragePassword ? (
+          <>
           <Route path="bookingAfterSignIn" element={<EntraceBooking/>}/>
-            <Route path="bookingAfterSignIn/calendar" element={<BasicCalendar />}/>
-            <Route path="bookingAfterSignIn/checkBooking" element={<CheckFirstBooking />}/>
-            <Route path="bookingAfterSignIn/reBooking" element={<AgainBookingCalendar />}/>
+          <Route path="bookingAfterSignIn/calendar" element={<BasicCalendar />}/>
+          <Route path="bookingAfterSignIn/checkBooking" element={<CheckFirstBooking />}/>
+          <Route path="bookingAfterSignIn/reBooking" element={<AgainBookingCalendar />}/>
+          </>
+         ):(window.alert('你必須先註冊才可以使用看到此路由'))
+        }
+          
+
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>
