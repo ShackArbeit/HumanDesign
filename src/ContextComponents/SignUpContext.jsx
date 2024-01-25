@@ -9,7 +9,7 @@ export default function SignUpProvider({children}){
      const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const [open, setOpen] = useState(true);
-    const [rememberMe, setRememberMe] = useState(false);
+    // const [rememberMe, setRememberMe] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const negative=useNavigate()
     
@@ -77,11 +77,9 @@ export default function SignUpProvider({children}){
                 icon: 'success',
                 confirmButtonText: '了解'
               })
-              if (rememberMe) {
                 // 使用 localStorage 存儲使用者的 Email
                 localStorage.setItem('rememberedEmail', email);
                 localStorage.setItem('remeberMePassword',password)
-              }
               setEmailValue(email);
               negative('/HumanDesign/afterSignUp')
             }else{
@@ -97,13 +95,10 @@ export default function SignUpProvider({children}){
           console.log(error)
         }
 };
-
-
       return(
             <SingUpContext.Provider value={{
                   open,setOpen,handleSubmit,
-                  passwordPattern,rememberMe,
-                  setRememberMe,emailValue
+                  passwordPattern,emailValue
             }}>
                   {children}
             </SingUpContext.Provider>

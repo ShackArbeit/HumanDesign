@@ -1,8 +1,6 @@
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import {Link} from 'react-router-dom'
 import Box from '@mui/material/Box';
@@ -26,8 +24,6 @@ export default function SignUp() {
     setOpen,
     handleSubmit,
     passwordPattern,
-    rememberMe,
-    setRememberMe
   }=useContext(SingUpContext)
 
   return (
@@ -108,11 +104,6 @@ export default function SignUp() {
                   },
                 }}
            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-              onChange={() => setRememberMe(!rememberMe)} 
-            />
             <Box sx={{
                 display:'flex'
             }}>
