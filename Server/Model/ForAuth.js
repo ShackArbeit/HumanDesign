@@ -17,7 +17,11 @@ const ParentSchema=new Schema({
         required:[true,'ConfirmPassword is required']
     },
     // 這裡的 Sessions 在註冊時是空陣列，只有等到登入時才會建立 Sessions 物件
-    Sessions:[]
+    Sessions:[],
+    RegistrationOrder: { // 新增這個欄位
+        type: Number,
+        default: 0 // 或者設定為你需要的預設值
+    }
 })
 
 const SignUpModel=models.User|| model('User',ParentSchema)

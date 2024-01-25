@@ -13,6 +13,8 @@ router.post('/signUp', async (req, res) => {
     await connectToDB();
     const { email, password, confirmPassword } = req.body;
     const checkEmail = await SignUpModel.findOne({ Email: email });
+    const registrationCount = await SignUpModel.countDocuments();
+  
     if (checkEmail !== null) {
       res.json({
         success: false,
@@ -24,6 +26,7 @@ router.post('/signUp', async (req, res) => {
         Email: email,
         Password: password,
         ConfirmPassword: confirmPassword,
+        RegistrationOrder: registrationCount
       });
       await newUser.save();
       res.json({

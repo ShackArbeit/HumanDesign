@@ -1,31 +1,34 @@
-import { Link, useNavigate } from 'react-router-dom';
-import {useState,useEffect,useContext} from 'react';
-import style from '../CssModules/Header.module.css'
+import { Link, useNavigate} from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import style from '../CssModules/Header.module.css';
 import { SignInContext } from '../ContextComponents/SignInContext';
 import Swal from 'sweetalert2';
 import { DateTimeContext } from '../ContextComponents/DataTimeContext';
 
 
-const Header = () => {
-  
-  const[isOpen,setIsOpen]=useState(false)
-  const{isLoggin,setIsLoggin}= useContext(SignInContext)
-  const { handleResetBooking}=useContext(DateTimeContext)
-  const nevigate=useNavigate()
 
-  useEffect(() => {
-    const handleResize = () => {
-      // 這裡是設定不管漢堡列是否被開啟或是關閉，當螢幕寬度大於768px時，漢堡列裡面的項目都會不顯示
-      if (window.innerWidth > 768) {
-        setIsOpen(false); 
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
- 
+const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { isLoggin, setIsLoggin } = useContext(SignInContext);
+  const { handleResetBooking } = useContext(DateTimeContext);
+  const navigate = useNavigate();
+  const {email}=useContext(SignInContext )
+  console.log(email)
+  // useEffect(() => {
+  //   const handleUnload = (event) => {
+  //     if (isLoggin) {
+  //       event.preventDefault();
+  //       const confirmationMessage = '確定要離開嗎？請先登出會員。';
+  //       event.returnValue = confirmationMessage; 
+  //       return confirmationMessage; 
+  //     }
+  //   };
+  //   window.addEventListener('beforeunload', handleUnload);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleUnload);
+  //   };
+  // }, [isLoggin]);
+
   const handleLogOut = async () => {
     Swal.fire({
       title: '登出後將會到首頁，確定要登出嗎 !',
@@ -44,27 +47,27 @@ const Header = () => {
             headers: {
               'Content-Type': 'application/json',
             },
+            body:JSON.stringify({email}),
           });
           const responseData = await response.json();
           console.log(responseData);
           if (responseData.success) {
             setIsLoggin(false);
-            handleResetBooking()
-            nevigate('/HumanDesign');
+            handleResetBooking();
+            navigate('/HumanDesign');
             console.log('已經成功登出了!');
           } else {
             console.log('登出失敗:', responseData.message);
           }
-        } catch (error) { 
+        } catch (error) {
           console.error('登出請求失敗:', error);
         }
       }
     });
   };
 
- 
   return (
-   <header className={style.navbar}>
+    <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>
     <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Major_League_Baseball_logo.svg/1200px-Major_League_Baseball_logo.svg.png'
          className={style.brand}/>
