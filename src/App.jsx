@@ -29,12 +29,19 @@ import CheckFirstBooking from "./PageComponents/BookPageComponents/CheckFirstBoo
 import AgainBookingCalendar from "./PageComponents/CalendarComponents/AgainBookingCalendar";
 import  ForgotPassword  from "./PageComponents/ForgotPasswordComponents/ForgotPassword";
 import EmailJormen from "./PageComponents/EmailJormen/EmailJormen";
+import {useEffect} from 'react'
 
 
 function App() {
   const StorageEmail=localStorage.getItem('rememberedEmail')
   const StoragePassword=localStorage.getItem('remeberMePassword')
-  console.log(StorageEmail,StoragePassword)
+  useEffect(()=>{
+    if(!StorageEmail&&!StoragePassword){
+      window.alert('歡迎，請先註冊會員 !!')
+    }
+    console.log(StorageEmail,StoragePassword)
+  },[StorageEmail,StoragePassword])
+  
   return (
      <BrowserRouter>
      <ReDateTimeProvider>
@@ -61,10 +68,11 @@ function App() {
           <Route path="bookingAfterSignIn/checkBooking" element={<CheckFirstBooking />}/>
           <Route path="bookingAfterSignIn/reBooking" element={<AgainBookingCalendar />}/>
           </>
-         ):(window.alert('你必須先註冊才可以使用看到此路由'))
+         ):(
+             <></>
+            )
         }
-          
-
+        
         // 這裡是沒有經過註冊所到的預約頁面的路由
          <Route path='notAuthBooking' element={<NotAuthEntraceBooking/>}/>
          <Route path='notAuthBooking/notAuthCalendar' element={<NotAuthBasicCalendar/>}/>

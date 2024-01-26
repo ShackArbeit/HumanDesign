@@ -7,7 +7,7 @@ const Footer = () => {
         <>
         <footer className={style.footer} >
           <Container className={style.footerBrand} fluid>
-          <Image src='https://humandesignasia.org/storage/charts/2024011011/638404560000000000.png' fluid />
+          <Image src='https://static.dw.com/image/53831376_604.jpg' fluid  />
           </Container>
           <Container className={style.footerIntroducer} fluid>
             <div className={style.footerIcons}>
