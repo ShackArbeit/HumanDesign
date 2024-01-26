@@ -2,6 +2,7 @@ const dayjs = require('dayjs');
 const connectToDB=require('../Databse/ConnectToMongoDB')
 const BookingModel=require('../Model/ForBooking')
 const SignUpModel = require('../Model/ForAuth');
+const NoAuthModel =require('../Model/ForNoAuth');
 const express = require('express');
 const app = express();
 const sessionMiddleware = require('../Databse/Session');
@@ -29,7 +30,7 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
               const startTime = dayjs(newBooking).subtract(90, 'minutes');
               const endTime = dayjs(newBooking).add(90,'minutes');
             // 先向集合內搜尋存在區間內的所有可能
-            const existingReservations=await BookingModel.find({
+            const existingReservationsBookingModel=await BookingModel.find({
               $or: [
                  {
                    $and: [
@@ -54,9 +55,39 @@ router.post('/saveDateTimeAndItem', async (req, res) => {
                  },
                ],
              }).exec();
+
+
+             const existingReservationsNoAuthModel = await NoAuthModel.find({
+              $or: [
+                {
+                  $and: [
+                   { Year: { $eq: newBooking.getFullYear() } },
+                    { Month: { $eq: newBooking.getMonth() } },
+                    { Day: { $eq: newBooking.getDate() } },
+                    { $or: [
+                        { $and: [
+                            { Hour: { $eq: startTime.hour() } },
+                            { Minute: { $gte: startTime.minute() } },
+                        ] },
+                        { $and: [
+                            { Hour: { $eq: endTime.hour() } },
+                           { Minute: { $lte: endTime.minute() } },
+                        ] },
+                        { $and: [
+                            { Hour: { $gt: startTime.hour() } },
+                            { Hour: { $lt: endTime.hour() } },
+                        ] },
+                    ] },
+                  ],
+                },
+              ],
+             })
+
+             const existingReservations = existingReservationsNoAuthModel.concat(existingReservationsBookingModel) 
+
             console.log(existingReservations)
              // 若有搜尋到，則將所有符合條件且已存放在 MongoDB 的資料透過解構賦值返回給前端
-               if (existingReservations.length > 0) {
+               if (existingReservations && existingReservations.length > 0) {
                  for(i=0;i<existingReservations.length;i++){
                    const { Year, Month, Day, Hour, Minute } = existingReservations[i];
                    return res.status(400).json({

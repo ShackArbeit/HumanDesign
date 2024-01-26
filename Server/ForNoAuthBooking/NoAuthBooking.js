@@ -74,7 +74,7 @@ router.post('/noAuthBooking',async(req,res)=>{
               },
             ],
            })
-           const existingReservations = existingReservationsBookingModel.concat(existingReservationsNoAuthModel);
+           const existingReservations = existingReservationsBookingModel.concat(existingReservationsNoAuthModel) 
            console.log(existingReservations)
            console.log(firstValue)
            console.log(secondItem)
