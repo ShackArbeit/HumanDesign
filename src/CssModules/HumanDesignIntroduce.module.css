@@ -13,6 +13,7 @@ body{
     width:100%;
     padding-top: 84px;
     padding-bottom: 84px;
+    text-align:center; 
     color:white;
     background: linear-gradient(to right, 
     #000 0%,
@@ -25,7 +26,7 @@ body{
 }
 .HumanDesignMainTitle{
     font-weight: 800;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px;  */
     color:#f72f02;
 }
 /* 以下為滑動介紹人類圖是什麼的設定 */

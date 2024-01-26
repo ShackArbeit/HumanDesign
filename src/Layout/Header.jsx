@@ -69,7 +69,7 @@ const Header = () => {
   return (
     <header className={style.navbar}>
    <a href='https://www.google.com.tw/?gws_rd=ssl'>
-    <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Major_League_Baseball_logo.svg/1200px-Major_League_Baseball_logo.svg.png'
+    <img src='https://static.wixstatic.com/media/f0f6ca_1b73c7f2cf5d4066b5ad6ad5358381c7~mv2.png/v1/fill/w_559,h_204,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/hello%20taiwan%20logo.png'
          className={style.brand}/>
    </a>
   <ul className={isOpen?style.NavMenu:style.Nav}>
