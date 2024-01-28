@@ -83,7 +83,7 @@ const Header = () => {
       <Link className={style.Navlink} to="Jerome">認識Jerome</Link>
     </li>
     <li className={style.Navitem}>
-      <Link className={style.Navlink} to="Feedback">體驗回饋</Link>
+      <Link className={style.Navlink} to="Feedback">免費音檔</Link>
     </li>
     {!isLoggin && (
           <li className={style.Navitem}>
