@@ -53,7 +53,7 @@ export default function SignInProvider({children}){
               console.log({email,password,});
           }
           try{
-            const response=await fetch('http://localhost:8000/directSignIn',{
+            const response=await fetch('https://humannode.onrender.com/directSignIn',{
               method:'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export default function SignInProvider({children}){
             return 
           }
           try{
-            const response=await fetch('http://localhost:8000/resendPassword',{
+            const response=await fetch('https://humannode.onrender.com/resendPassword',{
               method:'POST',
               headers: {
                 'Content-Type': 'application/json',

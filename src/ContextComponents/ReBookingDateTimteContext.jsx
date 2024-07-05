@@ -94,7 +94,7 @@ export default function ReDateTimeProvider({ children }) {
     // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
   try {
       // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
-      const response = await fetch('http://localhost:8000/saveDateTimeAndItem', {
+      const response = await fetch('https://humannode.onrender.com/saveDateTimeAndItem', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ export default function ReDateTimeProvider({ children }) {
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
       console.log('Deleting booking with ID:', bookingIdToDelete);
-       const response = await fetch(`http://localhost:8000/deleteBooking/${bookingIdToDelete}`, {
+       const response = await fetch(`https://humannode.onrender.com/deleteBooking/${bookingIdToDelete}`, {
          method: 'DELETE',
          headers: {
            'Content-Type': 'application/json',

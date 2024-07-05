@@ -104,7 +104,7 @@ export default function NoAuthDateTimeProvider({ children }) {
     // 若都不是前面用前端判斷的例外情形就進入後端 Api 判斷的邏輯
   try {
       // 先向後端 Api 發送 Post 請求，將資料放入資料庫內
-      const response = await fetch('http://localhost:8000/noAuthBooking', {
+      const response = await fetch('https://humannode.onrender.com/noAuthBooking', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export default function NoAuthDateTimeProvider({ children }) {
     const bookingIdToDelete = localStorage.getItem('bookingIdToDelete');
     const userConfirmed = window.confirm('請確定要刪除預約嗎 ?');
      if (userConfirmed) {
-       const response = await fetch(`http://localhost:8000/noAuthDelete/${bookingIdToDelete}`, {
+       const response = await fetch(`https://humannode.onrender.com/noAuthDelete/${bookingIdToDelete}`, {
          method: 'DELETE',
          headers: {
            'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ export default function NoAuthDateTimeProvider({ children }) {
     try{
         const userConfirmed = window.confirm('確認預約後將無法再更改預約，已考慮清楚 ?');
         if(userConfirmed){
-          const response=await fetch('http://localhost:8000/NoauthSendEmail',{
+          const response=await fetch('https://humannode.onrender.com/NoauthSendEmail',{
             method:'POST',
             headers: {
               'Content-Type': 'application/json',

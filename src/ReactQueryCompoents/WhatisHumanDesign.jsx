@@ -5,7 +5,7 @@ export const useAuthorHumanDesign=()=>{
             queryKey:['authorHumanDesign'],
             queryFn:
             async()=>{
-                  const response=await fetch('http://localhost:8000/human/authorHuman')
+                  const response=await fetch('https://humannode.onrender.com/human/authorHuman')
                   const data=await response.json()
                   return data
             }
@@ -17,7 +17,7 @@ export const useEnergyHumanDesign=()=>{
             queryKey:['energyHumanDesign'],
             queryFn:
             async()=>{
-                  const response=await fetch('http://localhost:8000/human/energyHuman')
+                  const response=await fetch('https://humannode.onrender.com/human/energyHuman')
                   const data=await response.json()
                   return data
             }
@@ -28,7 +28,7 @@ export const useExplainHumanDesign=()=>{
       return useQuery({
             queryKey:['explainHumanDesign'],
             queryFn:async()=>{
-                  const response=await fetch('http://localhost:8000/human/explainHuman')
+                  const response=await fetch('https://humannode.onrender.com/human/explainHuman')
                   const data=await response.json()
                   return data
             }
@@ -39,7 +39,7 @@ export const useHoverHumanDesing=()=>{
       return useQuery({
             queryKey:['hoverHumanDesign'],
             queryFn:async()=>{
-            const response = await fetch('http://localhost:8000/human/hoverIntroducer');
+            const response = await fetch('https://humannode.onrender.com/human/hoverIntroducer');
             const data=await response.json()
             return data
             }
@@ -50,7 +50,7 @@ export const useWriterHumanDesign=()=>{
       return useQuery({
             queryKey:['writerHumanDesign'],
             queryFn:async()=>{
-                  const response = await fetch('http://localhost:8000/human/writerHuman');
+                  const response = await fetch('https://humannode.onrender.com/human/writerHuman');
                   const data = await response.json()
                   return data
             }
@@ -61,7 +61,7 @@ export const useRoadHumanDesign=()=>{
       return useQuery({
             queryKey:['roadHumanDesign'],
             queryFn:async()=>{
-                  const response = await fetch('http://localhost:8000/human/roadHuman');
+                  const response = await fetch('https://humannode.onrender.com/human/roadHuman');
                   const data=await response.json()
                   return data
             }
@@ -72,7 +72,7 @@ export const useRoleHumanDesign=()=>{
       return useQuery({
             queryKey:['roleHumanDesign'],
             queryFn:async()=>{
-                  const response = await fetch('http://localhost:8000/human/roleHuman');
+                  const response = await fetch('https://humannode.onrender.com/human/roleHuman');
                   const data=await response.json()
                   return data
             }
@@ -83,7 +83,7 @@ export const useTypeHumanDesign=()=>{
       return useQuery({
             queryKey:['typeHumanDesign'],
             queryFn:async()=>{
-                  const response = await fetch('http://localhost:8000/human/talentHuman');
+                  const response = await fetch('https://humannode.onrender.com/human/talentHuman');
                   const data=await response.json();
                   return data;
           }
@@ -94,7 +94,7 @@ export const useCircleHumanDesign=()=>{
       return useQuery({
             queryKey:['circleHumanDesign'],
             queryFn:async()=>{
-                  const response=await fetch('http://localhost:8000/human/circleHuman')
+                  const response=await fetch('https://humannode.onrender.com/human/circleHuman')
                   const data=await response.json();
                   return data;
             }

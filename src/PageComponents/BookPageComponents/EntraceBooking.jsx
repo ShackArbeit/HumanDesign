@@ -21,7 +21,7 @@ const EntraceBooking = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('http://localhost:8000/bookingIntroduction/isDesktop');
+            const response = await fetch('https://humannode.onrender.com/bookingIntroduction/isDesktop');
             const Data = await response.json();
             setDataOne(Data)
           } 
@@ -35,7 +35,7 @@ const EntraceBooking = () => {
       useEffect(() => {
         const fetchData2 = async () => {
           try {
-            const response = await fetch('http://localhost:8000/bookingIntroduction/isMobile');
+            const response = await fetch('https://humannode.onrender.com/bookingIntroduction/isMobile');
             const Data = await response.json();
             setDataTwo(Data)
           } 

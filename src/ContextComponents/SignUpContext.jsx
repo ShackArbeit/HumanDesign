@@ -61,7 +61,7 @@ export default function SignUpProvider({children}){
             console.log({email,password,});
         }
         try{
-            const response= await fetch('http://localhost:8000/signUp',{
+            const response= await fetch('https://humannode.onrender.com/signUp',{
               method:'POST',
               headers: {
                 'Content-Type': 'application/json',

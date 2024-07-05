@@ -12,7 +12,7 @@ export default function SendEmailProvider({ children }){
             try{
                 const userConfirmed = window.confirm('確認後將無法再刪除預約，是否已確定此次預約?');
             if(userConfirmed){
-                const response=await fetch('http://localhost:8000/sendEmail',{
+                const response=await fetch('https://humannode.onrender.com/sendEmail',{
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
