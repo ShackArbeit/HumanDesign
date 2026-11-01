@@ -35,14 +35,14 @@ export const toPublicBooking = (booking) => ({
 export const createBookingService = ({ mail, now, webBaseUrl }) => {
   const sendConfirmation = async ({ booking, service, rules, to, cancelUrl }) => {
     try {
-      await mail.sendBookingConfirmation({
+      const result = await mail.sendBookingConfirmation({
         to,
         booking,
         serviceName: service.name,
         timezone: rules.timezone,
         cancelUrl,
       });
-      return true;
+      return result !== false;
     } catch (error) {
       // The booking is already committed, so a mail outage must not fail the request.
       console.error(

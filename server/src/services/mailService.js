@@ -37,7 +37,7 @@ export const createMailService = ({ user, password }) => {
     async sendBookingConfirmation({ to, ...details }) {
       if (!transporter) {
         console.log(JSON.stringify({ severity: 'INFO', message: 'Email skipped: not configured' }));
-        return;
+        return false;
       }
       await transporter.sendMail({
         from: user,
