@@ -1,9 +1,7 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import style from '../../CssModules/AuthProcess.module.css';
+import { PageContainer } from '../../components/PageContainer';
 
 export const AuthFormLayout = ({
   title,
@@ -15,28 +13,25 @@ export const AuthFormLayout = ({
   children,
   footer,
 }) => (
-  <div className={style.signInContainer}>
-    <Container component="main" maxWidth="xs">
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">
-          {title}
-        </Typography>
-        <Box component="form" noValidate sx={{ mt: 1, width: '100%' }} onSubmit={onSubmit}>
-          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-          {successMessage && <Alert severity="success">{successMessage}</Alert>}
-          {children}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isSubmitting}
-            sx={{ mt: 3, mb: 2, fontWeight: 'bold', fontSize: '20px' }}
-          >
-            {submitLabel}
-          </Button>
-          {footer}
-        </Box>
+  <PageContainer narrow>
+    <Box sx={{ width: 'min(100%, 420px)', mx: 'auto' }}>
+      <h1 style={{ marginBottom: 16, textAlign: 'center' }}>{title}</h1>
+      <Box component="form" noValidate onSubmit={onSubmit}>
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+        {successMessage && <Alert severity="success">{successMessage}</Alert>}
+        {children}
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          size="large"
+          disabled={isSubmitting}
+          sx={{ mt: 2, mb: 2 }}
+        >
+          {submitLabel}
+        </Button>
+        {footer}
       </Box>
-    </Container>
-  </div>
+    </Box>
+  </PageContainer>
 );

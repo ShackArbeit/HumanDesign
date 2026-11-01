@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
@@ -93,10 +94,20 @@ describe('App routes', () => {
     expect(window.location.pathname).toBe('/signin');
   });
 
+  it('opens the mobile menu accessibly and closes it with Escape', async () => {
+    const user = userEvent.setup();
+    renderAt('/signin');
+    const toggle = await screen.findByRole('button', { name: '開啟選單' });
+    await user.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    await user.keyboard('{Escape}');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('shows the member menu when signed in', async () => {
     authState.user = { uid: 'u1' };
     renderAt('/signin');
-    expect(await screen.findByText('查看預約紀錄')).toBeTruthy();
+    expect(await screen.findByText('我的預約')).toBeTruthy();
     expect(screen.queryByText('會員登入')).toBeNull();
   });
 });

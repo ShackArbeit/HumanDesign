@@ -1,0 +1,140 @@
+/* Home hero */
+.hero {
+  padding: var(--space-8) var(--space-4) calc(var(--space-8) + var(--space-5));
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), 0 100%);
+  color: var(--color-on-primary);
+}
+
+.heroInner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+
+.heroInner h1 {
+  margin-bottom: var(--space-3);
+}
+
+.heroLead {
+  max-width: 36em;
+  margin-bottom: var(--space-5);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.section {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+/* Card grids */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.cardGrow {
+  flex: 1;
+}
+
+.price {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.linkCard {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.linkCard .card {
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.linkCard:hover .card {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 700;
+}
+
+/* Long-form articles */
+.articleList {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.article {
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.article:last-child {
+  border-bottom: 0;
+}
+
+.article h2 {
+  margin-bottom: var(--space-2);
+}
+
+/* About timeline */
+.timeline {
+  margin: 0;
+  padding: 0 0 0 var(--space-5);
+  border-left: 2px solid var(--color-primary);
+  list-style: none;
+}
+
+.timeline li {
+  position: relative;
+  padding-bottom: var(--space-5);
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: calc(var(--space-5) * -1 - 7px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.year {
+  color: var(--color-accent);
+  font-weight: 700;
+}

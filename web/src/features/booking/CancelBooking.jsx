@@ -14,7 +14,7 @@ const CancelBooking = () => {
   const cancel = useCancelBooking();
 
   return (
-    <Box component="main" sx={{ maxWidth: 480, mx: 'auto', px: 2, pt: 12, pb: 6 }}>
+    <Box sx={{ maxWidth: 480, mx: 'auto', px: 2, py: 6 }}>
       <Stack spacing={2}>
         <Typography component="h1" variant="h4" sx={{ fontWeight: 700 }}>
           取消預約

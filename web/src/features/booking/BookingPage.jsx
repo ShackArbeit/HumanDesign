@@ -55,7 +55,7 @@ const BookingPage = () => {
   const query = useServices();
 
   return (
-    <Box component="main" sx={{ maxWidth: 1120, mx: 'auto', px: 2, pt: 12, pb: 4 }}>
+    <Box sx={{ maxWidth: 1120, mx: 'auto', px: 2, py: 4 }}>
       <Typography component="h1" variant="h4" sx={{ mb: 1, fontWeight: 700 }}>
         線上預約
       </Typography>

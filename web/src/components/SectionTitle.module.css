@@ -1,0 +1,8 @@
+.wrap {
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--color-muted);
+}
