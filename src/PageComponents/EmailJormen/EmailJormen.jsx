@@ -22,9 +22,9 @@ const EmailJormen = () => {
     const[message,setMessage]=useState('')
     const handleSubmit=(e)=>{
         e.preventDefault();
-        const serviceId = 'service_qdtfj5q'
-        const templateId= 'template_02dyado'
-        const publicKey= 'xuD2f8-n9hro9IUff'
+        const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+        const templateId= import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+        const publicKey= import.meta.env.VITE_EMAILJS_PUBLIC_KEY
         const templateParams={
             from_name:name,
             from_email:email,
