@@ -1,0 +1,9 @@
+{
+  "name": "humandesign",
+  "private": true,
+  "scripts": {
+    "lint": "npm --prefix web run lint && npm --prefix server run lint",
+    "test": "npm --prefix web test && npm --prefix server test",
+    "build": "npm --prefix web run build"
+  }
+}

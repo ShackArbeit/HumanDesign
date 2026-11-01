@@ -1,0 +1,69 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  PROJECT_ID: humandesign-64ea8
+  VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+  VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+  VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+  VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+  VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID }}
+  VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID }}
+  VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  production:
+    if: github.event_name == 'push' && vars.WIF_PROVIDER != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Deploy API to Cloud Run
+        run: ./scripts/deploy-api.sh
+      - name: Build web
+        run: |
+          npm --prefix web ci
+          npm --prefix web run build
+      - name: Deploy Hosting and Firestore config
+        run: npx firebase-tools deploy --only hosting,firestore --project "$PROJECT_ID" --non-interactive
+      - name: Smoke test
+        run: ./scripts/smoke-test.sh "https://$PROJECT_ID.web.app"
+
+  preview:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      vars.WIF_PROVIDER != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build web
+        run: |
+          npm --prefix web ci
+          npm --prefix web run build
+      - name: Deploy preview channel
+        run: >-
+          npx firebase-tools hosting:channel:deploy "pr-${{ github.event.number }}"
+          --expires 7d --project "$PROJECT_ID" --non-interactive
