@@ -21,3 +21,8 @@ node_modules
 *.sln
 *.sw?
 .env
+.env.*
+!.env.example
+
+# Build output
+dist
