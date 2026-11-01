@@ -22,5 +22,4 @@ export const defaultScheduleRules = {
   },
 };
 
-// TODO(shack): confirm this cancellation window against the published booking notes.
 export const CANCEL_CUTOFF_HOURS = 24;

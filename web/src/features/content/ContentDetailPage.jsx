@@ -14,7 +14,9 @@ const ContentDetailPage = ({ section, title }) => {
             {items.map((item) => (
               <article key={item.id} className={style.article}>
                 <h2>{item.title}</h2>
-                {item.imagePath && <img src={item.imagePath} alt="" loading="lazy" />}
+                {item.imagePath && (
+                  <img src={item.imagePath} alt="" loading="lazy" className={style.articleImage} />
+                )}
                 <p>{item.body}</p>
               </article>
             ))}

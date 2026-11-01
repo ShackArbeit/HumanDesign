@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { paymentInfo } from '../config/paymentInfo.js';
 
 const formatter = (timezone) =>
   new Intl.DateTimeFormat('zh-TW', {
@@ -15,9 +16,13 @@ const buildConfirmationHtml = ({ booking, serviceName, timezone, cancelUrl }) =>
     <li>時間：${formatter(timezone).format(booking.startAt)}</li>
     <li>費用：NT$ ${booking.priceTwd.toLocaleString('en-US')}</li>
   </ul>
-  <!-- TODO(shack): add the bank transfer details shown to customers. -->
-  <p>請於三日內完成匯款，確認款項後即完成預約。</p>
-  <p>如需取消，請於預約開始 24 小時前處理。${
+  <p>請於三日內匯款至以下帳戶（示範資料，請勿實際匯款），確認款項後即完成預約：</p>
+  <ul>
+    <li>銀行：${paymentInfo.bankName}</li>
+    <li>戶名：${paymentInfo.accountName}</li>
+    <li>帳號：${paymentInfo.accountNumber}</li>
+  </ul>
+  <p>預約開始前 1 天內不可取消。${
     cancelUrl ? `<a href="${cancelUrl}">取消預約</a>` : '可至「我的預約」頁面取消。'
   }</p>
 `;

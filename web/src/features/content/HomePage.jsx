@@ -44,6 +44,9 @@ const Services = () => {
             {services.map((service) => (
               <li key={service.id}>
                 <article className={style.card}>
+                  {service.imagePath && (
+                    <img src={service.imagePath} alt="" loading="lazy" className={style.cardImage} />
+                  )}
                   <h3>{service.name}</h3>
                   <p className={style.cardGrow}>{service.description}</p>
                   <p className={style.price}>
@@ -73,6 +76,9 @@ const BookingSteps = () => {
             {steps.map((step, index) => (
               <li key={step.id}>
                 <div className={style.card}>
+                  {step.imagePath && (
+                    <img src={step.imagePath} alt="" loading="lazy" className={style.cardImage} />
+                  )}
                   <span className={style.step}>{index + 1}</span>
                   <h3>{step.title}</h3>
                   <p>{step.body}</p>

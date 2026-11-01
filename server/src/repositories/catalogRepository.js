@@ -25,7 +25,7 @@ export const listAboutTimeline = async () => {
 export const listFeedbackVideos = async () => {
   const snapshot = await db().collection('feedbackVideos').orderBy('order').get();
   return snapshot.docs.map((doc) => {
-    const { title, body, youtubeId } = doc.data();
-    return { id: doc.id, title, body, youtubeId };
+    const { title, body, youtubeId, imagePath } = doc.data();
+    return { id: doc.id, title, body, youtubeId, imagePath };
   });
 };

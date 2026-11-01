@@ -106,7 +106,17 @@ describe('bookings API', () => {
           },
         },
       });
-      await request(failing.app).post('/api/v1/bookings').send(guestBooking()).expect(201);
+      const response = await request(failing.app)
+        .post('/api/v1/bookings')
+        .send(guestBooking())
+        .expect(201);
+      expect(response.body.data.emailSent).toBe(false);
+    });
+
+    it('returns the payment details and reports the email as sent', async () => {
+      const response = await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
+      expect(response.body.data.emailSent).toBe(true);
+      expect(response.body.data.paymentInfo.isDemo).toBe(true);
     });
 
     it('rejects an invalid token instead of falling back to guest', async () => {

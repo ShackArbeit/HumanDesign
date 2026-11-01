@@ -15,6 +15,9 @@ const AboutPage = () => {
                 <span className={style.year}>{entry.year}</span>
                 <h2 style={{ fontSize: 'var(--text-h3)' }}>{entry.title}</h2>
                 <p>{entry.body}</p>
+                {entry.imagePath && (
+                  <img src={entry.imagePath} alt="" loading="lazy" className={style.cardImage} />
+                )}
               </li>
             ))}
           </ol>

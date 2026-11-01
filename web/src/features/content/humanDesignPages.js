@@ -1,5 +1,5 @@
 export const humanDesignPages = [
-  { path: 'overview', section: 'hd-overview', title: 'You Are Waht You Be !' },
+  { path: 'overview', section: 'hd-overview', title: '活出原本的自己' },
   { path: 'types', section: 'hd-types', title: '知悉天賦比努力更重要 !' },
   { path: 'profiles', section: 'hd-profiles', title: '意識到你是什麼 !' },
   { path: 'authority', section: 'hd-authority', title: '傾聽後再作決定吧 !' },

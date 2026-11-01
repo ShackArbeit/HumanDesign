@@ -16,6 +16,9 @@ const FeedbackPage = () => {
             {videos.map((video) => (
               <li key={video.id}>
                 <article className={style.card}>
+                  {video.imagePath && (
+                    <img src={video.imagePath} alt="" loading="lazy" className={style.cardImage} />
+                  )}
                   <h2 style={{ fontSize: 'var(--text-h3)' }}>{video.title}</h2>
                   <p className={style.cardGrow}>{video.body}</p>
                   <a

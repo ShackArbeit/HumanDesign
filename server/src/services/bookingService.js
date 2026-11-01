@@ -1,4 +1,5 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { paymentInfo } from '../config/paymentInfo.js';
 import { CANCEL_CUTOFF_HOURS } from '../config/scheduleRules.js';
 import { AppError, forbidden, notFound, unauthenticated } from '../lib/errors.js';
 import * as bookingRepository from '../repositories/bookingRepository.js';
@@ -41,6 +42,7 @@ export const createBookingService = ({ mail, now, webBaseUrl }) => {
         timezone: rules.timezone,
         cancelUrl,
       });
+      return true;
     } catch (error) {
       // The booking is already committed, so a mail outage must not fail the request.
       console.error(
@@ -51,6 +53,7 @@ export const createBookingService = ({ mail, now, webBaseUrl }) => {
           error: error.message,
         }),
       );
+      return false;
     }
   };
 
@@ -96,7 +99,7 @@ export const createBookingService = ({ mail, now, webBaseUrl }) => {
     const id = await bookingRepository.createWithLocks(booking, locks, currentTime);
     const saved = { ...booking, id, createdAt: currentTime };
 
-    await sendConfirmation({
+    const emailSent = await sendConfirmation({
       booking: saved,
       service,
       rules,
@@ -106,7 +109,12 @@ export const createBookingService = ({ mail, now, webBaseUrl }) => {
         : null,
     });
 
-    return { ...toPublicBooking(saved), ...(cancelToken ? { cancelToken } : {}) };
+    return {
+      ...toPublicBooking(saved),
+      emailSent,
+      paymentInfo,
+      ...(cancelToken ? { cancelToken } : {}),
+    };
   };
 
   const cancel = async ({ id, user, token }) => {

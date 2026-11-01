@@ -15,6 +15,9 @@ const HumanDesignIndex = () => {
               <li key={item.id}>
                 <Link to={item.linkPath} className={style.linkCard}>
                   <div className={style.card}>
+                    {item.imagePath && (
+                      <img src={item.imagePath} alt="" loading="lazy" className={style.cardImage} />
+                    )}
                     <h2 style={{ fontSize: 'var(--text-h3)' }}>{item.title}</h2>
                     <p>{item.body}</p>
                   </div>
