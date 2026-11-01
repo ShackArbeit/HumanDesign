@@ -1,7 +1,8 @@
 const session = require('express-session');
+const requireEnv = require('../config/requireEnv');
 
 const sessionMiddleware=session({
-    secret: 'HumanDesign Booking',
+    secret: requireEnv('SESSION_SECRET'),
     resave: false,
     saveUninitialized: true,
     cookie: {

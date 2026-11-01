@@ -3,6 +3,10 @@ const app = express();
 const connectToDB = require('../Databse/ConnectToMongoDB');
 const SignUpModel = require('../Model/ForAuth');
 const sessionMiddleware = require('../Databse/Session');
+const requireEnv = require('../config/requireEnv');
+
+const gmailUser = requireEnv('GMAIL_USER');
+const gmailAppPassword = requireEnv('GMAIL_APP_PASSWORD');
 const nodemailer = require('nodemailer');
 require('dotenv').config()
 
@@ -22,13 +26,13 @@ router.post('/resendPassword', async (req, res) => {
           port: 587,
           secure: false,
           auth: {
-            user: 'g0972222165@gmail.com',
-            pass: 'zttn zhgf cqdh dpoy'
+            user: gmailUser,
+            pass: gmailAppPassword
           }
         });
   
         const mailOptions = {
-          from: 'g0972222165@gmail.com',
+          from: gmailUser,
           to: email,
           subject: '預約確認信',
           html: `<p style="font-size: 20px; color: #333;">你的密碼是 ${userEmail[0].Password}</p>`,

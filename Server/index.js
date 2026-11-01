@@ -1,3 +1,5 @@
+// Must stay first: the modules below read process.env when they are loaded.
+require('dotenv').config()
 const express=require('express')
 const JeromeRouter=require('./ForSubPage/AboutJerome');
 const FeedbackRouter=require('./ForSubPage/Feedback');

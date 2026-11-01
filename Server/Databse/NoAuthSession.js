@@ -1,7 +1,8 @@
 const session = require('express-session');
+const requireEnv = require('../config/requireEnv');
 
 const AuthsessionMiddleware=session({
-    secret: 'HumanDesign Booking For No Auth',
+    secret: requireEnv('NO_AUTH_SESSION_SECRET'),
     resave: false,
     saveUninitialized: true,
     cookie: {

@@ -7,6 +7,10 @@ require('dotenv').config()
 const path = require('path');
 
 const sessionMiddleware = require('../Databse/Session');
+const requireEnv = require('../config/requireEnv');
+
+const gmailUser = requireEnv('GMAIL_USER');
+const gmailAppPassword = requireEnv('GMAIL_APP_PASSWORD');
 
 app.use(sessionMiddleware);
 
@@ -36,13 +40,13 @@ router.post('/NoauthSendEmail', async (req, res) => {
           port: 587,
           secure: false,
           auth: {
-            user: 'g0972222165@gmail.com',
-            pass: 'zttn zhgf cqdh dpoy'
+            user: gmailUser,
+            pass: gmailAppPassword
           }
         });
 
         const mailOptions = {
-          from: 'g0972222165@gmail.com',
+          from: gmailUser,
           to: currentEmail,
           subject: '預約確認信',
           html: `

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const mongo  = require('mongodb');
 
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
+const url = process.env.MONGODB_URI
 const client = new mongo.MongoClient(url);
 let db = null
 let id

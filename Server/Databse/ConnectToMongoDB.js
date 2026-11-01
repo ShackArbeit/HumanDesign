@@ -1,7 +1,8 @@
 const mongoose =require('mongoose');
+const requireEnv = require('../config/requireEnv');
 
 let isConnected = false; 
-const url = "mongodb+srv://wang8119:wang8119@cluster0.w3kipgk.mongodb.net/?retryWrites=true&w=majority"
+const url = requireEnv('MONGODB_URI')
 
 const connectToDB = async () => {
   mongoose.set('strictQuery', true);
