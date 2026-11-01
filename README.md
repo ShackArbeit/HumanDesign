@@ -20,14 +20,16 @@ cp .env.example .env
 npm install
 npm run dev
 
-# 後端
-cd Server
-cp .env.example .env
-npm install
-npm run server
+# 後端（需要 Firebase CLI 與 Java）
+cp server/.env.example server/.env
+npm --prefix server install
+firebase emulators:start --only auth,firestore --project demo-humandesign
+npm --prefix server run seed      # 另開終端機，寫入 emulator
+npm --prefix server run dev       # http://localhost:8080
+npm --prefix server test          # 自動啟動 emulator 並跑全部測試
 ```
 
-環境變數的項目見 `.env.example` 與 `Server/.env.example`，實際的值不可提交到版本控制。
+環境變數的項目見 `.env.example` 與 `server/.env.example`，實際的值不可提交到版本控制。
 
 ## 技術決策
 
