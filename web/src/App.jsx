@@ -17,7 +17,9 @@ const ContentDetailPage = lazy(() => import('./features/content/ContentDetailPag
 const SignIn = lazy(() => import('./features/auth/SignIn'));
 const SignUp = lazy(() => import('./features/auth/SignUp'));
 const ForgotPassword = lazy(() => import('./features/auth/ForgotPassword'));
-const BookingPlaceholder = lazy(() => import('./features/booking/BookingPlaceholder'));
+const BookingPage = lazy(() => import('./features/booking/BookingPage'));
+const MyBookings = lazy(() => import('./features/booking/MyBookings'));
+const CancelBooking = lazy(() => import('./features/booking/CancelBooking'));
 
 const App = () => (
   <BrowserRouter>
@@ -31,12 +33,13 @@ const App = () => (
             <Route path="signup" element={<SignUp />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="booking" element={<BookingPlaceholder />} />
+            <Route path="booking" element={<BookingPage />} />
+            <Route path="bookings/:id/cancel" element={<CancelBooking />} />
             <Route
               path="my-bookings"
               element={
                 <RequireAuth>
-                  <BookingPlaceholder />
+                  <MyBookings />
                 </RequireAuth>
               }
             />

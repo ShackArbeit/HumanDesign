@@ -34,7 +34,7 @@ describe('apiRequest', () => {
       params: { from: '2026-11-05', durationMin: undefined },
     });
     expect(data).toEqual([1]);
-    expect(fetchMock.mock.calls[0][0]).toBe('/api/v1/availability?from=2026-11-05');
+    expect(fetchMock.mock.calls[0][0]).toBe('http://localhost/api/v1/availability?from=2026-11-05');
   });
 
   it('sends the ID token when signed in', async () => {

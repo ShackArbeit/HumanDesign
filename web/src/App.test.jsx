@@ -1,10 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, configure, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
-// The first import of a lazy route is transformed on demand and can exceed the 1s default.
-configure({ asyncUtilTimeout: 10000 });
 
 const authState = { user: null };
 
@@ -48,7 +46,7 @@ describe('App routes', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url) => {
-        const data = responses[url];
+        const data = responses[new URL(url).pathname];
         return data
           ? new Response(JSON.stringify({ data }), { status: 200 })
           : new Response(JSON.stringify({ error: { code: 'INTERNAL', message: 'x' } }), {
