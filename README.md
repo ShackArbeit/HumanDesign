@@ -15,10 +15,11 @@
 ## 本機開發
 
 ```bash
-# 前端（根目錄）
-cp .env.example .env
-npm install
-npm run dev
+# 前端
+cp web/.env.example web/.env.local
+npm --prefix web install
+npm --prefix web run dev          # http://localhost:5173（/api 代理到 8080）
+npm --prefix web test
 
 # 後端（需要 Firebase CLI 與 Java）
 cp server/.env.example server/.env
@@ -29,7 +30,7 @@ npm --prefix server run dev       # http://localhost:8080
 npm --prefix server test          # 自動啟動 emulator 並跑全部測試
 ```
 
-環境變數的項目見 `.env.example` 與 `server/.env.example`，實際的值不可提交到版本控制。
+環境變數的項目見 `web/.env.example` 與 `server/.env.example`，實際的值不可提交到版本控制。
 
 ## 技術決策
 
