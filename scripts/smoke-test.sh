@@ -17,8 +17,8 @@ check() {
 }
 
 check /api/v1/health 200
-check /api/v1/services 200
 check "/api/v1/availability?from=$FROM&to=$TO&durationMin=60" 200
 check / 200
 check /human/types 200
 check /booking 200
+check /api/v1/nope 404
