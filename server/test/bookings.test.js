@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import request from 'supertest';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { db } from '../src/lib/firebase.js';
 import { buildApp, countLocks, resetDatabase, signUp } from './helpers.js';
 
 // Tuesday 2026-11-10 10:00 in Taipei.
@@ -167,6 +168,28 @@ describe('bookings API', () => {
       expect(response.body.data.status).toBe('cancelled');
       expect(await countLocks()).toBe(0);
       await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
+    });
+
+    it('deletes the booking from the database when cancelled', async () => {
+      const token = await signUp(uniqueEmail());
+      const id = await createMember(token);
+
+      await api.delete(`/api/v1/bookings/${id}`).set(bearer(token)).expect(200);
+
+      const doc = await db().collection('bookings').doc(id).get();
+      expect(doc.exists).toBe(false);
+      const mine = await api.get('/api/v1/me/bookings').set(bearer(token)).expect(200);
+      expect(mine.body.data).toHaveLength(0);
+      await api.delete(`/api/v1/bookings/${id}`).set(bearer(token)).expect(404);
+    });
+
+    it('does not remove another booking lock when deleting an old cancelled record', async () => {
+      const created = await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
+      const { id, cancelToken } = created.body.data;
+      await db().collection('bookings').doc(id).update({ status: 'cancelled' });
+
+      await api.delete(`/api/v1/bookings/${id}?token=${cancelToken}`).expect(200);
+      expect(await countLocks()).toBe(3);
     });
 
     it('returns 403 for another member', async () => {

@@ -84,7 +84,7 @@ export async function createBookingWithLocks(booking, locks, now) {
   });
 }
 
-// 取消預約：預約紀錄保留、狀態改成 cancelled，並刪除時段鎖讓別人能預約。
+// 取消預約：直接刪除預約資料，並刪除時段鎖讓別人能預約。
 // checkCanCancel 放在 transaction 內執行，確保檢查時看到的是最新資料。
 export async function cancelBookingWithLocks(id, checkCanCancel, now) {
   return db().runTransaction(async (transaction) => {
@@ -95,19 +95,17 @@ export async function cancelBookingWithLocks(id, checkCanCancel, now) {
     }
 
     const booking = docToBooking(doc);
-    if (booking.status === 'cancelled') {
-      return booking;
-    }
     checkCanCancel(booking);
 
-    transaction.update(bookingRef, {
-      status: 'cancelled',
-      updatedAt: Timestamp.fromDate(now),
-    });
-    for (const lockId of booking.slotLockIds) {
-      transaction.delete(slotLocksCollection().doc(lockId));
+    // 舊資料可能已是 cancelled，它的時段鎖早就釋出，不能再刪，以免刪到別人的鎖
+    if (booking.status !== 'cancelled') {
+      for (const lockId of booking.slotLockIds) {
+        transaction.delete(slotLocksCollection().doc(lockId));
+      }
     }
+    transaction.delete(bookingRef);
 
+    // 資料已從資料庫刪除，這裡只是回傳給前端顯示結果
     booking.status = 'cancelled';
     booking.updatedAt = now;
     return booking;
