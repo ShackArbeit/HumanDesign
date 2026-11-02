@@ -14,45 +14,45 @@ import {
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [values, setValues] = useState({ email: '', password: '', confirmPassword: '' });
-  const [touched, setTouched] = useState({});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmTouched, setConfirmTouched] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fieldErrors = {
-    email: isValidEmail(values.email) ? '' : '請輸入有效的 Email',
-    password: isValidPassword(values.password) ? '' : PASSWORD_RULE_TEXT,
-    confirmPassword: values.password === values.confirmPassword ? '' : '兩次輸入的密碼不一致',
-  };
-  const shownError = (field) => (touched[field] ? fieldErrors[field] : '');
+  const emailOk = isValidEmail(email);
+  const passwordOk = isValidPassword(password);
+  const confirmOk = password === confirmPassword;
 
-  const fieldProps = (field) => ({
-    id: field,
-    margin: 'normal',
-    required: true,
-    fullWidth: true,
-    value: values[field],
-    error: Boolean(shownError(field)),
-    onChange: (event) => setValues({ ...values, [field]: event.target.value }),
-    onBlur: () => setTouched({ ...touched, [field]: true }),
-  });
+  // Only show field errors after the user has left the field or submitted.
+  const showEmailError = emailTouched && !emailOk;
+  const showPasswordError = passwordTouched && !passwordOk;
+  const showConfirmError = confirmTouched && !confirmOk;
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setTouched({ email: true, password: true, confirmPassword: true });
-    if (Object.values(fieldErrors).some(Boolean)) return;
+    setEmailTouched(true);
+    setPasswordTouched(true);
+    setConfirmTouched(true);
+
+    if (!emailOk || !passwordOk || !confirmOk) {
+      return;
+    }
 
     setErrorMessage('');
     setIsSubmitting(true);
     try {
-      await createUserWithEmailAndPassword(getFirebaseAuth(), values.email, values.password);
+      await createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
       navigate('/booking', { replace: true });
     } catch (error) {
       setErrorMessage(getAuthErrorMessage(error));
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <AuthFormLayout
@@ -69,26 +69,47 @@ const SignUp = () => {
       }
     >
       <TextField
-        {...fieldProps('email')}
+        id="email"
+        margin="normal"
+        required
+        fullWidth
         label="電子信箱"
         type="email"
         autoComplete="email"
         autoFocus
-        helperText={shownError('email')}
+        value={email}
+        error={showEmailError}
+        helperText={showEmailError ? '請輸入有效的 Email' : ''}
+        onChange={(event) => setEmail(event.target.value)}
+        onBlur={() => setEmailTouched(true)}
       />
       <TextField
-        {...fieldProps('password')}
+        id="password"
+        margin="normal"
+        required
+        fullWidth
         label="密碼"
         type="password"
         autoComplete="new-password"
+        value={password}
+        error={showPasswordError}
         helperText={PASSWORD_RULE_TEXT}
+        onChange={(event) => setPassword(event.target.value)}
+        onBlur={() => setPasswordTouched(true)}
       />
       <TextField
-        {...fieldProps('confirmPassword')}
+        id="confirmPassword"
+        margin="normal"
+        required
+        fullWidth
         label="確認密碼"
         type="password"
         autoComplete="new-password"
-        helperText={shownError('confirmPassword')}
+        value={confirmPassword}
+        error={showConfirmError}
+        helperText={showConfirmError ? '兩次輸入的密碼不一致' : ''}
+        onChange={(event) => setConfirmPassword(event.target.value)}
+        onBlur={() => setConfirmTouched(true)}
       />
     </AuthFormLayout>
   );

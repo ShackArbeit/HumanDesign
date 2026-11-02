@@ -4,26 +4,30 @@ import { fetchAvailability } from '../api/availability';
 import { formatDate, toTaipei } from '../lib/datetime';
 import { queryKeys } from '../lib/queryKeys';
 
-const STALE_MS = 30 * 1000;
+const STALE_TIME_MS = 30 * 1000;
 
-const weekQuery = (weekStart, durationMin) => ({
-  queryKey: queryKeys.availability(weekStart, durationMin),
-  queryFn: () =>
-    fetchAvailability({
-      from: weekStart,
-      to: formatDate(toTaipei(weekStart).add(6, 'day')),
-      durationMin,
-    }),
-  staleTime: STALE_MS,
-});
+function fetchWeek(weekStart, durationMin) {
+  const weekEnd = formatDate(toTaipei(weekStart).add(6, 'day'));
+  return fetchAvailability({ from: weekStart, to: weekEnd, durationMin });
+}
 
-export const useAvailability = ({ weekStart, durationMin }) => {
+export function useAvailability({ weekStart, durationMin }) {
   const queryClient = useQueryClient();
 
+  // Load next week early so the "next week" button feels instant.
   useEffect(() => {
     const nextWeek = formatDate(toTaipei(weekStart).add(7, 'day'));
-    queryClient.prefetchQuery(weekQuery(nextWeek, durationMin));
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.availability(nextWeek, durationMin),
+      queryFn: () => fetchWeek(nextWeek, durationMin),
+      staleTime: STALE_TIME_MS,
+    });
   }, [queryClient, weekStart, durationMin]);
 
-  return useQuery({ ...weekQuery(weekStart, durationMin), placeholderData: keepPreviousData });
-};
+  return useQuery({
+    queryKey: queryKeys.availability(weekStart, durationMin),
+    queryFn: () => fetchWeek(weekStart, durationMin),
+    staleTime: STALE_TIME_MS,
+    placeholderData: keepPreviousData,
+  });
+}

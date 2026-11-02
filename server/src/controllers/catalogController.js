@@ -1,33 +1,48 @@
 import { notFound } from '../lib/errors.js';
-import * as catalogRepository from '../repositories/catalogRepository.js';
+import {
+  getContentSection,
+  listAboutTimeline as findAboutTimeline,
+  listActiveServices,
+  listFeedbackVideos as findFeedbackVideos,
+} from '../repositories/catalogRepository.js';
 import { contentSections } from '../schemas/content.js';
 
-export const listServices = async (req, res) => {
-  const services = await catalogRepository.listActiveServices();
-  res.json({
-    data: services.map(({ id, name, description, options, imagePath }) => ({
-      id,
-      name,
-      description,
-      options,
-      imagePath,
-    })),
-  });
-};
+export async function listServices(req, res) {
+  const services = await listActiveServices();
 
-export const getContent = async (req, res) => {
+  const data = [];
+  for (const service of services) {
+    data.push({
+      id: service.id,
+      name: service.name,
+      description: service.description,
+      options: service.options,
+      imagePath: service.imagePath,
+    });
+  }
+  res.json({ data });
+}
+
+export async function getContent(req, res) {
   const { section } = req.validated.params;
-  const items = contentSections.includes(section)
-    ? await catalogRepository.getContentSection(section)
-    : null;
-  if (!items) throw notFound('找不到此內容');
+
+  if (!contentSections.includes(section)) {
+    throw notFound('找不到此內容');
+  }
+
+  const items = await getContentSection(section);
+  if (!items) {
+    throw notFound('找不到此內容');
+  }
   res.json({ data: items });
-};
+}
 
-export const listAboutTimeline = async (req, res) => {
-  res.json({ data: await catalogRepository.listAboutTimeline() });
-};
+export async function listAboutTimeline(req, res) {
+  const data = await findAboutTimeline();
+  res.json({ data });
+}
 
-export const listFeedbackVideos = async (req, res) => {
-  res.json({ data: await catalogRepository.listFeedbackVideos() });
-};
+export async function listFeedbackVideos(req, res) {
+  const data = await findFeedbackVideos();
+  res.json({ data });
+}

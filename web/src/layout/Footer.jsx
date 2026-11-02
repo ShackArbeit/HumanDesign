@@ -1,6 +1,6 @@
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import style from './Footer.module.css';
+import style from '../styles/Footer.module.css';
 
 const SOCIAL_LINKS = [
   {

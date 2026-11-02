@@ -4,7 +4,6 @@ const MESSAGES = {
   'auth/weak-password': '密碼強度不足',
   'auth/too-many-requests': '嘗試次數過多，請稍後再試',
   'auth/network-request-failed': '無法連線，請檢查網路後再試',
-  // One message for all three, so the form does not reveal which accounts exist.
   'auth/invalid-credential': 'Email 或密碼不正確',
   'auth/wrong-password': 'Email 或密碼不正確',
   'auth/user-not-found': 'Email 或密碼不正確',

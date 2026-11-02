@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useCancelBooking } from '../../hooks/useBookingMutations';
 
-// Landing page for the cancel link in guest confirmation emails. Cancelling needs a
-// click because mail scanners open links, which must not cancel a booking by itself.
+
 const CancelBooking = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();

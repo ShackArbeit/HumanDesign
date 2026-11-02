@@ -26,3 +26,6 @@ node_modules
 
 # Build output
 dist
+
+# Firebase CLI cache
+.firebase

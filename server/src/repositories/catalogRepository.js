@@ -1,31 +1,57 @@
 import { db } from '../lib/firebase.js';
 
-export const listActiveServices = async () => {
+export async function listActiveServices() {
   const snapshot = await db().collection('services').orderBy('order').get();
-  return snapshot.docs
-    .map((doc) => ({ id: doc.id, ...doc.data() }))
-    .filter((service) => service.active);
-};
 
-export const getService = async (id) => {
+  const services = [];
+  for (const doc of snapshot.docs) {
+    const service = { id: doc.id, ...doc.data() };
+    if (service.active) {
+      services.push(service);
+    }
+  }
+  return services;
+}
+
+export async function getService(id) {
   const doc = await db().collection('services').doc(id).get();
-  return doc.exists ? { id: doc.id, ...doc.data() } : null;
-};
+  if (!doc.exists) {
+    return null;
+  }
+  return { id: doc.id, ...doc.data() };
+}
 
-export const getContentSection = async (section) => {
+export async function getContentSection(section) {
   const doc = await db().collection('content').doc(section).get();
-  return doc.exists ? doc.data().items : null;
-};
+  if (!doc.exists) {
+    return null;
+  }
+  return doc.data().items;
+}
 
-export const listAboutTimeline = async () => {
+export async function listAboutTimeline() {
   const snapshot = await db().collection('aboutTimeline').get();
-  return snapshot.docs.map((doc) => ({ year: doc.id, ...doc.data() }));
-};
 
-export const listFeedbackVideos = async () => {
+  const timeline = [];
+  for (const doc of snapshot.docs) {
+    timeline.push({ year: doc.id, ...doc.data() });
+  }
+  return timeline;
+}
+
+export async function listFeedbackVideos() {
   const snapshot = await db().collection('feedbackVideos').orderBy('order').get();
-  return snapshot.docs.map((doc) => {
-    const { title, body, youtubeId, imagePath } = doc.data();
-    return { id: doc.id, title, body, youtubeId, imagePath };
-  });
-};
+
+  const videos = [];
+  for (const doc of snapshot.docs) {
+    const data = doc.data();
+    videos.push({
+      id: doc.id,
+      title: data.title,
+      body: data.body,
+      youtubeId: data.youtubeId,
+      imagePath: data.imagePath,
+    });
+  }
+  return videos;
+}

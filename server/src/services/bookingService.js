@@ -2,10 +2,13 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { paymentInfo } from '../config/paymentInfo.js';
 import { CANCEL_CUTOFF_HOURS } from '../config/scheduleRules.js';
 import { AppError, forbidden, notFound, unauthenticated } from '../lib/errors.js';
-import * as bookingRepository from '../repositories/bookingRepository.js';
+import { cancelWithLocks, createWithLocks } from '../repositories/bookingRepository.js';
 import { getService } from '../repositories/catalogRepository.js';
 import { getScheduleRules, listClosures } from '../repositories/scheduleRepository.js';
 import { getLocalDate, getSlotLocks, validateBookingTime } from './availabilityService.js';
+
+const ONE_MINUTE_MS = 60 * 1000;
+const ONE_HOUR_MS = 60 * ONE_MINUTE_MS;
 
 const TIME_ERROR_MESSAGES = {
   TOO_SOON: '此時段已超過可預約期限，請至少提前 3 天預約',
@@ -13,120 +16,155 @@ const TIME_ERROR_MESSAGES = {
   OUTSIDE_BUSINESS_HOURS: '此時段不在服務時間內',
 };
 
-const hashToken = (token) => createHash('sha256').update(token).digest();
+function hashToken(token) {
+  return createHash('sha256').update(token).digest();
+}
 
-const tokenMatches = (token, storedHash) => {
-  if (!token || !storedHash) return false;
+function isValidCancelToken(token, storedHash) {
+  if (!token || !storedHash) {
+    return false;
+  }
   return timingSafeEqual(hashToken(token), Buffer.from(storedHash, 'hex'));
-};
+}
 
-export const toPublicBooking = (booking) => ({
-  id: booking.id,
-  serviceId: booking.serviceId,
-  durationMin: booking.durationMin,
-  priceTwd: booking.priceTwd,
-  startAt: booking.startAt.toISOString(),
-  endAt: booking.endAt.toISOString(),
-  status: booking.status,
-  note: booking.note ?? null,
-  createdAt: booking.createdAt.toISOString(),
-});
+// Only these fields may be sent to the browser.
+export function toPublicBooking(booking) {
+  return {
+    id: booking.id,
+    serviceId: booking.serviceId,
+    durationMin: booking.durationMin,
+    priceTwd: booking.priceTwd,
+    startAt: booking.startAt.toISOString(),
+    endAt: booking.endAt.toISOString(),
+    status: booking.status,
+    note: booking.note || null,
+    createdAt: booking.createdAt.toISOString(),
+  };
+}
 
-export const createBookingService = ({ mail, now, webBaseUrl }) => {
-  const sendConfirmation = async ({ booking, service, rules, to, cancelUrl }) => {
+function findServiceOption(service, durationMin) {
+  const option = service.options.find((item) => item.durationMin === durationMin);
+  if (!option) {
+    throw new AppError(400, 'VALIDATION_ERROR', '此服務沒有這個時長', [
+      { path: 'durationMin', message: '此服務沒有這個時長' },
+    ]);
+  }
+  return option;
+}
+
+async function checkBookingTime(rules, startAt, durationMin, currentTime) {
+  const date = getLocalDate(startAt, rules.timezone);
+  const closures = await listClosures(date, date);
+  const errorCode = validateBookingTime({
+    rules,
+    closures,
+    startAt,
+    durationMin,
+    now: currentTime,
+  });
+  if (errorCode) {
+    throw new AppError(422, errorCode, TIME_ERROR_MESSAGES[errorCode]);
+  }
+}
+
+// mail, now and webBaseUrl are passed in so tests can use a fake clock and fake mailer.
+export function createBookingService({ mail, now, webBaseUrl }) {
+  async function sendConfirmation(emailData, bookingId) {
     try {
-      const result = await mail.sendBookingConfirmation({
-        to,
-        booking,
-        serviceName: service.name,
-        timezone: rules.timezone,
-        cancelUrl,
-      });
+      const result = await mail.sendBookingConfirmation(emailData);
       return result !== false;
     } catch (error) {
-      // The booking is already committed, so a mail outage must not fail the request.
+      // The booking is already saved, so a mail problem must not fail the request.
       console.error(
         JSON.stringify({
           severity: 'ERROR',
           message: 'Confirmation email failed',
-          bookingId: booking.id,
+          bookingId,
           error: error.message,
         }),
       );
       return false;
     }
-  };
+  }
 
-  const create = async ({ input, user }) => {
+  async function create({ input, user }) {
     const currentTime = now();
-    const service = await getService(input.serviceId);
-    if (!service?.active) throw notFound('找不到此服務');
 
-    const option = service.options.find((item) => item.durationMin === input.durationMin);
-    if (!option) {
-      throw new AppError(400, 'VALIDATION_ERROR', '此服務沒有這個時長', [
-        { path: 'durationMin', message: '此服務沒有這個時長' },
-      ]);
+    const service = await getService(input.serviceId);
+    if (!service || !service.active) {
+      throw notFound('找不到此服務');
     }
+    const option = findServiceOption(service, input.durationMin);
 
     const rules = await getScheduleRules();
     const startAt = new Date(input.startAt);
-    const date = getLocalDate(startAt, rules.timezone);
-    const closures = await listClosures(date, date);
-    const timeError = validateBookingTime({
-      rules,
-      closures,
-      startAt,
-      durationMin: option.durationMin,
-      now: currentTime,
-    });
-    if (timeError) throw new AppError(422, timeError, TIME_ERROR_MESSAGES[timeError]);
+    await checkBookingTime(rules, startAt, option.durationMin, currentTime);
 
-    const cancelToken = user ? null : randomBytes(32).toString('hex');
+    // Guests cancel with a token. Only its hash is stored in the database.
+    let cancelToken = null;
+    let cancelTokenHash = null;
+    if (!user) {
+      cancelToken = randomBytes(32).toString('hex');
+      cancelTokenHash = hashToken(cancelToken).toString('hex');
+    }
+
     const booking = {
-      userId: user?.uid ?? null,
+      userId: user ? user.uid : null,
       guestEmail: user ? null : input.guestEmail,
       serviceId: service.id,
       durationMin: option.durationMin,
       priceTwd: option.priceTwd,
       startAt,
-      endAt: new Date(startAt.getTime() + option.durationMin * 60 * 1000),
+      endAt: new Date(startAt.getTime() + option.durationMin * ONE_MINUTE_MS),
       status: 'pending_payment',
-      note: input.note ?? null,
-      cancelTokenHash: cancelToken ? hashToken(cancelToken).toString('hex') : null,
+      note: input.note || null,
+      cancelTokenHash,
     };
+
     const locks = getSlotLocks({ rules, startAt, durationMin: option.durationMin });
-    const id = await bookingRepository.createWithLocks(booking, locks, currentTime);
-    const saved = { ...booking, id, createdAt: currentTime };
+    const bookingId = await createWithLocks(booking, locks, currentTime);
 
-    const emailSent = await sendConfirmation({
-      booking: saved,
-      service,
-      rules,
-      to: user?.email ?? input.guestEmail,
-      cancelUrl: cancelToken
-        ? `${webBaseUrl}/bookings/${id}/cancel?token=${cancelToken}`
-        : null,
-    });
+    booking.id = bookingId;
+    booking.createdAt = currentTime;
 
-    return {
-      ...toPublicBooking(saved),
-      emailSent,
-      paymentInfo,
-      ...(cancelToken ? { cancelToken } : {}),
-    };
-  };
+    let cancelUrl = null;
+    if (cancelToken) {
+      cancelUrl = `${webBaseUrl}/bookings/${bookingId}/cancel?token=${cancelToken}`;
+    }
 
-  const cancel = async ({ id, user, token }) => {
+    const emailSent = await sendConfirmation(
+      {
+        to: user ? user.email : input.guestEmail,
+        booking,
+        serviceName: service.name,
+        timezone: rules.timezone,
+        cancelUrl,
+      },
+      bookingId,
+    );
+
+    const result = toPublicBooking(booking);
+    result.emailSent = emailSent;
+    result.paymentInfo = paymentInfo;
+    if (cancelToken) {
+      result.cancelToken = cancelToken;
+    }
+    return result;
+  }
+
+  async function cancel({ id, user, token }) {
     const currentTime = now();
-    const authorize = (booking) => {
+
+    function checkCanCancel(booking) {
       if (booking.userId) {
         if (!user) throw unauthenticated();
         if (booking.userId !== user.uid) throw forbidden();
-      } else if (!tokenMatches(token, booking.cancelTokenHash)) {
+      } else if (!isValidCancelToken(token, booking.cancelTokenHash)) {
         throw forbidden();
       }
-      const hoursLeft = (booking.startAt.getTime() - currentTime.getTime()) / (60 * 60 * 1000);
+
+      const msLeft = booking.startAt.getTime() - currentTime.getTime();
+      const hoursLeft = msLeft / ONE_HOUR_MS;
       if (hoursLeft < CANCEL_CUTOFF_HOURS) {
         throw new AppError(
           422,
@@ -134,10 +172,11 @@ export const createBookingService = ({ mail, now, webBaseUrl }) => {
           `預約開始前 ${CANCEL_CUTOFF_HOURS} 小時內無法取消`,
         );
       }
-    };
-    const booking = await bookingRepository.cancelWithLocks(id, authorize, currentTime);
+    }
+
+    const booking = await cancelWithLocks(id, checkCanCancel, currentTime);
     return toPublicBooking(booking);
-  };
+  }
 
   return { create, cancel };
-};
+}

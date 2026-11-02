@@ -2,27 +2,27 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { cancelBooking, createBooking } from '../api/bookings';
 import { queryKeys } from '../lib/queryKeys';
 
-const useInvalidateBookings = () => {
+export function useCreateBooking() {
   const queryClient = useQueryClient();
-  return () =>
-    Promise.all([
-      queryClient.invalidateQueries({ queryKey: queryKeys.availabilityAll }),
-      queryClient.invalidateQueries({ queryKey: queryKeys.myBookings }),
-    ]);
-};
 
-export const useCreateBooking = () => {
-  const invalidate = useInvalidateBookings();
   return useMutation({
     mutationFn: createBooking,
-    onSettled: invalidate,
+    // Refresh after success or failure: a 409 also means the calendar is out of date.
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.availabilityAll });
+      queryClient.invalidateQueries({ queryKey: queryKeys.myBookings });
+    },
   });
-};
+}
 
-export const useCancelBooking = () => {
-  const invalidate = useInvalidateBookings();
+export function useCancelBooking() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: cancelBooking,
-    onSuccess: invalidate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.availabilityAll });
+      queryClient.invalidateQueries({ queryKey: queryKeys.myBookings });
+    },
   });
-};
+}

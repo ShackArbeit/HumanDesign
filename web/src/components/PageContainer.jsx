@@ -1,4 +1,4 @@
-import style from './PageContainer.module.css';
+import style from '../styles/PageContainer.module.css';
 
 export const PageContainer = ({ title, intro, narrow = false, children }) => (
   <div className={`${style.page} ${narrow ? style.narrow : ''}`}>

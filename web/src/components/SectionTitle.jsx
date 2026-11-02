@@ -1,4 +1,4 @@
-import style from './SectionTitle.module.css';
+import style from '../styles/SectionTitle.module.css';
 
 export const SectionTitle = ({ children, subtitle }) => (
   <div className={style.wrap}>

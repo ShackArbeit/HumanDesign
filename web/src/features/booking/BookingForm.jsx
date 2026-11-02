@@ -43,25 +43,36 @@ const FormFields = ({ services, slot, durationMin, isGuest, onCancel, onSlotTake
   const selectedService = services.find((service) => service.id === watch('serviceId'));
   const option = selectedService.options.find((item) => item.durationMin === durationMin);
 
-  const onSubmit = ({ serviceId, guestEmail, note }) => {
-    mutation.mutate(
-      {
-        serviceId,
-        durationMin,
-        startAt: slot.start,
-        ...(isGuest ? { guestEmail } : {}),
-        ...(note ? { note } : {}),
-      },
-      {
-        onSuccess: (booking) => onCreated(booking, selectedService.name),
-        onError: (error) => {
-          if (error.status === 409) onSlotTaken();
-        },
-      },
-    );
-  };
+  function onSubmit(values) {
+    const requestBody = {
+      serviceId: values.serviceId,
+      durationMin,
+      startAt: slot.start,
+    };
+    if (isGuest) {
+      requestBody.guestEmail = values.guestEmail;
+    }
+    if (values.note) {
+      requestBody.note = values.note;
+    }
 
-  const errorMessage = mutation.error?.status === 409 ? null : mutation.error?.message;
+    mutation.mutate(requestBody, {
+      onSuccess: (booking) => {
+        onCreated(booking, selectedService.name);
+      },
+      onError: (error) => {
+        if (error.status === 409) {
+          onSlotTaken();
+        }
+      },
+    });
+  }
+
+  // A 409 closes this form and shows a message on the page instead.
+  let errorMessage = null;
+  if (mutation.error && mutation.error.status !== 409) {
+    errorMessage = mutation.error.message;
+  }
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>

@@ -16,7 +16,7 @@ import {
   todayInTaipei,
   weekdayLabel,
 } from '../../lib/datetime';
-import style from './AvailabilityWeekGrid.module.css';
+import style from '../../styles/AvailabilityWeekGrid.module.css';
 
 const DEFAULT_MAX_ADVANCE_DAYS = 60;
 

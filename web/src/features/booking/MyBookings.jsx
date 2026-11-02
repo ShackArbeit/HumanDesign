@@ -13,7 +13,8 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '../../components/EmptyState';
-import { QueryState } from '../../components/QueryState';
+import { ErrorState } from '../../components/ErrorState';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { useCancelBooking } from '../../hooks/useBookingMutations';
 import { useMyBookings } from '../../hooks/useMyBookings';
 import { useServices } from '../../hooks/useServices';
@@ -27,70 +28,85 @@ const STATUS_LABELS = {
   cancelled: '已取消',
 };
 
-const canCancel = (booking) =>
-  booking.status !== 'cancelled' &&
-  dayjs(booking.startAt).diff(dayjs(), 'hour', true) >= CANCEL_CUTOFF_HOURS;
+function canCancel(booking) {
+  if (booking.status === 'cancelled') {
+    return false;
+  }
+  const hoursLeft = dayjs(booking.startAt).diff(dayjs(), 'hour', true);
+  return hoursLeft >= CANCEL_CUTOFF_HOURS;
+}
 
 const MyBookings = () => {
   const navigate = useNavigate();
-  const query = useMyBookings();
-  const services = useServices();
-  const cancel = useCancelBooking();
-  const [target, setTarget] = useState(null);
+  const { data: bookings, isLoading, isError, refetch } = useMyBookings();
+  const { data: services } = useServices();
+  const cancelMutation = useCancelBooking();
+  const [bookingToCancel, setBookingToCancel] = useState(null);
 
-  const serviceName = (id) => services.data?.find((service) => service.id === id)?.name ?? id;
+  function getServiceName(serviceId) {
+    if (!services) {
+      return serviceId;
+    }
+    const service = services.find((item) => item.id === serviceId);
+    return service ? service.name : serviceId;
+  }
 
-  const handleConfirm = () => {
-    cancel.mutate({ id: target.id }, { onSuccess: () => setTarget(null) });
-  };
+  function handleConfirmCancel() {
+    cancelMutation.mutate(
+      { id: bookingToCancel.id },
+      { onSuccess: () => setBookingToCancel(null) },
+    );
+  }
 
   return (
     <Box sx={{ maxWidth: 720, mx: 'auto', px: 2, py: 4 }}>
       <Typography component="h1" variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
         我的預約
       </Typography>
-      <QueryState query={query}>
-        {(bookings) =>
-          bookings.length === 0 ? (
-            <EmptyState
-              message="目前沒有預約"
-              actionLabel="前往預約"
-              onAction={() => navigate('/booking')}
-            />
-          ) : (
-            <Stack spacing={2}>
-              {bookings.map((booking) => (
-                <Card variant="outlined" key={booking.id}>
-                  <CardContent>
-                    <Typography sx={{ fontWeight: 700 }}>
-                      {serviceName(booking.serviceId)}（{booking.durationMin} 分鐘）
-                    </Typography>
-                    <Typography>{formatDateTime(booking.startAt)}</Typography>
-                    <Typography>
-                      NT$ {booking.priceTwd.toLocaleString('en-US')}｜
-                      {STATUS_LABELS[booking.status]}
-                    </Typography>
-                    {canCancel(booking) && (
-                      <Button sx={{ mt: 1 }} color="error" onClick={() => setTarget(booking)}>
-                        取消預約
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </Stack>
-          )
-        }
-      </QueryState>
-      <Dialog open={Boolean(target)} onClose={() => setTarget(null)}>
+
+      {isLoading && <LoadingSkeleton />}
+      {isError && <ErrorState onRetry={refetch} />}
+
+      {!isLoading && !isError && bookings.length === 0 && (
+        <EmptyState
+          message="目前沒有預約"
+          actionLabel="前往預約"
+          onAction={() => navigate('/booking')}
+        />
+      )}
+
+      {!isLoading && !isError && bookings.length > 0 && (
+        <Stack spacing={2}>
+          {bookings.map((booking) => (
+            <Card variant="outlined" key={booking.id}>
+              <CardContent>
+                <Typography sx={{ fontWeight: 700 }}>
+                  {getServiceName(booking.serviceId)}（{booking.durationMin} 分鐘）
+                </Typography>
+                <Typography>{formatDateTime(booking.startAt)}</Typography>
+                <Typography>
+                  NT$ {booking.priceTwd.toLocaleString('en-US')}｜{STATUS_LABELS[booking.status]}
+                </Typography>
+                {canCancel(booking) && (
+                  <Button sx={{ mt: 1 }} color="error" onClick={() => setBookingToCancel(booking)}>
+                    取消預約
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </Stack>
+      )}
+
+      <Dialog open={bookingToCancel !== null} onClose={() => setBookingToCancel(null)}>
         <DialogTitle>確定要取消這筆預約嗎？</DialogTitle>
         <DialogContent>
-          {target && <Typography>{formatDateTime(target.startAt)}</Typography>}
-          {cancel.error && <Alert severity="error">{cancel.error.message}</Alert>}
+          {bookingToCancel && <Typography>{formatDateTime(bookingToCancel.startAt)}</Typography>}
+          {cancelMutation.error && <Alert severity="error">{cancelMutation.error.message}</Alert>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setTarget(null)}>返回</Button>
-          <Button color="error" disabled={cancel.isPending} onClick={handleConfirm}>
+          <Button onClick={() => setBookingToCancel(null)}>返回</Button>
+          <Button color="error" disabled={cancelMutation.isPending} onClick={handleConfirmCancel}>
             確認取消
           </Button>
         </DialogActions>

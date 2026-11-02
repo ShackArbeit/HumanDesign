@@ -4,16 +4,25 @@ import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { QueryState } from '../../components/QueryState';
+import { ErrorState } from '../../components/ErrorState';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { useServices } from '../../hooks/useServices';
 import { useAuth } from '../auth/AuthProvider';
 import AvailabilityWeekGrid from './AvailabilityWeekGrid';
 import BookingForm from './BookingForm';
 
-const getDurationOptions = (services) =>
-  [...new Set(services.flatMap((service) => service.options.map((o) => o.durationMin)))].sort(
-    (a, b) => a - b,
-  );
+function getDurationOptions(services) {
+  const durations = [];
+  for (const service of services) {
+    for (const option of service.options) {
+      if (!durations.includes(option.durationMin)) {
+        durations.push(option.durationMin);
+      }
+    }
+  }
+  durations.sort((a, b) => a - b);
+  return durations;
+}
 
 const BookingContent = ({ services }) => {
   const durationOptions = getDurationOptions(services);
@@ -52,7 +61,7 @@ const BookingContent = ({ services }) => {
 
 const BookingPage = () => {
   const { user } = useAuth();
-  const query = useServices();
+  const { data: services, isLoading, isError, refetch } = useServices();
 
   return (
     <Box sx={{ maxWidth: 1120, mx: 'auto', px: 2, py: 4 }}>
@@ -68,7 +77,9 @@ const BookingPage = () => {
           </>
         )}
       </Typography>
-      <QueryState query={query}>{(services) => <BookingContent services={services} />}</QueryState>
+      {isLoading && <LoadingSkeleton />}
+      {isError && <ErrorState onRetry={refetch} />}
+      {!isLoading && !isError && <BookingContent services={services} />}
     </Box>
   );
 };

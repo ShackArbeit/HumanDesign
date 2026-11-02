@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthProvider';
-import style from './Header.module.css';
+import style from '../styles/Header.module.css';
 
 const PUBLIC_LINKS = [
   { to: '/human', label: '什麼是人類圖' },
