@@ -1,3 +1,4 @@
+// 讀取並檢查環境變數，設定有問題時在啟動階段就報錯
 import { z } from 'zod';
 
 const envSchema = z.object({

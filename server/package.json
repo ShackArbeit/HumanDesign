@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
-    "seed": "node scripts/seed.js",
     "lint": "eslint .",
     "test": "firebase emulators:exec --config ../firebase.json --project demo-humandesign --only auth,firestore \"vitest run\"",
     "test:unit": "vitest run test/availability.test.js"

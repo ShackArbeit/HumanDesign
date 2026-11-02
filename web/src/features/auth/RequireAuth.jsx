@@ -1,3 +1,4 @@
+// 保護需要登入的頁面，未登入就導向登入頁
 import { Navigate, useLocation } from 'react-router-dom';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { useAuth } from './AuthProvider';

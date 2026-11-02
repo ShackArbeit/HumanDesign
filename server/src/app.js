@@ -1,13 +1,14 @@
+// 建立 Express app。獨立成一個檔案，測試時才能直接使用，不用真的啟動伺服器。
 import express from 'express';
 import helmet from 'helmet';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { createAvailabilityRouter } from './routes/availability.js';
 import { createBookingsRouter } from './routes/bookings.js';
-import { contentRouter } from './routes/content.js';
 
 const DEFAULT_BOOKING_RATE_LIMIT = 10;
 
+// mail 和 now 由外部傳入，測試時可以換成假的寄信功能和固定時間
 export function createApp({
   mail,
   webBaseUrl,
@@ -26,12 +27,12 @@ export function createApp({
   }
   app.use(express.json({ limit: '10kb' }));
 
+  // 健康檢查，用來確認服務有在運作
   app.get('/api/v1/health', (req, res) => {
     res.json({ data: { status: 'ok' } });
   });
   app.use('/api/v1', createAvailabilityRouter({ now }));
   app.use('/api/v1', createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }));
-  app.use('/api/v1', contentRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

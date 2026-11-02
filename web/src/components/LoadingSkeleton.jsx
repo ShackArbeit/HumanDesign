@@ -1,3 +1,4 @@
+// 載入中的灰色骨架畫面
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 

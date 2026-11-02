@@ -1,5 +1,5 @@
-// Structured JSON for Cloud Logging. Only the pathname is logged because guest
-// cancel tokens travel in the query string.
+// 用 JSON 格式記錄每個請求，方便在 Cloud Logging 查詢。
+// 只記錄路徑、不記錄查詢字串，因為訪客的取消 token 會放在查詢字串裡
 export const requestLogger = (req, res, next) => {
   const startedAt = Date.now();
   res.on('finish', () => {

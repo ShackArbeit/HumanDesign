@@ -1,3 +1,4 @@
+// 登入頁
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -20,6 +21,7 @@ const SignIn = () => {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
+      // 登入由 Firebase Auth 處理，成功後回到原本要去的頁面
       await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
       navigate(location.state?.from ?? '/booking', { replace: true });
     } catch (error) {

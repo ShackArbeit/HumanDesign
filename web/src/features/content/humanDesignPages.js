@@ -1,3 +1,4 @@
+// 人類圖各主題頁的路徑、內容區塊和標題
 export const humanDesignPages = [
   { path: 'overview', section: 'hd-overview', title: '活出原本的自己' },
   { path: 'types', section: 'hd-types', title: '知悉天賦比努力更重要 !' },

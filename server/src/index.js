@@ -1,3 +1,4 @@
+// 後端程式的進入點：讀取環境變數、建立 app、開始監聽
 import 'dotenv/config';
 import { createApp } from './app.js';
 import { loadEnv } from './config/env.js';

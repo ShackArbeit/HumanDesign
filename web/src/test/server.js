@@ -3,29 +3,6 @@ import { setupServer } from 'msw/node';
 
 export const API = 'http://localhost/api/v1';
 
-export const services = [
-  {
-    id: 'personal',
-    name: '個人解析',
-    description: '',
-    imagePath: null,
-    options: [
-      { durationMin: 60, priceTwd: 5000 },
-      { durationMin: 120, priceTwd: 9000 },
-    ],
-  },
-  {
-    id: 'family',
-    name: '親子解析',
-    description: '',
-    imagePath: null,
-    options: [
-      { durationMin: 60, priceTwd: 8000 },
-      { durationMin: 120, priceTwd: 14000 },
-    ],
-  },
-];
-
 const slot = (date, utcHour, status) => ({
   start: `${date}T${utcHour}:00:00Z`,
   end: `${date}T${utcHour}:30:00Z`,
@@ -54,7 +31,6 @@ export const buildWeek = (from, overrides = {}) => {
 };
 
 export const handlers = [
-  http.get(`${API}/services`, () => HttpResponse.json({ data: services })),
   http.get(`${API}/availability`, ({ request }) => {
     const from = new URL(request.url).searchParams.get('from');
     return HttpResponse.json({ data: buildWeek(from) });

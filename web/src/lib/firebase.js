@@ -1,3 +1,4 @@
+// 初始化 Firebase Auth，第一次使用時才建立
 import { initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 

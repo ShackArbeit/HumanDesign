@@ -34,17 +34,13 @@ flowchart LR
 | 部署 | Firebase Hosting、Cloud Run、Secret Manager、GitHub Actions |
 | 測試 | Vitest、Testing Library、msw、supertest、Firebase Emulator |
 
-後端結構很簡單：`routes/` 處理 API 與預約流程，`lib/` 放可預約計算、Firestore 存取與寄信。可預約時段的計算是純函式，方便單元測試。
+網站文字、服務與顯示價格都寫在前端的 `web/src/data/`，後端只處理預約相關功能：`routes/` 放 API，`lib/` 放可預約計算、Firestore 存取與寄信。Firestore 只存預約資料。註冊與登入由前端的 Firebase Auth 處理，後端負責驗證 token。
 
 ## REST API（`/api/v1`）
 
 | Method | Path | 驗證 | 說明 |
 |---|---|---|---|
 | GET | `/health` | – | 健康檢查 |
-| GET | `/services` | – | 服務與價格 |
-| GET | `/content/:section` | – | 頁面內容 |
-| GET | `/about/timeline` | – | Jerome 經歷 |
-| GET | `/feedback/videos` | – | 影片清單 |
 | GET | `/availability?from&to&durationMin` | – | 週曆資料，只回狀態，不含預約者資訊 |
 | POST | `/bookings` | 選用 | 建立預約，未登入須填 `guestEmail` |
 | GET | `/me/bookings` | 必要 | 自己的預約 |
@@ -59,7 +55,7 @@ flowchart LR
 - **用 Firebase ID token，不用 session**：Firebase Hosting 只轉送 `__session` cookie；無狀態的後端也才能在 Cloud Run 水平擴展。
 - **時間一律存 UTC，以 `Asia/Taipei` 計算**：伺服器在 UTC 時區也不會差 8 小時，測試涵蓋不同伺服器時區。
 - **寄信失敗不讓預約失敗**：預約已經提交，API 回傳 `emailSent`，畫面據實顯示，並提供取消連結。
-- **價格只由伺服器決定**：請求的 schema 不接受價格欄位，避免被竄改。
+- **價格只由伺服器決定**：請求的 schema 不接受價格欄位，金額取自 `server/src/config/services.js`，避免被竄改。
 - **Workload Identity Federation**：GitHub Actions 部署不需要長期有效的 JSON key。
 
 ## 原版問題與改善對照
@@ -90,7 +86,6 @@ npm --prefix web install
 npm --prefix server install
 
 firebase emulators:start --only auth,firestore --project demo-humandesign
-npm --prefix server run seed      # 另開終端機，寫入 emulator
 npm --prefix server run dev       # http://localhost:8080
 npm --prefix web run dev          # http://localhost:5173，/api 代理到 8080
 ```
@@ -111,12 +106,6 @@ bash scripts/deploy-api.sh
 npm --prefix web run build
 firebase deploy --only hosting,firestore --project humandesign-64ea8
 bash scripts/smoke-test.sh https://humandesign-64ea8.web.app
-```
-
-更新正式環境內容時，從 repo 根目錄執行，避免載入指向 emulator 的 `server/.env`：
-
-```bash
-GOOGLE_CLOUD_PROJECT=humandesign-64ea8 node server/scripts/seed.js --production
 ```
 
 面試當天可用 `gcloud run services update humandesign-api --min-instances=1` 避免冷啟動，結束後改回 0。

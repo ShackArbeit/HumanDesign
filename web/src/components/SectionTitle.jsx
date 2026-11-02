@@ -1,3 +1,4 @@
+// 區塊標題
 import style from '../styles/SectionTitle.module.css';
 
 export const SectionTitle = ({ children, subtitle }) => (

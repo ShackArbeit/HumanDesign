@@ -1,3 +1,4 @@
+// 可預約時段週曆：桌面顯示表格，手機顯示清單
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Skeleton from '@mui/material/Skeleton';
@@ -20,6 +21,7 @@ import style from '../../styles/AvailabilityWeekGrid.module.css';
 
 const DEFAULT_MAX_ADVANCE_DAYS = 60;
 
+// 每種狀態對應的文字和樣式，同時用文字表示，不只靠顏色
 const STATUS = {
   available: { label: '可預約', className: style.available },
   booked: { label: '已額滿', className: style.booked },
@@ -28,8 +30,10 @@ const STATUS = {
   too_soon: { label: '未開放', className: style.tooSoon, title: '需於 3 天前預約' },
 };
 
+// 往前或往後移動幾週
 const shiftWeek = (weekStart, weeks) => formatDate(toTaipei(weekStart).add(weeks * 7, 'day'));
 
+// 給螢幕閱讀器念的文字，例如「11月5日 星期四 10:00 可預約」
 const slotAriaLabel = (slot, label) => {
   const date = toTaipei(slot.start);
   return `${date.format('M月D日')} 星期${weekdayLabel(slot.start)} ${formatTime(slot.start)} ${label}`;
@@ -38,6 +42,7 @@ const slotAriaLabel = (slot, label) => {
 const getStatusText = (slot, day) =>
   slot.status === 'closed' && day.closedReason ? day.closedReason : STATUS[slot.status].label;
 
+// 單一時段：可預約的是按鈕，其他狀態只是文字
 const SlotCell = ({ slot, day, onSelect, className = style.cell, children }) => {
   const status = STATUS[slot.status];
   const text = getStatusText(slot, day);
@@ -71,6 +76,7 @@ const Legend = () => (
   </ul>
 );
 
+// 桌面版：七天的週表格
 const DesktopTable = ({ days, onSelect }) => (
   <div className={style.tableWrap}>
     <table className={style.table}>
@@ -106,6 +112,7 @@ const DesktopTable = ({ days, onSelect }) => (
 
 const hasAvailable = (day) => day.slots.some((slot) => slot.status === 'available');
 
+// 手機版：上方選日期，下方列出當天時段
 const MobileList = ({ days, onSelect }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const selected =

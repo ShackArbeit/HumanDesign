@@ -1,17 +1,17 @@
+// 預約頁：組合週曆和預約表單
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ErrorState } from '../../components/ErrorState';
-import { LoadingSkeleton } from '../../components/LoadingSkeleton';
-import { useServices } from '../../hooks/useServices';
+import { services } from '../../data/services';
 import { useAuth } from '../auth/AuthProvider';
 import AvailabilityWeekGrid from './AvailabilityWeekGrid';
 import BookingForm from './BookingForm';
 
-function getDurationOptions(services) {
+// 從所有服務整理出不重複的時長，例如 [60, 120]
+function getDurationOptions() {
   const durations = [];
   for (const service of services) {
     for (const option of service.options) {
@@ -24,9 +24,10 @@ function getDurationOptions(services) {
   return durations;
 }
 
-const BookingContent = ({ services }) => {
-  const durationOptions = getDurationOptions(services);
+const BookingContent = () => {
+  const durationOptions = getDurationOptions();
   const [durationMin, setDurationMin] = useState(durationOptions[0]);
+  // 使用者點選的時段，有值時才會打開預約表單
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [slotTaken, setSlotTaken] = useState(false);
 
@@ -61,7 +62,6 @@ const BookingContent = ({ services }) => {
 
 const BookingPage = () => {
   const { user } = useAuth();
-  const { data: services, isLoading, isError, refetch } = useServices();
 
   return (
     <Box sx={{ maxWidth: 1120, mx: 'auto', px: 2, py: 4 }}>
@@ -77,9 +77,7 @@ const BookingPage = () => {
           </>
         )}
       </Typography>
-      {isLoading && <LoadingSkeleton />}
-      {isError && <ErrorState onRetry={refetch} />}
-      {!isLoading && !isError && <BookingContent services={services} />}
+      <BookingContent />
     </Box>
   );
 };

@@ -1,3 +1,4 @@
+// 載入失敗時顯示的畫面，可以重試
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';

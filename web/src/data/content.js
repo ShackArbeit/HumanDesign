@@ -1,5 +1,5 @@
-// Edit copy here, then rerun the seed. imagePath values are placeholder images from
-// picsum.photos until licensed photos are available.
+// 網站所有靜態文字都寫在這裡，要改文案直接改這個檔案。
+// imagePath 目前是 picsum.photos 的假圖片，之後換成有授權的照片。
 export const content = {
   "home-services": [
     {

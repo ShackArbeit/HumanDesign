@@ -1,30 +1,21 @@
+// 人類圖各主題共用的內容頁，section 決定要顯示 data/content.js 的哪一區
 import { Link } from 'react-router-dom';
-import { ErrorState } from '../../components/ErrorState';
-import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { PageContainer } from '../../components/PageContainer';
-import { useContent } from '../../hooks/useContent';
+import { content } from '../../data/content';
 import style from '../../styles/content.module.css';
 
 const ContentDetailPage = ({ section, title }) => {
-  const { data: items, isLoading, isError, refetch } = useContent(section);
-
   return (
     <PageContainer title={title} narrow>
-      {isLoading && <LoadingSkeleton />}
-      {isError && <ErrorState onRetry={refetch} />}
-      {!isLoading && !isError && (
-        <div className={style.articleList}>
-          {items.map((item) => (
-            <article key={item.id} className={style.article}>
-              <h2>{item.title}</h2>
-              {item.imagePath && (
-                <img src={item.imagePath} alt="" loading="lazy" className={style.articleImage} />
-              )}
-              <p>{item.body}</p>
-            </article>
-          ))}
-        </div>
-      )}
+      <div className={style.articleList}>
+        {content[section].map((item) => (
+          <article key={item.id} className={style.article}>
+            <h2>{item.title}</h2>
+            <img src={item.imagePath} alt="" loading="lazy" className={style.articleImage} />
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
       <p>
         <Link to="/human">← 回到人類圖介紹</Link>
       </p>

@@ -1,3 +1,4 @@
+// 全站頁首與導覽選單，手機版使用漢堡選單
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthProvider';
@@ -23,8 +24,10 @@ const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  // 換頁時自動關閉手機選單
   useEffect(() => setIsOpen(false), [pathname]);
 
+  // 選單打開時，可以按 Esc 關閉
   useEffect(() => {
     if (!isOpen) return undefined;
     const closeOnEscape = (event) => {

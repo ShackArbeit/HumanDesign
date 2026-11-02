@@ -1,13 +1,13 @@
+// 預約 API：建立預約、取消預約、查看自己的預約
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Router } from 'express';
 import { paymentInfo } from '../config/paymentInfo.js';
-import { CANCEL_CUTOFF_HOURS } from '../config/scheduleRules.js';
+import { CANCEL_CUTOFF_HOURS, defaultScheduleRules as rules } from '../config/scheduleRules.js';
+import { findService } from '../config/services.js';
 import { getLocalDate, getSlotLocks, validateBookingTime } from '../lib/availability.js';
 import {
   cancelBookingWithLocks,
   createBookingWithLocks,
-  getScheduleRules,
-  getService,
   listBookingsByUser,
   listClosures,
 } from '../lib/database.js';
@@ -27,10 +27,12 @@ const TIME_ERROR_MESSAGES = {
   OUTSIDE_BUSINESS_HOURS: '此時段不在服務時間內',
 };
 
+// 把 token 轉成 hash，資料庫外洩時也無法還原出原本的 token
 function hashToken(token) {
   return createHash('sha256').update(token).digest();
 }
 
+// 比對訪客提供的取消 token 是否正確
 function isValidCancelToken(token, storedHash) {
   if (!token || !storedHash) {
     return false;
@@ -38,7 +40,7 @@ function isValidCancelToken(token, storedHash) {
   return timingSafeEqual(hashToken(token), Buffer.from(storedHash, 'hex'));
 }
 
-// Only these fields may be sent to the browser.
+// 只挑選可以給瀏覽器看的欄位，避免洩漏 cancelTokenHash 等內部資料
 function toPublicBooking(booking) {
   return {
     id: booking.id,
@@ -53,6 +55,7 @@ function toPublicBooking(booking) {
   };
 }
 
+// 找出服務對應的時長方案，沒有這個時長就回傳 400
 function findServiceOption(service, durationMin) {
   const option = service.options.find((item) => item.durationMin === durationMin);
   if (!option) {
@@ -63,7 +66,8 @@ function findServiceOption(service, durationMin) {
   return option;
 }
 
-async function checkBookingTime(rules, startAt, durationMin, currentTime) {
+// 檢查時間是否可預約，不行就回傳 422
+async function checkBookingTime(startAt, durationMin, currentTime) {
   const date = getLocalDate(startAt, rules.timezone);
   const closures = await listClosures(date, date);
   const errorCode = validateBookingTime({
@@ -78,7 +82,7 @@ async function checkBookingTime(rules, startAt, durationMin, currentTime) {
   }
 }
 
-// The booking is already saved here, so a mail problem must not fail the request.
+// 走到這裡時預約已經存好了，所以寄信失敗不能讓整個請求失敗
 async function sendConfirmationEmail(mail, emailData, bookingId) {
   try {
     const result = await mail.sendBookingConfirmation(emailData);
@@ -96,10 +100,11 @@ async function sendConfirmationEmail(mail, emailData, bookingId) {
   }
 }
 
-// mail and now are passed in so tests can use a fake mailer and a fake clock.
+// mail 和 now 由外部傳入，測試時可以換成假的寄信功能和固定時間
 export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
   const router = Router();
 
+  // 建立預約：會員和訪客都走這裡
   router.post(
     '/bookings',
     noStore,
@@ -117,17 +122,18 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
         ]);
       }
 
-      const service = await getService(input.serviceId);
-      if (!service || !service.active) {
+      // 第 1 步：確認服務和時長都存在，價格一律用後端的資料
+      const service = findService(input.serviceId);
+      if (!service) {
         throw notFound('找不到此服務');
       }
       const option = findServiceOption(service, input.durationMin);
 
-      const rules = await getScheduleRules();
+      // 第 2 步：確認時間在可預約範圍內
       const startAt = new Date(input.startAt);
-      await checkBookingTime(rules, startAt, option.durationMin, currentTime);
+      await checkBookingTime(startAt, option.durationMin, currentTime);
 
-      // Guests cancel with a token. Only its hash is stored in the database.
+      // 第 3 步：訪客用取消 token 取消預約，資料庫只存 hash，不存原始 token
       let cancelToken = null;
       let cancelTokenHash = null;
       if (!user) {
@@ -148,12 +154,14 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
         cancelTokenHash,
       };
 
+      // 第 4 步：在 transaction 內寫入預約和時段鎖，時段已被預約時會回 409
       const locks = getSlotLocks({ rules, startAt, durationMin: option.durationMin });
       const bookingId = await createBookingWithLocks(booking, locks, currentTime);
 
       booking.id = bookingId;
       booking.createdAt = currentTime;
 
+      // 第 5 步：寄確認信，訪客的信裡會附取消連結
       let cancelUrl = null;
       if (cancelToken) {
         cancelUrl = `${webBaseUrl}/bookings/${bookingId}/cancel?token=${cancelToken}`;
@@ -171,6 +179,7 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
         bookingId,
       );
 
+      // 第 6 步：回傳結果給前端
       const data = toPublicBooking(booking);
       data.emailSent = emailSent;
       data.paymentInfo = paymentInfo;
@@ -181,6 +190,7 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
     },
   );
 
+  // 取消預約：會員要是本人，訪客要有正確的取消 token
   router.delete(
     '/bookings/:id',
     noStore,
@@ -191,6 +201,7 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
       const token = req.validated.query.token;
       const currentTime = now();
 
+      // 這個檢查會在 transaction 內執行，不符合時丟出錯誤
       function checkCanCancel(booking) {
         if (booking.userId) {
           if (!user) throw unauthenticated();
@@ -219,6 +230,7 @@ export function createBookingsRouter({ mail, now, webBaseUrl, rateLimitMax }) {
     },
   );
 
+  // 查看自己的預約：一定要登入
   router.get('/me/bookings', noStore, requireAuth, async (req, res) => {
     const bookings = await listBookingsByUser(req.user.uid);
 

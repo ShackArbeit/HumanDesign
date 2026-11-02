@@ -1,3 +1,4 @@
+// 預約相關 API 的輸入規則。strict() 會拒絕多餘欄位，例如前端自己傳來的價格
 import { z } from 'zod';
 
 export const createBookingBody = z

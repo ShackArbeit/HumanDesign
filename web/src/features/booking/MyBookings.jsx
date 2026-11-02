@@ -1,3 +1,4 @@
+// 我的預約頁：列出預約並可取消
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,9 +16,9 @@ import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '../../components/EmptyState';
 import { ErrorState } from '../../components/ErrorState';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton';
+import { services } from '../../data/services';
 import { useCancelBooking } from '../../hooks/useBookingMutations';
 import { useMyBookings } from '../../hooks/useMyBookings';
-import { useServices } from '../../hooks/useServices';
 import { formatDateTime } from '../../lib/datetime';
 
 const CANCEL_CUTOFF_HOURS = 24;
@@ -28,6 +29,7 @@ const STATUS_LABELS = {
   cancelled: '已取消',
 };
 
+// 已取消，或距離開始不到 24 小時的預約，就不顯示取消按鈕
 function canCancel(booking) {
   if (booking.status === 'cancelled') {
     return false;
@@ -39,14 +41,11 @@ function canCancel(booking) {
 const MyBookings = () => {
   const navigate = useNavigate();
   const { data: bookings, isLoading, isError, refetch } = useMyBookings();
-  const { data: services } = useServices();
   const cancelMutation = useCancelBooking();
   const [bookingToCancel, setBookingToCancel] = useState(null);
 
+  // 用服務 id 找出中文名稱
   function getServiceName(serviceId) {
-    if (!services) {
-      return serviceId;
-    }
     const service = services.find((item) => item.id === serviceId);
     return service ? service.name : serviceId;
   }

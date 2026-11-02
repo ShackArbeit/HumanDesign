@@ -1,3 +1,4 @@
+// API 使用的錯誤類別，以及常用錯誤的建立函式
 export class AppError extends Error {
   constructor(status, code, message, details) {
     super(message);

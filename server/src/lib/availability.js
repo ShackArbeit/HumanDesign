@@ -1,3 +1,4 @@
+// 可預約時段的計算。所有營業時間都用台灣時間計算，回傳時轉成 UTC
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
@@ -9,7 +10,7 @@ const ONE_MINUTE_MS = 60 * 1000;
 const ONE_DAY_MS = 24 * 60 * ONE_MINUTE_MS;
 const WEEKDAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-// '10:30' -> 630
+// 把時間字串換成分鐘數，例如 '10:30' 會變成 630
 function timeToMinutes(time) {
   const parts = time.split(':');
   const hours = Number(parts[0]);
@@ -17,6 +18,7 @@ function timeToMinutes(time) {
   return hours * 60 + minutes;
 }
 
+// 把一組營業時段都換成分鐘數
 function rangesToMinutes(ranges) {
   const result = [];
   for (const range of ranges) {
@@ -25,14 +27,17 @@ function rangesToMinutes(ranges) {
   return result;
 }
 
+// 日期加幾天，格式維持 YYYY-MM-DD
 function addDays(date, days) {
   return dayjs.utc(date).add(days, 'day').format('YYYY-MM-DD');
 }
 
+// 轉成 API 回傳用的 UTC 時間字串
 function toIsoString(ms) {
   return new Date(ms).toISOString().replace('.000Z', 'Z');
 }
 
+// 從營業時段中扣掉休息時段，一段可能被切成前後兩段
 function removeClosedRange(openRanges, closedRange) {
   const result = [];
   for (const range of openRanges) {
@@ -51,6 +56,7 @@ function removeClosedRange(openRanges, closedRange) {
   return result;
 }
 
+// 算出某一天實際開放的時段：每週規則扣掉當天的休息設定
 function getOpenRanges(rules, date, closure) {
   const weekdayKey = WEEKDAY_KEYS[dayjs.utc(date).day()];
   const weeklyRanges = rules.weekly[weekdayKey] || [];
@@ -59,7 +65,7 @@ function getOpenRanges(rules, date, closure) {
   if (!closure) {
     return openRanges;
   }
-  // ranges is null when the whole day is closed
+  // ranges 是 null 代表整天休息
   if (closure.ranges === null || closure.ranges === undefined) {
     return [];
   }
@@ -71,7 +77,7 @@ function getOpenRanges(rules, date, closure) {
   return openRanges;
 }
 
-// Every day uses the same rows so the week table can line up.
+// 找出一週中最早和最晚的營業時間，讓每天的列數相同，週曆表格才對得齊
 function getGridBounds(rules) {
   let start = null;
   let end = null;
@@ -89,6 +95,7 @@ function getGridBounds(rules) {
   return { start, end };
 }
 
+// 列出被占用的時間：每筆預約的時間加上 buffer，已取消的不算
 function getBlockedTimes(bookings, bufferMinutes) {
   const blockedTimes = [];
   for (const booking of bookings) {
@@ -101,6 +108,7 @@ function getBlockedTimes(bookings, bufferMinutes) {
   return blockedTimes;
 }
 
+// 判斷一段時間有沒有跟任何已占用的時間重疊
 function isBlocked(startMs, endMs, blockedTimes) {
   for (const blocked of blockedTimes) {
     if (startMs < blocked.end && endMs > blocked.start) {
@@ -110,6 +118,7 @@ function isBlocked(startMs, endMs, blockedTimes) {
   return false;
 }
 
+// 找出能完整包住這段時間的營業時段，找不到回傳 null
 function findRange(openRanges, startMinute, endMinute) {
   for (const range of openRanges) {
     if (startMinute >= range.start && endMinute <= range.end) {
@@ -119,15 +128,18 @@ function findRange(openRanges, startMinute, endMinute) {
   return null;
 }
 
+// 最早可預約時間：現在加上最少提前天數
 function getEarliestBookableMs(rules, nowMs) {
   return nowMs + rules.minLeadDays * ONE_DAY_MS;
 }
 
+// 最晚可預約日期：以台灣時間的今天往後算
 function getLastBookableDate(rules, nowMs) {
   const today = dayjs(nowMs).tz(rules.timezone).format('YYYY-MM-DD');
   return addDays(today, rules.maxAdvanceDays);
 }
 
+// 判斷單一格的狀態，由上往下檢查，符合就回傳
 function getSlotStatus(rules, slot, openRanges, blockedTimes, nowMs, durationMin) {
   const slotEndMs = slot.startMs + rules.slotMinutes * ONE_MINUTE_MS;
 
@@ -149,7 +161,7 @@ function getSlotStatus(rules, slot, openRanges, blockedTimes, nowMs, durationMin
   }
 
   if (durationMin) {
-    // The session must end inside business hours, but its buffer may run past closing.
+    // 服務本身要在營業時間內結束，但 buffer 可以超過打烊時間
     if (slot.minute + durationMin > range.end) {
       return 'closed';
     }
@@ -163,6 +175,7 @@ function getSlotStatus(rules, slot, openRanges, blockedTimes, nowMs, durationMin
   return 'available';
 }
 
+// 週曆的主要計算。這是純函式：相同輸入一定得到相同結果，也不碰資料庫，所以很好測試
 export function computeAvailability({
   rules,
   closures = [],
@@ -211,7 +224,7 @@ export function computeAvailability({
   };
 }
 
-// Returns an error code when the time cannot be booked, or null when it can.
+// 建立預約前再檢查一次時間。不能預約時回傳錯誤代碼，可以預約時回傳 null
 export function validateBookingTime({ rules, closures = [], startAt, durationMin, now }) {
   const startMs = new Date(startAt).getTime();
   const nowMs = new Date(now).getTime();
@@ -237,8 +250,8 @@ export function validateBookingTime({ rules, closures = [], startAt, durationMin
   return null;
 }
 
-// One lock per 30 minutes, covering the session and its buffer.
-// Two overlapping bookings always share at least one lock document.
+// 算出這筆預約要鎖住哪些時段：每 30 分鐘一格，包含服務時間和 buffer。
+// 兩筆重疊的預約一定會搶到同一格，所以不會重複預約
 export function getSlotLocks({ rules, startAt, durationMin }) {
   const startMs = new Date(startAt).getTime();
   const totalMinutes = durationMin + rules.bufferMinutes;
@@ -254,12 +267,14 @@ export function getSlotLocks({ rules, startAt, durationMin }) {
   return locks;
 }
 
+// 把日期範圍換成毫秒，查詢資料庫時使用
 export function getDayRange(from, to, timezoneName) {
   const startMs = dayjs.tz(`${from} 00:00`, timezoneName).valueOf();
   const endMs = dayjs.tz(`${addDays(to, 1)} 00:00`, timezoneName).valueOf();
   return { startMs, endMs };
 }
 
+// 取得台灣時間的日期字串
 export function getLocalDate(value, timezoneName) {
   return dayjs(value).tz(timezoneName).format('YYYY-MM-DD');
 }

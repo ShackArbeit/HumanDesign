@@ -1,3 +1,4 @@
+// 全站外框：Header、頁面內容、Footer，讓 Footer 貼齊底部
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';

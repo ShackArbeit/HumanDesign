@@ -1,3 +1,4 @@
+// 預約成功後的確認畫面
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -7,6 +8,7 @@ import { formatDateTime, toTaipei } from '../../lib/datetime';
 
 const toCalendarTime = (value) => toTaipei(value).utc().format('YYYYMMDDTHHmmss[Z]');
 
+// 組出「加入 Google 日曆」的連結
 const buildGoogleCalendarUrl = ({ title, startAt, endAt }) => {
   const params = new URLSearchParams({
     action: 'TEMPLATE',

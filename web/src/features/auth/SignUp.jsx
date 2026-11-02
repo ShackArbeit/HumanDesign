@@ -1,3 +1,4 @@
+// 註冊頁
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -27,7 +28,7 @@ const SignUp = () => {
   const passwordOk = isValidPassword(password);
   const confirmOk = password === confirmPassword;
 
-  // Only show field errors after the user has left the field or submitted.
+  // 使用者離開欄位或按下送出後才顯示錯誤，避免一開始就滿版紅字
   const showEmailError = emailTouched && !emailOk;
   const showPasswordError = passwordTouched && !passwordOk;
   const showConfirmError = confirmTouched && !confirmOk;
@@ -45,6 +46,7 @@ const SignUp = () => {
     setErrorMessage('');
     setIsSubmitting(true);
     try {
+      // 註冊由 Firebase Auth 處理，密碼不會經過我們的後端
       await createUserWithEmailAndPassword(getFirebaseAuth(), email, password);
       navigate('/booking', { replace: true });
     } catch (error) {

@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '../src/lib/firebase.js';
-import { contentSections } from '../src/schemas/content.js';
 import { buildApp, resetDatabase } from './helpers.js';
 
 describe('public API', () => {
@@ -15,45 +14,6 @@ describe('public API', () => {
   it('reports health', async () => {
     const response = await api.get('/api/v1/health').expect(200);
     expect(response.body.data.status).toBe('ok');
-  });
-
-  it('lists services with 60 and 120 minute options, cached', async () => {
-    const response = await api.get('/api/v1/services').expect(200);
-    expect(response.headers['cache-control']).toBe('public, max-age=300');
-    expect(response.body.data.map((service) => service.id)).toEqual([
-      'personal',
-      'multi-person',
-      'family',
-      'group',
-    ]);
-    expect(response.body.data[0].options).toEqual([
-      { durationMin: 60, priceTwd: 5000 },
-      { durationMin: 120, priceTwd: 9000 },
-    ]);
-  });
-
-  it.each(contentSections)('serves the %s section', async (section) => {
-    const response = await api.get(`/api/v1/content/${section}`).expect(200);
-    expect(response.body.data.length).toBeGreaterThan(0);
-    expect(JSON.stringify(response.body.data)).not.toContain('localhost');
-  });
-
-  it('returns 404 for an unknown section', async () => {
-    const response = await api.get('/api/v1/content/nope').expect(404);
-    expect(response.body.error.code).toBe('NOT_FOUND');
-  });
-
-  it('serves the timeline in year order and the videos', async () => {
-    const timeline = await api.get('/api/v1/about/timeline').expect(200);
-    expect(timeline.body.data.map((entry) => entry.year)).toEqual([
-      '2013',
-      '2016',
-      '2019',
-      '2021',
-      '2022',
-    ]);
-    const videos = await api.get('/api/v1/feedback/videos').expect(200);
-    expect(videos.body.data[0].youtubeId).toBe('rkgEqVzYbzY');
   });
 
   describe('GET /availability', () => {

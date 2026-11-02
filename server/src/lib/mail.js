@@ -1,3 +1,4 @@
+// 用 Nodemailer 透過 Gmail 寄出預約確認信
 import nodemailer from 'nodemailer';
 import { paymentInfo } from '../config/paymentInfo.js';
 

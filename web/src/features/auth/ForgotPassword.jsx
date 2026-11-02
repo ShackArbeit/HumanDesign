@@ -1,3 +1,4 @@
+// 忘記密碼頁：由 Firebase 寄送重設信
 import TextField from '@mui/material/TextField';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { useState } from 'react';
@@ -24,7 +25,7 @@ const ForgotPassword = () => {
       await sendPasswordResetEmail(getFirebaseAuth(), email);
       setSuccessMessage(SENT_MESSAGE);
     } catch (error) {
-      // Same outcome either way, so this form cannot be used to probe for accounts.
+      // 帳號不存在時也顯示相同訊息，避免被用來猜測誰有註冊
       if (error.code === NO_ACCOUNT_CODE) setSuccessMessage(SENT_MESSAGE);
       else setErrorMessage(getAuthErrorMessage(error));
     } finally {

@@ -1,3 +1,4 @@
+// 預約表單
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -18,6 +19,7 @@ import { formatDateTime } from '../../lib/datetime';
 import { useAuth } from '../auth/AuthProvider';
 import { BookingSummary } from './BookingSummary';
 
+// 表單驗證規則：只有訪客需要填 Email
 const buildSchema = (isGuest) =>
   z.object({
     serviceId: z.string().min(1, '請選擇服務'),
@@ -43,6 +45,7 @@ const FormFields = ({ services, slot, durationMin, isGuest, onCancel, onSlotTake
   const selectedService = services.find((service) => service.id === watch('serviceId'));
   const option = selectedService.options.find((item) => item.durationMin === durationMin);
 
+  // 組出要送給後端的資料，只放需要的欄位
   function onSubmit(values) {
     const requestBody = {
       serviceId: values.serviceId,
@@ -68,7 +71,7 @@ const FormFields = ({ services, slot, durationMin, isGuest, onCancel, onSlotTake
     });
   }
 
-  // A 409 closes this form and shows a message on the page instead.
+  // 409 時表單會關閉，改在頁面上提示，所以這裡不顯示
   let errorMessage = null;
   if (mutation.error && mutation.error.status !== 409) {
     errorMessage = mutation.error.message;
@@ -130,6 +133,7 @@ const FormFields = ({ services, slot, durationMin, isGuest, onCancel, onSlotTake
   );
 };
 
+// 預約對話框：會員和訪客共用，送出成功後切換成確認畫面
 const BookingForm = ({ services, slot, durationMin, onClose, onSlotTaken }) => {
   const { user } = useAuth();
   const isMobile = useMediaQuery('(max-width:767.98px)');

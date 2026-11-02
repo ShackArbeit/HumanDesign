@@ -1,3 +1,4 @@
+// 訪客取消預約頁
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,6 +8,8 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useCancelBooking } from '../../hooks/useBookingMutations';
 
 
+// 訪客從確認信的連結進來。要多按一次按鈕，
+// 因為郵件掃描器會自動開啟連結，不能一開就取消
 const CancelBooking = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();

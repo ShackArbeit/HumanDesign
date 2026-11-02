@@ -1,3 +1,5 @@
+// 把 Firebase 的錯誤代碼轉成中文訊息。
+// 帳號或密碼錯誤都顯示同一句，避免洩漏帳號是否存在
 const MESSAGES = {
   'auth/email-already-in-use': '此 Email 已經註冊，請直接登入',
   'auth/invalid-email': 'Email 格式不正確',

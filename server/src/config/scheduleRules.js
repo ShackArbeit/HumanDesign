@@ -4,7 +4,8 @@ const OPEN_DAY = [
   { start: '19:00', end: '21:00' },
 ];
 
-// TODO(shack): confirm business hours, closed days, buffer and booking window.
+// 預約規則。要調整營業時間、buffer 或可預約天數都改這裡。
+// TODO(shack): 確認營業時間與休息日。
 export const defaultScheduleRules = {
   timezone: 'Asia/Taipei',
   slotMinutes: 30,
@@ -22,4 +23,5 @@ export const defaultScheduleRules = {
   },
 };
 
+// 預約開始前 24 小時內不可取消
 export const CANCEL_CUTOFF_HOURS = 24;

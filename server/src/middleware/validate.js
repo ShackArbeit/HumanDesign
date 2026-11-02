@@ -1,3 +1,4 @@
+// 用 zod 檢查請求資料，通過後放進 req.validated，不通過就回傳 400
 import { AppError } from '../lib/errors.js';
 
 export const validate = (schemas) => (req, res, next) => {

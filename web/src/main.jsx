@@ -1,3 +1,4 @@
+// 前端進入點：掛上主題、React Query，再渲染 App
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ const MAX_RETRIES = 2;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // A 4xx will not fix itself, so only retry network and server failures.
+      // 4xx 是請求本身有問題，重試也沒用，所以只重試網路或伺服器錯誤
       retry: (failureCount, error) =>
         failureCount < MAX_RETRIES && !(error.status >= 400 && error.status < 500),
     },

@@ -1,3 +1,4 @@
+// 用 Context 提供全站的登入狀態
 import { useQueryClient } from '@tanstack/react-query';
 import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Firebase 登入狀態改變時，更新畫面上的 user
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getFirebaseAuth(), (currentUser) => {
       setUser(currentUser);
@@ -20,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   async function signOut() {
     await firebaseSignOut(getFirebaseAuth());
-    // Remove cached member data so the next person cannot see it.
+    // 清掉快取的會員資料，避免下一位使用者看到
     queryClient.clear();
   }
 
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// 讓任何元件都能用 useAuth() 取得登入狀態
 // eslint-disable-next-line react-refresh/only-export-components -- Hook belongs with its provider.
 export const useAuth = () => {
   const context = useContext(AuthContext);
