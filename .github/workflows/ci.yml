@@ -1,5 +1,7 @@
 name: CI
 
+#定義什麼情況下要執行這個 Workflow。
+# 	有人建立或更新 Pull Request 時，有人將程式碼 Push 到 main 分支時	
 on:
   pull_request:
   push:
