@@ -1,69 +1,351 @@
+
+# ============================================================
+# Workflow: Deploy (Continuous Deployment)
+#
+# 目的：
+# 1. Push 到 main 時，部署正式環境
+# 2. 建立 Pull Request 時，部署 Firebase Preview Channel
+# 3. 使用 Google Cloud WIF 進行安全身分驗證
+# 4. 將 API 部署到 Cloud Run
+# 5. 將前端部署到 Firebase Hosting
+# 6. 部署 Firestore Rules / Indexes
+# 7. 執行部署後的 Smoke Test
+# ============================================================
+
 name: Deploy
 
+
+# ============================================================
+# Workflow Trigger：定義觸發事件
+# ============================================================
+
 on:
+
+  # Push 到 main 時觸發正式部署流程
   push:
     branches: [main]
+
+  # 建立、更新或重新開啟 Pull Request 時觸發預覽部署
   pull_request:
 
+
+# ============================================================
+# Global Environment Variables
+#
+# 全域環境變數：
+# 提供給此 Workflow 中所有 Jobs 和 Steps 使用。
+#
+# 此處只保留不需要限定在特定 Step 的共用設定。
+# 前端 VITE_ 變數則放在 Build Web Step 中。
+# ============================================================
+
 env:
+
+  # Google Cloud / Firebase 專案 ID
+  # 後續 gcloud 與 Firebase CLI 都會使用這個專案
   PROJECT_ID: humandesign-64ea8
-  VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
-  VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
-  VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
-  VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
-  VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID }}
-  VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID }}
-  VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY }}
+
+
+# ============================================================
+# Default Permissions
+#
+# 設定 GITHUB_TOKEN 的預設權限。
+#
+# contents: read
+# 允許讀取 Repository 程式碼。
+#
+# id-token: write
+# 讓 Job 可以請求 GitHub OIDC Token，
+# 以便透過 WIF 向 Google Cloud 驗證。
+#
+# 注意：
+# 這裡只給予 contents: read。
+# id-token: write 會在需要 GCP 驗證的 Job 個別授權。
+# ============================================================
 
 permissions:
   contents: read
-  id-token: write
+
+
+# ============================================================
+# Jobs：定義部署工作
+# ============================================================
 
 jobs:
+
+
+  # ----------------------------------------------------------
+  # Job 1：Production Deployment
+  #
+  # 正式環境部署：
+  # Push to main
+  #     ↓
+  # Google Cloud Authentication
+  #     ↓
+  # Deploy API to Cloud Run
+  #     ↓
+  # Build Frontend
+  #     ↓
+  # Deploy Firebase Hosting / Firestore
+  #     ↓
+  # Smoke Test
+  # ----------------------------------------------------------
+
   production:
-    if: github.event_name == 'push' && vars.WIF_PROVIDER != ''
+
+    # --------------------------------------------------------
+    # 執行條件：
+    #
+    # 1. 觸發事件必須是 push
+    # 2. WIF Provider 必須有設定
+    # 3. Deploy Service Account 必須有設定
+    #
+    # 三個條件都成立才執行正式部署。
+    # --------------------------------------------------------
+
+    if: >-
+      github.event_name == 'push' &&
+      vars.WIF_PROVIDER != '' &&
+      vars.DEPLOY_SERVICE_ACCOUNT != ''
+
+    # 指定 GitHub-hosted Ubuntu Runner
     runs-on: ubuntu-latest
+
+    # 本 Job 需要 Google Cloud OIDC 身分驗證權限
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+
+      # Step 1：Checkout Repository
+      # 將 main 分支對應的程式碼下載到 Runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      # Step 2：Google Cloud Authentication
+      #
+      # 使用 Workload Identity Federation (WIF)
+      # 不需要在 GitHub Secrets 中儲存長期有效的
+      # Google Service Account JSON 私鑰。
+      #
+      # workload_identity_provider：
+      # Google Cloud Workload Identity Provider 資源名稱。
+      #
+      # service_account：
+      # 指定要使用的 Google Cloud Service Account。
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
-      - uses: google-github-actions/setup-gcloud@v2
-      - uses: actions/setup-node@v4
+
+
+      # Step 3：安裝與設定 Google Cloud SDK
+      #
+      # 讓後續 Shell Script 可以使用 gcloud CLI。
+      #
+      # project_id：
+      # 明確指定預設 Google Cloud Project。
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+
+      # Step 4：設定 Node.js
+      #
+      # 後續需要使用 npm / npx：
+      # - Firebase CLI
+      # - 前端建置
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+
+
+      # Step 5：部署後端 API 至 Google Cloud Run
+      #
+      # 執行專案自行撰寫的 Shell Script。
+      # 實際部署細節需要查看 scripts/deploy-api.sh。
       - name: Deploy API to Cloud Run
         run: ./scripts/deploy-api.sh
+
+
+      # Step 6：建置前端專案
+      #
+      # npm --prefix web：
+      # 指定 npm 在 web/ 專案目錄中執行。
+      #
+      # npm ci：
+      # 根據 web/package-lock.json 安裝 Dependencies。
+      #
+      # npm run build：
+      # 建置正式環境前端檔案。
+      #
+      # VITE_ 環境變數：
+      # 由 GitHub Repository Variables 注入，
+      # 提供 Vite Build 使用。
       - name: Build web
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+          VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID }}
+          VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY }}
         run: |
           npm --prefix web ci
           npm --prefix web run build
+
+
+      # Step 7：部署 Firebase Hosting 與 Firestore 設定
+      #
+      # hosting：
+      # 部署前端靜態網站。
+      #
+      # firestore：
+      # 部署 firebase.json 所設定的 Firestore Rules / Indexes。
+      #
+      # --project：
+      # 指定 Firebase Project。
+      #
+      # --non-interactive：
+      # 避免執行時要求使用者手動輸入。
       - name: Deploy Hosting and Firestore config
-        run: npx firebase-tools deploy --only hosting,firestore --project "$PROJECT_ID" --non-interactive
+        run: >-
+          npx firebase-tools deploy
+          --only hosting,firestore
+          --project "$PROJECT_ID"
+          --non-interactive
+
+
+      # Step 8：部署後冒煙測試
+      #
+      # 執行自訂的 Smoke Test Script。
+      # 將正式 Firebase Hosting 網址傳入腳本。
+      #
+      # 如果測試失敗，Step 會回傳非 0 Exit Code，
+      # Workflow 因而標記為失敗。
       - name: Smoke test
         run: ./scripts/smoke-test.sh "https://$PROJECT_ID.web.app"
 
+
+
+  # ----------------------------------------------------------
+  # Job 2：Preview Deployment
+  #
+  # Pull Request 預覽部署：
+  #
+  # Pull Request
+  #      ↓
+  # 確認來源 Repository
+  #      ↓
+  # Google Cloud Authentication
+  #      ↓
+  # Build Frontend
+  #      ↓
+  # Deploy Firebase Preview Channel
+  #
+  # 不會部署正式 Cloud Run API，
+  # 也不會部署正式 Hosting 或 Firestore 設定。
+  # ----------------------------------------------------------
+
   preview:
+
+    # --------------------------------------------------------
+    # 執行條件：
+    #
+    # 1. 必須是 Pull Request 事件
+    #
+    # 2. PR 來源 Repository 必須與目前 Repository 相同
+    #    避免外部 Fork PR 直接進入有雲端權限的部署流程
+    #
+    # 3. WIF Provider 必須已設定
+    #
+    # 4. Deploy Service Account 必須已設定
+    # --------------------------------------------------------
+
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      vars.WIF_PROVIDER != ''
+      vars.WIF_PROVIDER != '' &&
+      vars.DEPLOY_SERVICE_ACCOUNT != ''
+
+    # 指定 GitHub-hosted Ubuntu Runner
     runs-on: ubuntu-latest
+
+    # 本 Job 需要 Google Cloud OIDC 身分驗證權限
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: google-github-actions/auth@v2
+
+      # Step 1：Checkout Repository
+      #
+      # pull_request 事件預設會 Checkout GitHub 建立的
+      # PR 合併測試版本（merge commit）。
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      # Step 2：Google Cloud Authentication
+      #
+      # 使用 WIF 取得短期 Google Cloud 憑證。
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
-      - uses: actions/setup-node@v4
+
+
+      # Step 3：設定 Node.js
+      # 提供 npm / npx 執行環境。
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+
+
+      # Step 4：建置前端預覽版本
+      #
+      # 透過 Repository Variables 提供 Firebase / EmailJS 設定。
+      # 建置完成後會產生可部署的靜態檔案。
       - name: Build web
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+          VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID }}
+          VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY }}
         run: |
           npm --prefix web ci
           npm --prefix web run build
+
+
+      # Step 5：部署 Firebase Hosting Preview Channel
+      #
+      # hosting:channel:deploy：
+      # 將前端建置結果部署至指定 Preview Channel。
+      #
+      # pr-${{ github.event.number }}：
+      # 使用 PR 編號作為 Channel 名稱。
+      # 例如 PR #25 -> pr-25。
+      #
+      # --expires 7d：
+      # 設定 Preview Channel 七天後過期。
+      #
+      # Firebase CLI 會輸出預覽網址，
+      # 供開發者及審查人員測試。
       - name: Deploy preview channel
         run: >-
-          npx firebase-tools hosting:channel:deploy "pr-${{ github.event.number }}"
-          --expires 7d --project "$PROJECT_ID" --non-interactive
+          npx firebase-tools hosting:channel:deploy
+          "pr-${{ github.event.number }}"
+          --expires 7d
+          --project "$PROJECT_ID"
+          --non-interactive
