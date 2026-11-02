@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { createApp } from './app.js';
 import { loadEnv } from './config/env.js';
-import { createMailService } from './services/mailService.js';
+import { createMailService } from './lib/mail.js';
 
 const env = loadEnv();
 

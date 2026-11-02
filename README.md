@@ -5,11 +5,6 @@
 > 內容僅供自我探索參考，不構成醫療、心理或財務建議。
 > 目前的圖片為 picsum.photos 佔位圖，匯款帳號為示範資料。
 
-| 桌面 | 手機 |
-|---|---|
-| ![首頁](docs/screenshots/1280-home.png) | ![手機首頁](docs/screenshots/375-home.png) |
-| ![預約表單](docs/screenshots/1280-booking-form.png) | ![手機預約表單](docs/screenshots/375-booking-form.png) |
-
 ## 功能
 
 - 週曆顯示可預約時段：桌面為週表格，手機為日期 chip 加時段清單
@@ -39,7 +34,7 @@ flowchart LR
 | 部署 | Firebase Hosting、Cloud Run、Secret Manager、GitHub Actions |
 | 測試 | Vitest、Testing Library、msw、supertest、Firebase Emulator |
 
-後端分為 routes、controllers、services、repositories。可預約時段的計算是純函式，資料庫存取集中在 repository，之後要換資料庫只需要改這一層。
+後端結構很簡單：`routes/` 處理 API 與預約流程，`lib/` 放可預約計算、Firestore 存取與寄信。可預約時段的計算是純函式，方便單元測試。
 
 ## REST API（`/api/v1`）
 

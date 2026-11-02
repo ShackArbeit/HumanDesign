@@ -1,6 +1,92 @@
-import { Timestamp } from 'firebase-admin/firestore';
-import { notFound, slotTaken } from '../lib/errors.js';
-import { db } from '../lib/firebase.js';
+import { FieldPath, Timestamp } from 'firebase-admin/firestore';
+import { defaultScheduleRules } from '../config/scheduleRules.js';
+import { notFound, slotTaken } from './errors.js';
+import { db } from './firebase.js';
+
+// ---------- Services and page content ----------
+
+export async function listActiveServices() {
+  const snapshot = await db().collection('services').orderBy('order').get();
+
+  const services = [];
+  for (const doc of snapshot.docs) {
+    const service = { id: doc.id, ...doc.data() };
+    if (service.active) {
+      services.push(service);
+    }
+  }
+  return services;
+}
+
+export async function getService(id) {
+  const doc = await db().collection('services').doc(id).get();
+  if (!doc.exists) {
+    return null;
+  }
+  return { id: doc.id, ...doc.data() };
+}
+
+export async function getContentSection(section) {
+  const doc = await db().collection('content').doc(section).get();
+  if (!doc.exists) {
+    return null;
+  }
+  return doc.data().items;
+}
+
+export async function listAboutTimeline() {
+  const snapshot = await db().collection('aboutTimeline').get();
+
+  const timeline = [];
+  for (const doc of snapshot.docs) {
+    timeline.push({ year: doc.id, ...doc.data() });
+  }
+  return timeline;
+}
+
+export async function listFeedbackVideos() {
+  const snapshot = await db().collection('feedbackVideos').orderBy('order').get();
+
+  const videos = [];
+  for (const doc of snapshot.docs) {
+    const data = doc.data();
+    videos.push({
+      id: doc.id,
+      title: data.title,
+      body: data.body,
+      youtubeId: data.youtubeId,
+      imagePath: data.imagePath,
+    });
+  }
+  return videos;
+}
+
+// ---------- Business hours ----------
+
+export async function getScheduleRules() {
+  const doc = await db().collection('settings').doc('schedule').get();
+  if (!doc.exists) {
+    return defaultScheduleRules;
+  }
+  return doc.data();
+}
+
+// Closure documents use the date as their id, for example 2026-11-05.
+export async function listClosures(from, to) {
+  const snapshot = await db()
+    .collection('closures')
+    .where(FieldPath.documentId(), '>=', from)
+    .where(FieldPath.documentId(), '<=', to)
+    .get();
+
+  const closures = [];
+  for (const doc of snapshot.docs) {
+    closures.push({ date: doc.id, ...doc.data() });
+  }
+  return closures;
+}
+
+// ---------- Bookings ----------
 
 function bookingsCollection() {
   return db().collection('bookings');
@@ -25,11 +111,13 @@ function docToBooking(doc) {
 
 // The transaction makes "check the locks, then save" one atomic step.
 // If two people book at once, Firestore reruns one of them and it sees the lock.
-export async function createWithLocks(booking, locks, now) {
+export async function createBookingWithLocks(booking, locks, now) {
   return db().runTransaction(async (transaction) => {
     const lockRefs = [];
+    const lockIds = [];
     for (const lock of locks) {
       lockRefs.push(slotLocksCollection().doc(lock.id));
+      lockIds.push(lock.id);
     }
 
     const lockDocs = await transaction.getAll(...lockRefs);
@@ -41,10 +129,6 @@ export async function createWithLocks(booking, locks, now) {
 
     const bookingRef = bookingsCollection().doc();
     const timestamp = Timestamp.fromDate(now);
-    const lockIds = [];
-    for (const lock of locks) {
-      lockIds.push(lock.id);
-    }
 
     transaction.create(bookingRef, {
       ...booking,
@@ -66,7 +150,7 @@ export async function createWithLocks(booking, locks, now) {
   });
 }
 
-export async function cancelWithLocks(id, checkCanCancel, now) {
+export async function cancelBookingWithLocks(id, checkCanCancel, now) {
   return db().runTransaction(async (transaction) => {
     const bookingRef = bookingsCollection().doc(id);
     const doc = await transaction.get(bookingRef);
@@ -94,7 +178,7 @@ export async function cancelWithLocks(id, checkCanCancel, now) {
   });
 }
 
-export async function listStartingBetween(startMs, endMs) {
+export async function listBookingsStartingBetween(startMs, endMs) {
   const snapshot = await bookingsCollection()
     .where('startAt', '>=', Timestamp.fromMillis(startMs))
     .where('startAt', '<', Timestamp.fromMillis(endMs))
@@ -107,7 +191,7 @@ export async function listStartingBetween(startMs, endMs) {
   return bookings;
 }
 
-export async function listByUser(userId) {
+export async function listBookingsByUser(userId) {
   const snapshot = await bookingsCollection()
     .where('userId', '==', userId)
     .orderBy('startAt', 'desc')

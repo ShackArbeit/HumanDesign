@@ -12,7 +12,7 @@
     "seed": "node scripts/seed.js",
     "lint": "eslint .",
     "test": "firebase emulators:exec --config ../firebase.json --project demo-humandesign --only auth,firestore \"vitest run\"",
-    "test:unit": "vitest run test/availabilityService.test.js"
+    "test:unit": "vitest run test/availability.test.js"
   },
   "dependencies": {
     "dayjs": "^1.11.13",

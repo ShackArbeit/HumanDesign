@@ -4,7 +4,7 @@ import {
   computeAvailability,
   getSlotLocks,
   validateBookingTime,
-} from '../src/services/availabilityService.js';
+} from '../src/lib/availability.js';
 
 // Sunday 2026-11-01 10:00 in Taipei.
 const now = '2026-11-01T02:00:00Z';

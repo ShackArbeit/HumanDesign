@@ -131,10 +131,8 @@ Firebase Hosting ──(靜態檔) React SPA（rewrites ** → /index.html，解
     │   ├─ index.js          # listen(process.env.PORT)
     │   ├─ config/           # env 讀取與驗證（zod）, scheduleRules 預設值
     │   ├─ middleware/       # auth.js（驗證 ID token）, validate.js, errorHandler.js, rateLimit.js
-    │   ├─ routes/v1/        # services, availability, bookings, me, content
-    │   ├─ controllers/
-    │   ├─ services/         # availabilityService, bookingService, mailService（商業邏輯，純函式為主）
-    │   ├─ repositories/     # Firestore 存取（之後要換 DB 只改這層）
+    │   ├─ routes/           # availability, bookings, content（API 與預約流程）
+    │   ├─ lib/              # availability（純函式）, database（Firestore）, mail, firebase, errors
     │   └─ schemas/          # zod schema（request 驗證，前端可共用型別概念）
     ├─ scripts/seed.js       # 把現有 mock data 寫入 Firestore（含 emulator）
     └─ test/                 # vitest + supertest，搭配 Firestore Emulator
@@ -211,7 +209,7 @@ Firebase Hosting ──(靜態檔) React SPA（rewrites ** → /index.html，解
 - `status`：`available` | `booked` | `closed`（休息/非營業）| `past` | `too_soon`（未滿 3 天）。
 - 若傳 `durationMin`，`available` 代表「從這格開始、整段 durationMin + buffer 都空」。
 - **只回狀態，不回任何預約者資訊**。
-- 計算放在 `services/availabilityService.js`，寫成**純函式** `computeAvailability({ rules, closures, bookings, from, to, now, durationMin })`，方便單元測試。
+- 計算放在 `lib/availability.js`，寫成**純函式** `computeAvailability({ rules, closures, bookings, from, to, now, durationMin })`，方便單元測試。
 - `from`–`to` 最多 31 天，超過回 400。
 
 ---
