@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { defaultScheduleRules as rules } from '../src/config/scheduleRules.js';
+import { defaultScheduleRules } from '../src/config/scheduleRules.js';
+
+// The algorithm tests use their own 30-minute rules, so they keep covering
+// buffers and uneven ranges no matter how the live schedule is configured.
+const OPEN_DAY = [
+  { start: '10:00', end: '12:00' },
+  { start: '14:00', end: '18:00' },
+  { start: '19:00', end: '21:00' },
+];
+const rules = {
+  timezone: 'Asia/Taipei',
+  slotMinutes: 30,
+  bufferMinutes: 30,
+  minLeadDays: 3,
+  maxAdvanceDays: 60,
+  weekly: { sun: [], mon: [], tue: OPEN_DAY, wed: OPEN_DAY, thu: OPEN_DAY, fri: OPEN_DAY, sat: OPEN_DAY },
+};
 import {
   computeAvailability,
   getSlotLocks,
@@ -167,5 +183,49 @@ describe('getSlotLocks', () => {
   it('rolls over to the next day', () => {
     const locks = getSlotLocks({ rules, startAt: taipei(THU, '23:30'), durationMin: 60 });
     expect(locks.at(-1).id).toBe('20261106-0030');
+  });
+});
+
+describe('two-hour live schedule', () => {
+  const live = defaultScheduleRules;
+  const liveDay = (args = {}) =>
+    computeAvailability({ rules: live, now, from: THU, to: THU, durationMin: 120, ...args }).days[0];
+
+  it('offers six two-hour slots a day plus the closed lunch row', () => {
+    const day = liveDay();
+    const starts = day.slots.map((slot) => slot.start);
+    expect(starts).toEqual([
+      utcIso(THU, '08:00'),
+      utcIso(THU, '10:00'),
+      utcIso(THU, '12:00'),
+      utcIso(THU, '14:00'),
+      utcIso(THU, '16:00'),
+      utcIso(THU, '18:00'),
+      utcIso(THU, '20:00'),
+    ]);
+    const available = day.slots.filter((slot) => slot.status === 'available');
+    expect(available).toHaveLength(6);
+    expect(statusAt(day, THU, '12:00')).toBe('closed');
+  });
+
+  it('lets back-to-back slots be booked with no buffer', () => {
+    const day = liveDay({ bookings: [booking(THU, '10:00', '12:00')] });
+    expect(statusAt(day, THU, '08:00')).toBe('available');
+    expect(statusAt(day, THU, '10:00')).toBe('booked');
+    expect(statusAt(day, THU, '14:00')).toBe('available');
+  });
+
+  it('rejects starts that are not on a slot boundary', () => {
+    const check = (time) =>
+      validateBookingTime({ rules: live, startAt: taipei(THU, time), durationMin: 120, now });
+    expect(check('08:00')).toBeNull();
+    expect(check('20:00')).toBeNull();
+    expect(check('09:00')).toBe('OUTSIDE_BUSINESS_HOURS');
+    expect(check('21:00')).toBe('OUTSIDE_BUSINESS_HOURS');
+  });
+
+  it('locks exactly one slot per booking', () => {
+    const locks = getSlotLocks({ rules: live, startAt: taipei(THU, '14:00'), durationMin: 120 });
+    expect(locks.map((lock) => lock.id)).toEqual(['20261105-1400']);
   });
 });

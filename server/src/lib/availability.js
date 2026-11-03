@@ -250,7 +250,7 @@ export function validateBookingTime({ rules, closures = [], startAt, durationMin
   return null;
 }
 
-// 算出這筆預約要鎖住哪些時段：每 30 分鐘一格，包含服務時間和 buffer。
+// 算出這筆預約要鎖住哪些時段：每格長度依 slotMinutes，包含服務時間和 buffer。
 // 兩筆重疊的預約一定會搶到同一格，所以不會重複預約
 export function getSlotLocks({ rules, startAt, durationMin }) {
   const startMs = new Date(startAt).getTime();

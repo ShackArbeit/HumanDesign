@@ -203,20 +203,25 @@ const AvailabilityWeekGrid = ({ durationOptions, durationMin, onDurationChange, 
             下一週 ▶
           </Button>
         </div>
-        <TextField
-          select
-          size="small"
-          label="服務時長"
-          value={durationMin}
-          onChange={(event) => onDurationChange(Number(event.target.value))}
-          sx={{ minWidth: 140 }}
-        >
-          {durationOptions.map((minutes) => (
-            <MenuItem key={minutes} value={minutes}>
-              {minutes} 分鐘
-            </MenuItem>
-          ))}
-        </TextField>
+        {/* 只有一種時長時直接顯示文字，有多種時長才需要選單 */}
+        {durationOptions.length > 1 ? (
+          <TextField
+            select
+            size="small"
+            label="服務時長"
+            value={durationMin}
+            onChange={(event) => onDurationChange(Number(event.target.value))}
+            sx={{ minWidth: 140 }}
+          >
+            {durationOptions.map((minutes) => (
+              <MenuItem key={minutes} value={minutes}>
+                {minutes} 分鐘
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <span style={{ fontWeight: 700 }}>每次 {durationMin / 60} 小時</span>
+        )}
       </div>
       <Legend />
       {query.isLoading && <GridSkeleton />}

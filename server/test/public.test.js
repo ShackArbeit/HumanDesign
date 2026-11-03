@@ -24,17 +24,19 @@ describe('public API', () => {
         .post('/api/v1/bookings')
         .send({
           serviceId: 'personal',
-          durationMin: 60,
+          durationMin: 120,
           startAt: '2026-11-10T02:00:00Z',
           guestEmail: 'private@example.test',
         })
         .expect(201);
 
       const response = await api
-        .get(`${url}?from=2026-11-10&to=2026-11-10&durationMin=60`)
+        .get(`${url}?from=2026-11-10&to=2026-11-10&durationMin=120`)
         .expect(200);
       expect(response.headers['cache-control']).toBe('no-store');
-      expect(response.body.data.days[0].slots[0].status).toBe('booked');
+      const slots = response.body.data.days[0].slots;
+      expect(slots[0].status).toBe('available');
+      expect(slots[1].status).toBe('booked');
       expect(JSON.stringify(response.body)).not.toContain('private@example.test');
     });
 

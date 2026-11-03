@@ -19,10 +19,10 @@ vi.mock('../../lib/firebase', () => ({
 const created = {
   id: 'b1',
   serviceId: 'personal',
-  durationMin: 60,
-  priceTwd: 5000,
+  durationMin: 120,
+  priceTwd: 9000,
   startAt: '2026-11-03T02:00:00.000Z',
-  endAt: '2026-11-03T03:00:00.000Z',
+  endAt: '2026-11-03T04:00:00.000Z',
   status: 'pending_payment',
 };
 
@@ -49,7 +49,7 @@ describe('BookingPage', () => {
     renderWithClient(<BookingPage />);
     await openForm(user);
     expect(screen.getByText('時間：2026年11月3日 星期二 10:00')).toBeTruthy();
-    expect(screen.getByText('費用：NT$ 5,000')).toBeTruthy();
+    expect(screen.getByText('費用：NT$ 9,000')).toBeTruthy();
   });
 
   it('updates the price when the service changes', async () => {
@@ -58,7 +58,7 @@ describe('BookingPage', () => {
     await openForm(user);
     await user.click(screen.getByRole('combobox', { name: '服務' }));
     await user.click(await screen.findByRole('option', { name: '親子解析' }));
-    expect(await screen.findByText('費用：NT$ 8,000')).toBeTruthy();
+    expect(await screen.findByText('費用：NT$ 14,000')).toBeTruthy();
   });
 
   it('validates the guest email only after submitting', async () => {
@@ -87,12 +87,12 @@ describe('BookingPage', () => {
     expect(await screen.findByText('預約成功')).toBeTruthy();
     expect(body).toEqual({
       serviceId: 'personal',
-      durationMin: 60,
+      durationMin: 120,
       startAt: '2026-11-03T02:00:00Z',
       guestEmail: 'guest@example.test',
     });
     const calendar = screen.getByRole('link', { name: '加入 Google 日曆' });
-    expect(calendar.getAttribute('href')).toContain('20261103T020000Z%2F20261103T030000Z');
+    expect(calendar.getAttribute('href')).toContain('20261103T020000Z%2F20261103T040000Z');
   });
 
   it('hides the email field for members', async () => {

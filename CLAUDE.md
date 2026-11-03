@@ -144,7 +144,7 @@ Firebase Hosting ──(靜態檔) React SPA（rewrites ** → /index.html，解
 
 ## 4. 資料模型（Firestore）
 
-> **2026-11-02 架構變更（以此為準）**：內容改為前端靜態資料（`web/src/data/`），刪除 `server/scripts/`。Firestore 只存 `bookings`、`slotLocks`、`closures`；`services`、`content`、`aboutTimeline`、`feedbackVideos`、`settings` 不再使用，營業規則與價格放在 `server/src/config/`。下方相關 collection 與 `/services`、`/content`、`/about`、`/feedback` API 僅為歷史紀錄。程式註解使用繁體中文。取消預約時直接刪除 bookings 文件與時段鎖，不保留 cancelled 紀錄。
+> **2026-11-02 架構變更（以此為準）**：內容改為前端靜態資料（`web/src/data/`），刪除 `server/scripts/`。Firestore 只存 `bookings`、`slotLocks`、`closures`；`services`、`content`、`aboutTimeline`、`feedbackVideos`、`settings` 不再使用，營業規則與價格放在 `server/src/config/`。下方相關 collection 與 `/services`、`/content`、`/about`、`/feedback` API 僅為歷史紀錄。程式註解使用繁體中文。取消預約時直接刪除 bookings 文件與時段鎖，不保留 cancelled 紀錄。**2026-11-03**：預約改為每格 2 小時、每次固定 120 分鐘、不留 buffer；週二到週六 08–12、14–18、18–22，每天 6 個時段（Shack 確認）。下方第 6 節的 30 分鐘與營業時間預設值已不適用。
 
 所有時間存 **UTC `Timestamp`**；顯示與營業時間計算一律用 `Asia/Taipei`（dayjs + utc + timezone plugin）。
 
