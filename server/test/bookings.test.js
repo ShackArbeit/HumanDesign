@@ -8,7 +8,7 @@ import { buildApp, countLocks, resetDatabase, signUp } from './helpers.js';
 const START = '2026-11-10T02:00:00Z';
 const memberBooking = (overrides = {}) => ({
   serviceId: 'personal',
-  durationMin: 60,
+  durationMin: 120,
   startAt: START,
   ...overrides,
 });
@@ -34,7 +34,7 @@ describe('bookings API', () => {
       const response = await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
       expect(response.body.data).toMatchObject({
         serviceId: 'personal',
-        priceTwd: 5000,
+        priceTwd: 9000,
         status: 'pending_payment',
       });
       expect(response.body.data.cancelToken).toEqual(expect.any(String));
@@ -55,8 +55,8 @@ describe('bookings API', () => {
       expect(response.body.error.details[0].path).toBe('guestEmail');
     });
 
-    it('returns 400 for a duration the service does not offer', async () => {
-      const body = guestBooking({ durationMin: 90 });
+    it.each([60, 90])('returns 400 for a %i-minute duration', async (durationMin) => {
+      const body = guestBooking({ durationMin });
       await api.post('/api/v1/bookings').send(body).expect(400);
     });
 
@@ -81,22 +81,25 @@ describe('bookings API', () => {
         api.post('/api/v1/bookings').send(guestBooking({ guestEmail: 'other@example.test' })),
       ]);
       expect(statuses(responses)).toEqual([201, 409]);
-      expect(await countLocks()).toBe(3);
+      expect(await countLocks()).toBe(1);
     });
 
-    it('allows only one of two concurrent overlapping requests with different starts', async () => {
-      const responses = await Promise.all([
-        api.post('/api/v1/bookings').send(guestBooking({ durationMin: 120 })),
-        api.post('/api/v1/bookings').send(guestBooking({ startAt: '2026-11-10T03:00:00Z' })),
-      ]);
-      expect(statuses(responses)).toEqual([201, 409]);
-    });
-
-    it('enforces the buffer after an existing booking', async () => {
+    it('lets back-to-back slots be booked because there is no buffer', async () => {
       await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
-      const inBuffer = guestBooking({ startAt: '2026-11-10T03:00:00Z' });
-      const response = await api.post('/api/v1/bookings').send(inBuffer).expect(409);
+      const earlier = guestBooking({ startAt: '2026-11-10T00:00:00Z' });
+      await api.post('/api/v1/bookings').send(earlier).expect(201);
+    });
+
+    it('returns 409 when the slot is already booked', async () => {
+      await api.post('/api/v1/bookings').send(guestBooking()).expect(201);
+      const response = await api.post('/api/v1/bookings').send(guestBooking()).expect(409);
       expect(response.body.error.code).toBe('SLOT_TAKEN');
+    });
+
+    it('returns 422 for a start in the middle of a slot', async () => {
+      const offGrid = guestBooking({ startAt: '2026-11-10T03:00:00Z' });
+      const response = await api.post('/api/v1/bookings').send(offGrid).expect(422);
+      expect(response.body.error.code).toBe('OUTSIDE_BUSINESS_HOURS');
     });
 
     it('still succeeds when the confirmation email fails', async () => {
@@ -189,7 +192,7 @@ describe('bookings API', () => {
       await db().collection('bookings').doc(id).update({ status: 'cancelled' });
 
       await api.delete(`/api/v1/bookings/${id}?token=${cancelToken}`).expect(200);
-      expect(await countLocks()).toBe(3);
+      expect(await countLocks()).toBe(1);
     });
 
     it('returns 403 for another member', async () => {

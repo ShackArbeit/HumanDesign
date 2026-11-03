@@ -12,7 +12,7 @@ const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 export function createAvailabilityRouter({ now }) {
   const router = Router();
 
-  // GET /availability?from=2026-11-05&to=2026-11-11&durationMin=60
+  // GET /availability?from=2026-11-05&to=2026-11-11&durationMin=120
   router.get('/availability', noStore, validate({ query: availabilityQuery }), async (req, res) => {
     const { from, to, durationMin } = req.validated.query;
 

@@ -50,7 +50,7 @@ flowchart LR
 
 ## 技術決策
 
-- **用 transaction 加 `slotLocks` 防重複預約**：先查再寫有競爭條件。每 30 分鐘一份鎖文件，涵蓋服務時間與 buffer，兩筆重疊的預約一定會撞到同一份文件。測試用 Emulator 實際併發驗證。
+- **用 transaction 加 `slotLocks` 防重複預約**：先查再寫有競爭條件。每個 2 小時時段一份鎖文件，同一時段被兩人同時預約時，一定會撞到同一份文件。測試用 Emulator 實際併發驗證。
 - **同網域 `/api/**` rewrite**：前端打相對路徑，不需要 CORS，也不用把後端網址寫進前端。
 - **用 Firebase ID token，不用 session**：Firebase Hosting 只轉送 `__session` cookie；無狀態的後端也才能在 Cloud Run 水平擴展。
 - **時間一律存 UTC，以 `Asia/Taipei` 計算**：伺服器在 UTC 時區也不會差 8 小時，測試涵蓋不同伺服器時區。
