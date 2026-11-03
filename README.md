@@ -96,7 +96,89 @@ npm test                          # 前端測試，加上在 emulator 上執行�
 npm run build
 ```
 
-環境變數的項目見 `web/.env.example` 與 `server/.env.example`，實際的值不可提交到版本控制。
+環境變數的項目見 `web/.env.example` 與 `server/.env.example`，實際的值不可提交到版本控制。詳細說明見下一節。
+
+## 環境變數
+
+### 存放位置
+
+| 位置 | 給誰用 | 內容 |
+|---|---|---|
+| `web/.env.local`、`server/.env` | 本機開發 | 從 `.env.example` 複製後填值，已列入 `.gitignore` |
+| GitHub Variables（Settings → Secrets and variables → Actions → Variables） | GitHub Actions 部署 | WIF 設定與前端 `VITE_*` 值 |
+| GCP Secret Manager | Cloud Run 執行時 | `GMAIL_USER`、`GMAIL_APP_PASSWORD` |
+| Cloud Run 服務設定 | Cloud Run 執行時 | `deploy-api.sh` 用 `--set-env-vars` 寫入的一般設定 |
+
+### 前端在打包時讀取，後端在執行時讀取
+
+- **前端**：程式用 `import.meta.env.VITE_*` 讀取。`npm run build` 時，Vite 會把這些值直接換成字串寫進 `web/dist/*.js`，所以：
+  - 只有 `VITE_` 開頭的變數會被打包，避免誤把伺服器密碼打包出去。
+  - 打包後任何人都能在瀏覽器看到這些值，只能放公開的值。Firebase Web 設定與 EmailJS public key 本來就是公開的，安全性靠 Firebase 的網域限制與後端驗證。
+  - 改了值必須**重新 build 並重新部署 Hosting** 才會生效。
+- **後端**：程式用 `process.env.*` 讀取。Cloud Run 啟動容器時注入變數，`server/src/index.js` 再呼叫 `loadEnv()`（`server/src/config/env.js`）用 zod 檢查。正式環境缺少 Gmail 設定時，服務會在啟動時直接失敗，而不是等到寄信才出錯。
+  - 本機由 `dotenv` 讀取 `server/.env`，不會覆蓋已經存在的環境變數。
+  - Docker 映像檔裡沒有 `.env`（`.dockerignore` 排除），密碼只在執行時存在。
+  - 改了值要**重新部署 Cloud Run**（產生新的 revision）才會生效。
+
+### 前端變數
+
+| 變數 | 讀取位置 | 功能 |
+|---|---|---|
+| `VITE_API_BASE_URL` | `web/src/api/client.js` | API 網址前綴，未設定時為 `/api/v1`（同網域 rewrite 到 Cloud Run）。測試時由 `web/vite.config.js` 設為 `http://localhost/api/v1` |
+| `VITE_FIREBASE_API_KEY`、`VITE_FIREBASE_AUTH_DOMAIN`、`VITE_FIREBASE_PROJECT_ID`、`VITE_FIREBASE_APP_ID` | `web/src/lib/firebase.js` | 初始化 Firebase Auth，用於註冊、登入、重設密碼與取得 ID token。值錯誤時登入會回 400 |
+| `VITE_FIREBASE_AUTH_EMULATOR_URL` | `web/src/lib/firebase.js` | 僅本機：設定後改連 Auth Emulator |
+| `VITE_EMAILJS_SERVICE_ID`、`VITE_EMAILJS_TEMPLATE_ID`、`VITE_EMAILJS_PUBLIC_KEY` | `web/src/features/content/ContactPage.jsx` | 「聯絡我們」表單透過 EmailJS 寄信 |
+
+### 後端變數
+
+| 變數 | 來源（正式環境） | 功能 |
+|---|---|---|
+| `NODE_ENV` | `server/Dockerfile` 設為 `production` | 決定是否強制要求 Gmail 設定 |
+| `PORT` | Cloud Run 自動提供（8080） | Express 監聽的 port |
+| `WEB_BASE_URL` | `deploy-api.sh`（`https://<專案>.web.app`） | 確認信中取消連結的網址 |
+| `TRUST_PROXY_HOPS` | `deploy-api.sh`（2：Hosting + Cloud Run） | 讓 Express 取得真實使用者 IP，給 rate limit 使用 |
+| `GOOGLE_CLOUD_PROJECT` | `deploy-api.sh` | `server/src/lib/firebase.js` 初始化 firebase-admin 用的專案 ID |
+| `GMAIL_USER`、`GMAIL_APP_PASSWORD` | Secret Manager，`deploy-api.sh` 用 `--set-secrets ...:latest` 注入 | Nodemailer 寄預約確認信與取消通知 |
+| `FIRESTORE_EMULATOR_HOST`、`FIREBASE_AUTH_EMULATOR_HOST` | 僅本機與 CI | firebase-admin 自動改連 Emulator，測試不會碰到正式資料 |
+
+Secret Manager 不是 repo 裡的檔案，而是 GCP 的服務，可在 [GCP Console](https://console.cloud.google.com/security/secret-manager?project=humandesign-64ea8) 檢視。repo 裡只出現 secret 的名稱：
+
+```
+scripts/gcp-bootstrap.sh   啟用 Secret Manager、授權 Cloud Run 讀取、詢問並建立兩個 secret
+        │
+Secret Manager（值存在 Google）
+        │  scripts/deploy-api.sh --set-secrets
+        ▼
+Cloud Run 容器 process.env ──► server/src/config/env.js 檢查 ──► index.js 傳給寄信模組
+```
+
+### GitHub Actions 使用的變數
+
+`.github/workflows/deploy.yml` 在 push 到 `main` 後依序執行：
+
+1. **認證**：用 `vars.WIF_PROVIDER` 與 `vars.DEPLOY_SERVICE_ACCOUNT` 透過 Workload Identity Federation 換取 GCP 短期憑證。兩個變數沒設定時，部署 job 會跳過。
+2. **部署後端**：執行 `deploy-api.sh`，設定 Cloud Run 的 env 與 secrets。
+3. **打包前端**：在 `Build web` 步驟用 `env:` 把 7 個 `vars.VITE_*` 傳給 `npm run build`，寫進 JS。
+4. **部署前端**：`firebase deploy` 上傳到 Hosting。
+5. **Smoke test**：用 workflow 內的 `env.PROJECT_ID`（`humandesign-64ea8`）組網址檢查線上服務。
+
+另外有兩類變數由工具自動產生，不需要設定：
+
+- `google-github-actions/auth` 產生 `GOOGLE_APPLICATION_CREDENTIALS`，讓後續的 `gcloud` 與 `firebase` 指令登入。
+- 後端測試指令（`server/package.json` 的 `firebase emulators:exec`）在本機與 CI 都會設定 `FIRESTORE_EMULATOR_HOST` 等，讓測試只連 Emulator。
+
+這些值都用 Variables 而不是 Secrets，因為都不是密碼：WIF 不需要金鑰，前端的值本來就會公開。
+
+### 改了變數後要做什麼
+
+| 改了什麼 | 要做的事 |
+|---|---|
+| GitHub 的 `VITE_*` | 重新執行 deploy workflow（或本機 build 後 `firebase deploy --only hosting`） |
+| `web/.env.local` | 重新啟動 `npm run dev`，或重新 build |
+| Secret Manager 的 Gmail 值 | 新增 secret 版本後執行 `deploy-api.sh` |
+| `deploy-api.sh` 中的 env | 執行 `deploy-api.sh` |
+| `server/.env` | 重新啟動 `npm run dev` |
+| `WIF_PROVIDER`、`DEPLOY_SERVICE_ACCOUNT` | 下次 workflow 執行時生效 |
 
 ## 部署
 
@@ -108,4 +190,4 @@ firebase deploy --only hosting,firestore --project humandesign-64ea8
 bash scripts/smoke-test.sh https://humandesign-64ea8.web.app
 ```
 
-面試當天可用 `gcloud run services update humandesign-api --min-instances=1` 避免冷啟動，結束後改回 0。
+ gcloud run services update humandesign-api --min-instances=1
